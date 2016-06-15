@@ -1,4 +1,4 @@
-aws-quickstart
+quickstart-microsoft-exchange
 ==============
 
 Microsoft Exchange Server 2013
