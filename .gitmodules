@@ -1,3 +1,0 @@
-[submodule "utilities"]
-	path = microsoft-utilities
-	url = https://github.com/aws-quickstart/quickstart-microsoft-utilities.git
