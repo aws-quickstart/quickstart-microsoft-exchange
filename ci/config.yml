@@ -17,9 +17,6 @@ global:
   cis3bucket:  s3://quickstart-ci-bucket
  
 tests:
-  quickstart-microsoft-exchanget1:
-    template_file: quickstart-microsoft-exchange-example1.template
-    parameter_input: quickstart-microsoft-exchange-exampleparms1.json
-  quickstart-microsoft-exchanget2:
-    template_file: quickstart-microsoft-exchange-example2.template
-    parameter_input: quickstart-microsoft-exchange-exampleparms2.json
+  master-template:
+    template_file: Exchange_2013_Master.template
+    parameter_input: Exchange_2013_Master.json
