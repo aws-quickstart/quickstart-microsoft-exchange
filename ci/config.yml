@@ -1,8 +1,7 @@
 global:
-  qsname: quickstart-microsoft-exchange
-  owner: quickstart-eng@amazon.com
   marketplace-ami: false
-  reporting: true
+  owner: quickstart-eng@amazon.com
+  qsname: quickstart-microsoft-exchange
   regions:
     - ap-northeast-1
     - ap-northeast-2
@@ -15,9 +14,8 @@ global:
     - us-east-1
     - us-west-1
     - us-west-2
-  cis3bucket:  s3://quickstart-ci-bucket
- 
+  reporting: true
 tests:
-  master-template:
+  master:
     template_file: Exchange_2013_Master.template
     parameter_input: Exchange_2013_Master.json
