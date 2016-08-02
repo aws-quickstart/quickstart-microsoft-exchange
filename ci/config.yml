@@ -10,7 +10,7 @@ global:
     - ap-southeast-2
     - eu-central-1
     - eu-west-1
-    - sa-east-1
+    # - sa-east-1 Unsupported only in CI due to GetAZs on ref acct
     - us-east-1
     - us-west-1
     - us-west-2
