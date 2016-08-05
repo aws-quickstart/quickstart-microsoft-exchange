@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "This template deploys two Exchange 2013 CU 9 servers. This template also deploys the require AD architecture outlined in \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description": "This template deploys two Exchange 2013 servers. This template also deploys the require AD architecture outlined in \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
     "Parameters": {
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
