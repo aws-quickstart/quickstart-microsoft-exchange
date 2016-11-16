@@ -350,16 +350,16 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Create-Share.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Create-Share.ps1"
@@ -371,7 +371,7 @@
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-UcmaRuntime.ps1"
@@ -380,7 +380,7 @@
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
                             "c:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Exch2013Org.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013Org.ps1"
@@ -398,7 +398,7 @@
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Invoke-ADReplication.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -858,16 +858,16 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
@@ -879,7 +879,7 @@
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
                             "c:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Exch2013.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013.ps1"
@@ -894,7 +894,7 @@
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Invoke-ADReplication.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -1287,13 +1287,13 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
@@ -1647,13 +1647,13 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
