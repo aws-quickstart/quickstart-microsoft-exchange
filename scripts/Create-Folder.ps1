@@ -1,5 +1,4 @@
-﻿[CmdletBinding()]
-param(
+﻿[CmdletBind
     [string]
     $ComputerName,
 
