@@ -119,7 +119,7 @@
         },
         "ap-northeast-1": {
             "WS2012R2": "ami-539aa834",
-			"WS2016": "ami-47c3f820"
+			        "WS2016": "ami-47c3f820"
         },
         "ap-northeast-2": {
             "WS2012R2": "ami-50e13c3e",
@@ -173,64 +173,6 @@
             "WS2012R2": "ami-3189ec51",
 			"WS2016": "ami-c2c3a2a2"
         }
-    },
-    "AWSInfoRegionMap": {
-      "ap-northeast-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "ap-northeast-2": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "ap-south-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "ap-southeast-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "ap-southeast-2": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "ca-central-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "eu-central-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "eu-west-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "eu-west-2": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "sa-east-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "us-east-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "us-east-2": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "us-west-1": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      },
-      "us-west-2": {
-        "Partition": "aws",
-        "QuickStartS3URL": "https://s3.amazonaws.com"
-      }
     },
     "ExchangeAMINameMap": {
       "AMI": { "2013": "WS2012R2", "2016": "WS2012R2" }
@@ -685,10 +627,10 @@
       "Type": "String"
     },
     "QSS3KeyPrefix": {
-      "AllowedPattern": "^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$",
-      "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+      "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+      "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
       "Default": "microsoft/exchange/latest",
-      "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+      "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
       "Type": "String"
     },
     "EdgeInstanceType": {
@@ -1197,7 +1139,7 @@
               "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1214,7 +1156,7 @@
               "C:\\cfn\\modules\\AWSQuickStart.zip": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1273,7 +1215,7 @@
               "C:\\cfn\\scripts\\Join-Domain.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1290,7 +1232,7 @@
               "C:\\cfn\\scripts\\Create-ADServiceAccount.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-ADServiceAccount.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Create-ADServiceAccount.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1307,7 +1249,7 @@
               "C:\\cfn\\scripts\\Create-Share.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1324,7 +1266,7 @@
               "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1341,7 +1283,7 @@
               "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1358,7 +1300,7 @@
               "C:\\cfn\\scripts\\Set-Dns.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1855,7 +1797,7 @@
               "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1872,7 +1814,7 @@
               "C:\\cfn\\modules\\AWSQuickStart.zip": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1889,7 +1831,7 @@
               "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1906,7 +1848,7 @@
               "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1923,7 +1865,7 @@
               "C:\\cfn\\scripts\\Join-Domain.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1940,7 +1882,7 @@
               "C:\\cfn\\scripts\\Set-Dns.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1957,7 +1899,7 @@
               "c:\\cfn\\scripts\\Download-ExchangeKit.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-ExchangeKit.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1971,10 +1913,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\EnableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\EnableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1988,10 +1930,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\DisableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\DisableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2008,7 +1950,7 @@
               "c:\\cfn\\scripts\\Download-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2025,7 +1967,7 @@
               "c:\\cfn\\scripts\\Install-ExchPrerequisites.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchPrerequisites.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2042,7 +1984,7 @@
               "c:\\cfn\\scripts\\Expand-Exchange.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Expand-Exchange.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2059,7 +2001,7 @@
               "c:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-WindowsFailoverClustering.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2076,7 +2018,7 @@
               "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2093,7 +2035,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeOrg.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeOrg.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2110,7 +2052,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeServer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeServer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2127,7 +2069,7 @@
               "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/OpenWSFCPorts.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2144,7 +2086,7 @@
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-UAC.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2248,6 +2190,9 @@
               ]
             }
           ]
+        },
+        "IamInstanceProfile": {
+            "Ref": "ExchangeProfile"
         },
         "InstanceType": {
           "Ref": "WSFCNode1InstanceType"
@@ -2696,10 +2641,27 @@
                   ]
                 }
               },
+              "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  "authentication": "S3AccessCreds"
+              },
               "C:\\cfn\\modules\\AWSQuickStart.zip": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2716,7 +2678,7 @@
               "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2733,7 +2695,7 @@
               "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2750,7 +2712,7 @@
               "C:\\cfn\\scripts\\Join-Domain.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2767,7 +2729,7 @@
               "C:\\cfn\\scripts\\Set-Dns.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2784,7 +2746,7 @@
               "c:\\cfn\\scripts\\Download-ExchangeKit.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-ExchangeKit.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2798,10 +2760,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\EnableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\EnableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2815,10 +2777,27 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\DisableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\DisableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  "authentication": "S3AccessCreds"
+              },
+              "C:\\cfn\\scripts\\Create-Share.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2835,7 +2814,7 @@
               "c:\\cfn\\scripts\\Download-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2852,7 +2831,7 @@
               "c:\\cfn\\scripts\\Install-ExchPrerequisites.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchPrerequisites.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2869,7 +2848,7 @@
               "c:\\cfn\\scripts\\Expand-Exchange.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Expand-Exchange.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2886,7 +2865,7 @@
               "c:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-WindowsFailoverClustering.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2903,7 +2882,7 @@
               "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2920,7 +2899,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeOrg.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeOrg.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2937,7 +2916,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeServer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeServer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2954,7 +2933,7 @@
               "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/OpenWSFCPorts.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -2971,24 +2950,7 @@
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  },
-                  "authentication": "S3AccessCreds"
-              },
-              "c:\\cfn\\scripts\\Create-Share.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Create-Share.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-UAC.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3005,7 +2967,7 @@
               "C:\\cfn\\scripts\\Set-Folder-Permissions.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-Folder-Permissions.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Set-Folder-Permissions.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3021,7 +2983,7 @@
               "C:\\cfn\\scripts\\Configure-WSFC.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-WSFC.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-WSFC.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3037,7 +2999,7 @@
               "C:\\cfn\\scripts\\Set-ClusterQuorum.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-ClusterQuorum.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Set-ClusterQuorum.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3329,63 +3291,6 @@
                               "Ref": "AWS::NoValue"
                           }
                       ]
-                  },
-                  "g-Set-ClusterQuorum": {
-                      "command": {
-                          "Fn::Join": [
-                              "",
-                              [
-                                  "powershell.exe -ExecutionPolicy RemoteSigned \"C:\\cfn\\scripts\\Set-ClusterQuorum.ps1",
-                                  {
-                                      "Fn::If": [
-                                          "ThirdAzIsFullNode",
-                                          " -Witness $false",
-                                          {
-                                              "Ref": "AWS::NoValue"
-                                          }
-                                      ]
-                                  },
-                                  " -DomainNetBIOSName '",
-                                  {
-                                      "Ref": "DomainNetBIOSName"
-                                  },
-                                  "' -DomainAdminUser '",
-                                  {
-                                      "Ref": "DomainAdminUser"
-                                  },
-                                  "' -DomainAdminPassword '",
-                                  {
-                                      "Ref": "DomainAdminPassword"
-                                  },
-                                  "' -WSFCNode2NetBIOSName '",
-                                  {
-                                      "Ref": "WSFCNode2NetBIOSName"
-                                  },
-                                  {
-                                      "Fn::If": [
-                                          "IsTwoNode",
-                                          "' -FileServerNetBIOSName '",
-                                          {
-                                              "Ref": "AWS::NoValue"
-                                          }
-                                      ]
-                                  },
-                                  {
-                                      "Fn::If": [
-                                          "IsTwoNode",
-                                          {
-                                              "Ref": "WSFCFileServerNetBIOSName"
-                                          },
-                                          {
-                                              "Ref": "AWS::NoValue"
-                                          }
-                                      ]
-                                  },
-                                  "'\""
-                              ]
-                          ]
-                      },
-                      "waitAfterCompletion": "0"
                   }
               }
           },
@@ -3466,6 +3371,9 @@
               ]
             }
           ]
+        },
+        "IamInstanceProfile": {
+            "Ref": "ExchangeProfile"
         },
         "InstanceType": {
           "Ref": "WSFCNode2InstanceType"
@@ -3893,10 +3801,27 @@
                   ]
                 }
               },
+              "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  "authentication": "S3AccessCreds"
+              },
               "C:\\cfn\\modules\\AWSQuickStart.zip": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3913,7 +3838,7 @@
               "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3930,7 +3855,7 @@
               "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3947,7 +3872,7 @@
               "C:\\cfn\\scripts\\Join-Domain.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3964,7 +3889,7 @@
               "C:\\cfn\\scripts\\Set-Dns.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3981,7 +3906,7 @@
               "c:\\cfn\\scripts\\Download-ExchangeKit.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-ExchangeKit.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3995,10 +3920,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\EnableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\EnableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4012,10 +3937,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\modules\\DisableCredSsp.ps1": {
+              "C:\\cfn\\scripts\\DisableCredSsp.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4032,7 +3957,7 @@
               "c:\\cfn\\scripts\\Download-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4049,7 +3974,7 @@
               "c:\\cfn\\scripts\\Install-ExchPrerequisites.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchPrerequisites.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4066,7 +3991,7 @@
               "c:\\cfn\\scripts\\Expand-Exchange.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Expand-Exchange.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4083,7 +4008,7 @@
               "c:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-WindowsFailoverClustering.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4100,7 +4025,7 @@
               "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-UcmaRuntime.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4117,7 +4042,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeOrg.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeOrg.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4134,7 +4059,7 @@
               "c:\\cfn\\scripts\\Install-ExchangeServer.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeServer.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4151,7 +4076,7 @@
               "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/OpenWSFCPorts.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4168,7 +4093,7 @@
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-UAC.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -4272,6 +4197,9 @@
               ]
             }
           ]
+        },
+        "IamInstanceProfile": {
+            "Ref": "ExchangeProfile"
         },
         "InstanceType": {
           "Ref": "WSFCNode3InstanceType"
@@ -4917,10 +4845,44 @@
                       ]
                     }
                   },
+                  "C:\\cfn\\modules\\AWSQuickStart.zip": {
+                      "source": {
+                          "Fn::Sub": [
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                              {
+                                  "QSS3Region": {
+                                      "Fn::If": [
+                                          "GovCloudCondition",
+                                          "s3-us-gov-west-1",
+                                          "s3"
+                                      ]
+                                  }
+                              }
+                          ]
+                      },
+                      "authentication": "S3AccessCreds"
+                  },
+                  "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                      "source": {
+                          "Fn::Sub": [
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                              {
+                                  "QSS3Region": {
+                                      "Fn::If": [
+                                          "GovCloudCondition",
+                                          "s3-us-gov-west-1",
+                                          "s3"
+                                      ]
+                                  }
+                              }
+                          ]
+                      },
+                      "authentication": "S3AccessCreds"
+                  },
                   "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -4937,7 +4899,7 @@
                   "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -4954,7 +4916,7 @@
                   "C:\\cfn\\scripts\\Join-Domain.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -4971,7 +4933,7 @@
                   "C:\\cfn\\scripts\\Set-Dns.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -4985,10 +4947,10 @@
                       },
                       "authentication": "S3AccessCreds"
                   },
-                  "C:\\cfn\\modules\\EnableCredSsp.ps1": {
+                  "C:\\cfn\\scripts\\EnableCredSsp.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5002,10 +4964,10 @@
                       },
                       "authentication": "S3AccessCreds"
                   },
-                  "C:\\cfn\\modules\\DisableCredSsp.ps1": {
+                  "C:\\cfn\\scripts\\DisableCredSsp.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5022,7 +4984,7 @@
                   "c:\\cfn\\scripts\\Download-ExchangeKit.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-ExchangeKit.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5039,7 +5001,7 @@
                   "c:\\cfn\\scripts\\Expand-Exchange.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Expand-Exchange.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5056,7 +5018,7 @@
                   "c:\\cfn\\scripts\\Install-EdgePrerequisites.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-EdgePrerequisites.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5073,7 +5035,7 @@
                   "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/OpenWSFCPorts.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5090,7 +5052,7 @@
                   "c:\\cfn\\scripts\\Install-ExchangeEdgeServer.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeEdgeServer.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5107,7 +5069,7 @@
                   "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Set-PrimaryDnsSuffix.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5124,7 +5086,7 @@
                   "c:\\cfn\\scripts\\Configure-EdgeDnsRecord.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-EdgeDnsRecord.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5141,7 +5103,7 @@
                   "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Reset-LocalAdminPassword.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5158,7 +5120,7 @@
                   "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                       "source": {
                           "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1",
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-UAC.ps1",
                               {
                                   "QSS3Region": {
                                       "Fn::If": [
@@ -5252,7 +5214,7 @@
                     {
                       "Fn::FindInMap": [
                         "ExchangeAMINameMap",
-						"AMI",
+						  "AMI",
                         {
                           "Ref": "ExchangeServerVersion"
                         }
@@ -5261,6 +5223,9 @@
                   ]
                 }
               ]
+            },
+            "IamInstanceProfile": {
+                "Ref": "ExchangeProfile"
             },
             "InstanceType": {
               "Ref": "EdgeInstanceType"
@@ -5660,10 +5625,44 @@
                           ]
                         }
                       },
+                      "C:\\cfn\\modules\\AWSQuickStart.zip": {
+                          "source": {
+                              "Fn::Sub": [
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                  {
+                                      "QSS3Region": {
+                                          "Fn::If": [
+                                              "GovCloudCondition",
+                                              "s3-us-gov-west-1",
+                                              "s3"
+                                          ]
+                                      }
+                                  }
+                              ]
+                          },
+                          "authentication": "S3AccessCreds"
+                      },
+                      "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                          "source": {
+                              "Fn::Sub": [
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                  {
+                                      "QSS3Region": {
+                                          "Fn::If": [
+                                              "GovCloudCondition",
+                                              "s3-us-gov-west-1",
+                                              "s3"
+                                          ]
+                                      }
+                                  }
+                              ]
+                          },
+                          "authentication": "S3AccessCreds"
+                      },
                       "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5680,7 +5679,7 @@
                       "C:\\cfn\\scripts\\Rename-Computer.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5697,7 +5696,7 @@
                       "C:\\cfn\\scripts\\Join-Domain.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5714,7 +5713,7 @@
                       "C:\\cfn\\scripts\\Set-Dns.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5728,10 +5727,10 @@
                           },
                           "authentication": "S3AccessCreds"
                       },
-                      "C:\\cfn\\modules\\EnableCredSsp.ps1": {
+                      "C:\\cfn\\scripts\\EnableCredSsp.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/EnableCredSsp.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5745,10 +5744,10 @@
                           },
                           "authentication": "S3AccessCreds"
                       },
-                      "C:\\cfn\\modules\\DisableCredSsp.ps1": {
+                      "C:\\cfn\\scripts\\DisableCredSsp.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/DisableCredSsp.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5765,7 +5764,7 @@
                       "c:\\cfn\\scripts\\Download-ExchangeKit.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Download-ExchangeKit.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5782,7 +5781,7 @@
                       "c:\\cfn\\scripts\\Expand-Exchange.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Expand-Exchange.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5799,7 +5798,7 @@
                       "c:\\cfn\\scripts\\Install-EdgePrerequisites.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-EdgePrerequisites.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5816,7 +5815,7 @@
                       "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/OpenWSFCPorts.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5833,7 +5832,7 @@
                       "c:\\cfn\\scripts\\Install-ExchangeEdgeServer.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Install-ExchangeEdgeServer.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5850,7 +5849,7 @@
                       "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Set-PrimaryDnsSuffix.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5867,7 +5866,7 @@
                       "c:\\cfn\\scripts\\Configure-EdgeDnsRecord.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-EdgeDnsRecord.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5884,7 +5883,7 @@
                       "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Reset-LocalAdminPassword.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5901,7 +5900,7 @@
                       "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                           "source": {
                               "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1",
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-UAC.ps1",
                                   {
                                       "QSS3Region": {
                                           "Fn::If": [
@@ -5979,6 +5978,9 @@
                       "Ref": "AWS::NoValue"
                     }
                   ]
+                },
+                "IamInstanceProfile": {
+                    "Ref": "ExchangeProfile"
                 },
                 "ImageId": {
                   "Fn::If": [
