@@ -981,6 +981,19 @@
     "WSFCFileServer": {
       "Condition": "IsTwoNode",
       "Metadata": {
+        "AWS::CloudFormation::Authentication": {
+              "S3AccessCreds": {
+                  "type": "S3",
+                  "roleName": {
+                      "Ref": "ExchangeRole"
+                  },
+                  "buckets": [
+                      {
+                          "Ref": "QSS3BucketName"
+                      }
+                  ]
+              }
+          },
         "AWS::CloudFormation::Init": {
           "Cleanup": {
           },
@@ -1358,6 +1371,9 @@
             },
             "WS2012R2"
           ]
+        },
+        "IamInstanceProfile": {
+            "Ref": "ExchangeProfile"
         },
         "InstanceType": {
           "Ref": "WSFCFileServerInstanceType"
