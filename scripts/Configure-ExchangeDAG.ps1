@@ -47,8 +47,11 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $ExchangeServerVersion
+    $ExchangeServerVersion,
 
+    [Parameter(Mandatory=$true)]
+    [string]
+    $DAGName
 )
 try {
     Start-Transcript -Path C:\cfn\log\Configure-ExchangeDAG.ps1.txt -Append
@@ -60,13 +63,13 @@ try {
 
     $ConfigDAG={
         $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName
-        $addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2
-        #New-Cluster -Name WSFCluster1 -Node $nodes -StaticAddress $addr
+         #$addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
+            
         Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-        New-DatabaseAvailabilityGroup -Name DAG -WitnessServer $Using:WSFCFileServerNetBIOSName -DatabaseAvailabilityGroupIpAddresses $addr
-
-        Add-DatabaseAvailabilityGroupServer -Identity DAG -MailboxServer $Using:WSFCNode1NetBIOSName
-        Add-DatabaseAvailabilityGroupServer -Identity DAG -MailboxServer $Using:WSFCNode2NetBIOSName
+        New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:WSFCFileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName 
+       
+        Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode1NetBIOSName
+        Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode2NetBIOSName
 
         Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
         Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
@@ -78,13 +81,13 @@ try {
     if ($WSFCNode3NetBIOSName) {
         $ConfigDAG={
             $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName, $Using:WSFCNode3NetBIOSName
-            $addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
-            #New-Cluster -Name WSFCluster1 -Node $nodes -StaticAddress $addr
-            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-            New-DatabaseAvailabilityGroup -Name DAG -WitnessServer $Using:WSFCFileServerNetBIOSName -DatabaseAvailabilityGroupIpAddresses $addr
+            #$addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
             
-            Add-DatabaseAvailabilityGroupServer -Identity DAG -MailboxServer $Using:WSFCNode1NetBIOSName
-            Add-DatabaseAvailabilityGroupServer -Identity DAG -MailboxServer $Using:WSFCNode2NetBIOSName
+            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+            New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:WSFCFileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName 
+            
+            Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode1NetBIOSName
+            Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode2NetBIOSName
 
             Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
             Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
@@ -94,7 +97,8 @@ try {
         }
     }
 
-    Invoke-Command -Authentication Credssp -Scriptblock $ConfigDAG -ComputerName $NetBIOSName -Credential $DomainAdminCreds
+   # Invoke-Command -Authentication Credssp -Scriptblock $ConfigDAG -ComputerName $NetBIOSName -Credential $DomainAdminCreds
+   Invoke-Command -Authentication Credssp -Scriptblock $ConfigDAG -ComputerName localhost -Credential $DomainAdminCreds
 }
 catch {
     $_ | Write-AWSQuickStartException

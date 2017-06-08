@@ -1543,7 +1543,7 @@
                       {
                           "Ref": "ExchangeServerVersion"
                       },
-                      "' -ServerIndex 1'",
+                      "' -ServerIndex '1",
                       "'\""
                     ]
                   ]
@@ -2390,7 +2390,7 @@
                       {
                           "Ref": "ExchangeServerVersion"
                       },
-                      "' -ServerIndex 2'",
+                      "' -ServerIndex '2",
                       "'\""
                     ]
                   ]
@@ -2980,26 +2980,10 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "C:\\cfn\\scripts\\Set-Folder-Permissions.ps1": {
+              "C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1": {
                   "source": {
                       "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-Folder-Permissions.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  }
-              },
-              "C:\\cfn\\scripts\\Set-ClusterQuorum.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-ClusterQuorum.ps1",
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -3028,7 +3012,7 @@
           },
           "Configure": {
               "commands": {
-                  "a-create-witness-share": {
+                  "a-create-dag-share": {
                       "Fn::If": [
                           "IsTwoNode",
                           {
@@ -3037,11 +3021,14 @@
                                       "",
                                       [
                                           "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
-                                          " -Path 'c:\\witness'",
-                                          " -ShareName 'witness'",
+                                          " -Path 'c:\\DAG'",
                                           " -FolderPath 'c:\\'",
-                                          " -FolderName 'witness'",
-                                          " -DomainNetBIOSName '",
+                                          " -FolderName 'DAG",
+                                          "' -ShareName 'DAG.",
+                                          {
+                                              "Ref": "DomainNetBIOSName"
+                                          },
+                                          "' -DomainNetBIOSName '",
                                           {
                                               "Ref": "DomainNetBIOSName"
                                           },
@@ -3068,45 +3055,45 @@
                           }
                       ]
                   },
-                  "b-create-Replica-share": {
-                      "command": {
-                          "Fn::Join": [
-                              "",
-                              [
-                                  "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
-                                  " -Path 'c:\\replica'",
-                                  " -ShareName 'replica'",
-                                  " -FolderPath 'c:\\'",
-                                  " -FolderName 'replica'",
-                                  " -DomainNetBIOSName '",
-                                  {
-                                      "Ref": "DomainNetBIOSName"
-                                  },
-                                  "' -DomainAdminUser '",
-                                  {
-                                      "Ref": "DomainAdminUser"
-                                  },
-                                  "' -DomainAdminPassword '",
-                                  {
-                                      "Ref": "DomainAdminPassword"
-                                  },
-                                  "' -ServerName '",
-                                  {
-                                      "Fn::If": [
-                                          "IsTwoNode",
-                                          {
-                                              "Ref": "WSFCFileServerNetBIOSName"
-                                          },
-                                          {
-                                              "Ref": "WSFCNode1NetBIOSName"
-                                          }
-                                      ]
-                                  },
-                                  "'\""
-                              ]
-                          ]
-                      },
-                      "waitAfterCompletion": "0"
+                  "b-configure-dag": {
+                    "command": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "powershell.exe -Command \"C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1 -DomainNetBIOSName '",
+                          {
+                            "Ref": "DomainNetBIOSName"
+                          },
+                          "' -DomainAdminUser '",
+                          {
+                              "Ref": "DomainAdminUser"
+                          },
+                          "' -DomainAdminPassword '",
+                          {
+                              "Ref": "DomainAdminPassword"
+                          },
+                          "' -WSFCNode1NetBIOSName '",
+                          {
+                              "Ref": "WSFCNode1NetBIOSName"
+                          },
+                          "' -WSFCNode2NetBIOSName '",
+                          {
+                              "Ref": "WSFCNode2NetBIOSName"
+                          },
+                          "' -WSFCFileServerNetBIOSName '",
+                          {
+                              "Ref": "WSFCFileServerNetBIOSName"
+                          },
+                          "' -ExchangeServerVersion '",
+                          {
+                              "Ref": "ExchangeServerVersion"
+                          },
+                          "' -DAGName 'DAG",
+                          "'\""
+                        ]
+                      ]
+                    },
+                    "waitAfterCompletion": "0"
                   },
                   "c-Invoke-ADReplication-DC1": {
                       "Fn::If": [
@@ -3160,42 +3147,6 @@
                                           "' -DomainController '",
                                           {
                                               "Ref": "ADServer2NetBIOSName"
-                                          },
-                                          "'\""
-                                      ]
-                                  ]
-                              },
-                              "waitAfterCompletion": "0"
-                          },
-                          {
-                              "Ref": "AWS::NoValue"
-                          }
-                      ]
-                  },
-                  "e-Set-Folder-Permissions": {
-                      "Fn::If": [
-                          "IsTwoNode",
-                          {
-                              "command": {
-                                  "Fn::Join": [
-                                      "",
-                                      [
-                                          "powershell.exe -ExecutionPolicy RemoteSigned \"C:\\cfn\\scripts\\Set-Folder-Permissions.ps1",
-                                          " -DomainNetBIOSName '",
-                                          {
-                                              "Ref": "DomainNetBIOSName"
-                                          },
-                                          "' -DomainAdminUser '",
-                                          {
-                                              "Ref": "DomainAdminUser"
-                                          },
-                                          "' -DomainAdminPassword '",
-                                          {
-                                              "Ref": "DomainAdminPassword"
-                                          },
-                                          "' -FileServerNetBIOSName '",
-                                          {
-                                              "Ref": "WSFCFileServerNetBIOSName"
                                           },
                                           "'\""
                                       ]
