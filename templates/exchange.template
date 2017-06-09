@@ -3061,7 +3061,7 @@
                                           "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
                                           " -Path 'c:\\DAG'",
                                           " -FolderPath 'c:\\'",
-                                          " -FolderName 'DAG'",
+                                          " -FolderName 'DAG",
                                           "' -ShareName 'DAG.",
                                           {
                                               "Ref": "DomainNetBIOSName"
