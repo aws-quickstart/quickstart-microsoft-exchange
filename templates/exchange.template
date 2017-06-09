@@ -1010,25 +1010,6 @@
           },
           "Prep": {
             "commands": {
-              "a-set-dns": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                      {
-                        "Ref": "ADServer1PrivateIP"
-                      },
-                      "' -ns2 '",
-                      {
-                        "Ref": "ADServer2PrivateIP"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "30"
-              },
               "b-rename-computer": {
                 "command": {
                   "Fn::Join": [
@@ -1229,23 +1210,6 @@
                   "source": {
                       "Fn::Sub": [
                           "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  },
-                  "authentication": "S3AccessCreds"
-              },
-              "C:\\cfn\\scripts\\Create-ADServiceAccount.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-ADServiceAccount.ps1",
                           {
                               "QSS3Region": {
                                   "Fn::If": [
@@ -1554,25 +1518,6 @@
           },
           "Prep": {
             "commands": {
-              "a-set-dns": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                      {
-                        "Ref": "ADServer1PrivateIP"
-                      },
-                      "' -ns2 '",
-                      {
-                        "Ref": "ADServer2PrivateIP"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "30"
-              },
               "b-rename-computer": {
                 "command": {
                   "Fn::Join": [
@@ -2115,6 +2060,70 @@
                       ]
                   },
                   "authentication": "S3AccessCreds"
+              },
+              "C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
               }
             },
             "services": {
@@ -2401,25 +2410,6 @@
           },
           "Prep": {
             "commands": {
-              "a-set-dns": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                      {
-                        "Ref": "ADServer1PrivateIP"
-                      },
-                      "' -ns2 '",
-                      {
-                        "Ref": "ADServer2PrivateIP"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "30"
-              },
               "b-rename-computer": {
                 "command": {
                   "Fn::Join": [
@@ -2995,6 +2985,54 @@
                           }
                       ]
                   }
+              },
+              "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
               }
             },
             "services": {
@@ -3023,7 +3061,7 @@
                                           "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
                                           " -Path 'c:\\DAG'",
                                           " -FolderPath 'c:\\'",
-                                          " -FolderName 'DAG",
+                                          " -FolderName 'DAG'",
                                           "' -ShareName 'DAG.",
                                           {
                                               "Ref": "DomainNetBIOSName"
@@ -3055,7 +3093,28 @@
                           }
                       ]
                   },
-                  "b-configure-dag": {
+                  "b-add-exchangegroup--to-localgroup": {
+                      "command": {
+                          "Fn::Join": [
+                              "",
+                              [
+                                  "powershell.exe ",
+                                  "-Command \"",
+                                  " C:\\cfn\\scripts\\Add-ExchangeGroup.ps1 -DomainNetBIOSName '",
+                                  {
+                                      "Ref": "DomainNetBIOSName"
+                                  },
+                                  "' -ServerName '",
+                                  {
+                                      "Ref": "WSFCFileServerNetBIOSName"
+                                  },
+                                  "' -ExchangeGroupName 'Exchange Trusted Subsystem' -LocalGroupName 'Administrators'-\""
+                              ]
+                          ]
+                      },
+                      "waitAfterCompletion": "0"
+                  },
+                  "c-configure-dag": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -3095,7 +3154,7 @@
                     },
                     "waitAfterCompletion": "0"
                   },
-                  "c-Invoke-ADReplication-DC1": {
+                  "d-Invoke-ADReplication-DC1": {
                       "Fn::If": [
                           "IsTwoNode",
                           {
@@ -3127,7 +3186,7 @@
                           }
                       ]
                   },
-                  "d-Invoke-ADReplication-DC2": {
+                  "e-Invoke-ADReplication-DC2": {
                       "Fn::If": [
                           "IsTwoNode",
                           {
@@ -3412,25 +3471,6 @@
           },
           "Prep": {
             "commands": {
-              "a-set-dns": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                      {
-                        "Ref": "ADServer1PrivateIP"
-                      },
-                      "' -ns2 '",
-                      {
-                        "Ref": "ADServer2PrivateIP"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "30"
-              },
               "b-rename-computer": {
                 "command": {
                   "Fn::Join": [
@@ -3973,6 +4013,70 @@
                       ]
                   },
                   "authentication": "S3AccessCreds"
+              },
+              "C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
+                  "source": {
+                      "Fn::Sub": [
+                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1",
+                          {
+                              "QSS3Region": {
+                                  "Fn::If": [
+                                      "GovCloudCondition",
+                                      "s3-us-gov-west-1",
+                                      "s3"
+                                  ]
+                              }
+                          }
+                      ]
+                  }
               }
             },
             "services": {
@@ -4473,25 +4577,6 @@
               },
               "Prep": {
                 "commands": {
-                  "a-set-dns": {
-                    "command": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                          {
-                            "Ref": "ADServer1PrivateIP"
-                          },
-                          "' -ns2 '",
-                          {
-                            "Ref": "ADServer2PrivateIP"
-                          },
-                          "'\""
-                        ]
-                      ]
-                    },
-                    "waitAfterCompletion": "30"
-                  },
                   "b-rename-computer": {
                     "command": {
                       "Fn::Join": [
@@ -4507,21 +4592,6 @@
                     },
                     "waitAfterCompletion": "forever"
                   },
-                  "c-set-DnsSuffix": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
-                                            {
-                                                "Ref": "DomainDNSName"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "forever"
-                            },
                   "d-install-edge-prerequisites": {
                     "command": {
                       "Fn::Join": [
@@ -5000,6 +5070,38 @@
                           ]
                       },
                       "authentication": "S3AccessCreds"
+                  },
+                  "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
+                      "source": {
+                          "Fn::Sub": [
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
+                              {
+                                  "QSS3Region": {
+                                      "Fn::If": [
+                                          "GovCloudCondition",
+                                          "s3-us-gov-west-1",
+                                          "s3"
+                                      ]
+                                  }
+                              }
+                          ]
+                      }
+                  },
+                  "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
+                      "source": {
+                          "Fn::Sub": [
+                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
+                              {
+                                  "QSS3Region": {
+                                      "Fn::If": [
+                                          "GovCloudCondition",
+                                          "s3-us-gov-west-1",
+                                          "s3"
+                                      ]
+                                  }
+                              }
+                          ]
+                      }
                   }
                 },
                 "services": {
@@ -5253,25 +5355,6 @@
                   },
                   "Prep": {
                     "commands": {
-                      "a-set-dns": {
-                        "command": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "powershell.exe -Command \"C:\\cfn\\scripts\\Set-Dns.ps1 -ns1 '",
-                              {
-                                "Ref": "ADServer1PrivateIP"
-                              },
-                              "' -ns2 '",
-                              {
-                                "Ref": "ADServer2PrivateIP"
-                              },
-                              "'\""
-                            ]
-                          ]
-                        },
-                        "waitAfterCompletion": "30"
-                      },
                       "b-rename-computer": {
                         "command": {
                           "Fn::Join": [
@@ -5287,21 +5370,6 @@
                         },
                         "waitAfterCompletion": "forever"
                       },
-                      "c-set-DnsSuffix": {
-                                    "command": {
-                                        "Fn::Join": [
-                                            "",
-                                            [
-                                                "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
-                                                {
-                                                    "Ref": "DomainDNSName"
-                                                },
-                                                "'\""
-                                            ]
-                                        ]
-                                    },
-                                    "waitAfterCompletion": "forever"
-                                },
                       "d-install-edge-prerequisites": {
                         "command": {
                           "Fn::Join": [
@@ -5780,6 +5848,38 @@
                               ]
                           },
                           "authentication": "S3AccessCreds"
+                      },
+                      "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
+                          "source": {
+                              "Fn::Sub": [
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
+                                  {
+                                      "QSS3Region": {
+                                          "Fn::If": [
+                                              "GovCloudCondition",
+                                              "s3-us-gov-west-1",
+                                              "s3"
+                                          ]
+                                      }
+                                  }
+                              ]
+                          }
+                      },
+                      "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
+                          "source": {
+                              "Fn::Sub": [
+                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
+                                  {
+                                      "QSS3Region": {
+                                          "Fn::If": [
+                                              "GovCloudCondition",
+                                              "s3-us-gov-west-1",
+                                              "s3"
+                                          ]
+                                      }
+                                  }
+                              ]
+                          }
                       }
                     },
                     "services": {
