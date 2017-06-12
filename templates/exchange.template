@@ -1010,7 +1010,7 @@
           },
           "Prep": {
             "commands": {
-              "b-rename-computer": {
+              "a-rename-computer": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1025,7 +1025,7 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "c-join-domain": {
+              "b-join-domain": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1052,7 +1052,7 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "d-Invoke-ADReplication-DC1": {
+              "c-Invoke-ADReplication-DC1": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1076,7 +1076,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "e-Invoke-ADReplication-DC2": {
+              "d-Invoke-ADReplication-DC2": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1518,7 +1518,7 @@
           },
           "Prep": {
             "commands": {
-              "b-rename-computer": {
+              "a-rename-computer": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1533,7 +1533,7 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "c-join-domain": {
+              "b-join-domain": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1560,11 +1560,11 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "d-install-windows-failover-clustering": {
+              "c-install-windows-failover-clustering": {
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "e-install-exchange-prerequisites": {
+              "d-install-exchange-prerequisites": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1579,23 +1579,54 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "f-enable-credssp": {
+              "e-enable-credssp": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
                 "waitAfterCompletion": "0"
               },
-              "g-disable-uac": {
+              "f-disable-uac": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
                 "waitAfterCompletion": "0"
               },
-              "h-reboot": {
+              "g-reboot": {
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "i-open-WSFC-ports": {
+              "h-download-netframework": {
+                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                "waitAfterCompletion": "0"
+              },
+              "i-install-netframework": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                      {
+                        "Ref": "DomainNetBIOSName"
+                      },
+                      "' -DomainAdminUser '",
+                      {
+                          "Ref": "DomainAdminUser"
+                      },
+                      "' -DomainAdminPassword '",
+                      {
+                          "Ref": "DomainAdminPassword"
+                      },
+                      "'\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0"
+              },
+              "j-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "k-open-WSFC-ports": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "j-Invoke-ADReplication-DC1": {
+              "l-Invoke-ADReplication-DC1": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1619,7 +1650,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "k-Invoke-ADReplication-DC2": {
+              "m-Invoke-ADReplication-DC2": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1643,7 +1674,7 @@
                 },
                 "waitAfterCompletion": "15"
               },
-              "l-download-exchange-kit": {
+              "n-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1661,7 +1692,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "m-expand-exchange-kit": {
+              "o-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1679,7 +1710,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "n-download-ucmaruntime": {
+              "p-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -2405,12 +2436,16 @@
                   ]
                 },
                 "waitAfterCompletion": "0"
+              },
+              "c-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
               }
             }
           },
           "Prep": {
             "commands": {
-              "b-rename-computer": {
+              "a-rename-computer": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2425,7 +2460,7 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "c-join-domain": {
+              "b-join-domain": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2452,11 +2487,11 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "d-install-windows-failover-clustering": {
+              "c-install-windows-failover-clustering": {
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "e-install-exchange-prerequisites": {
+              "d-install-exchange-prerequisites": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2471,23 +2506,54 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "f-enable-credssp": {
+              "e-enable-credssp": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
                 "waitAfterCompletion": "0"
               },
-              "g-disable-uac": {
+              "f-disable-uac": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
                 "waitAfterCompletion": "0"
               },
-              "h-reboot": {
+              "g-reboot": {
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "i-open-WSFC-ports": {
+              "h-download-netframework": {
+                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                "waitAfterCompletion": "0"
+              },
+              "i-install-netframework": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                      {
+                        "Ref": "DomainNetBIOSName"
+                      },
+                      "' -DomainAdminUser '",
+                      {
+                          "Ref": "DomainAdminUser"
+                      },
+                      "' -DomainAdminPassword '",
+                      {
+                          "Ref": "DomainAdminPassword"
+                      },
+                      "'\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0"
+              },
+              "j-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "k-open-WSFC-ports": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "j-Invoke-ADReplication-DC1": {
+              "l-Invoke-ADReplication-DC1": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2511,7 +2577,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "k-Invoke-ADReplication-DC2": {
+              "m-Invoke-ADReplication-DC2": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2535,7 +2601,7 @@
                 },
                 "waitAfterCompletion": "15"
               },
-              "l-download-exchange-kit": {
+              "n-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2553,7 +2619,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "m-expand-exchange-kit": {
+              "o-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2571,7 +2637,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "n-download-ucmaruntime": {
+              "p-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -2637,7 +2703,7 @@
                       {
                         "Ref": "AWS::StackId"
                       },
-                      " -r WSFCNode1",
+                      " -r WSFCNode2",
                       " --region ",
                       {
                         "Ref": "AWS::Region"
@@ -3062,10 +3128,7 @@
                                           " -Path 'c:\\DAG'",
                                           " -FolderPath 'c:\\'",
                                           " -FolderName 'DAG",
-                                          "' -ShareName 'DAG.",
-                                          {
-                                              "Ref": "DomainNetBIOSName"
-                                          },
+                                          "' -ShareName 'DAG.example.com",
                                           "' -DomainNetBIOSName '",
                                           {
                                               "Ref": "DomainNetBIOSName"
@@ -3092,67 +3155,6 @@
                               "Ref": "AWS::NoValue"
                           }
                       ]
-                  },
-                  "b-add-exchangegroup--to-localgroup": {
-                      "command": {
-                          "Fn::Join": [
-                              "",
-                              [
-                                  "powershell.exe ",
-                                  "-Command \"",
-                                  " C:\\cfn\\scripts\\Add-ExchangeGroup.ps1 -DomainNetBIOSName '",
-                                  {
-                                      "Ref": "DomainNetBIOSName"
-                                  },
-                                  "' -ServerName '",
-                                  {
-                                      "Ref": "WSFCFileServerNetBIOSName"
-                                  },
-                                  "' -ExchangeGroupName 'Exchange Trusted Subsystem' -LocalGroupName 'Administrators'-\""
-                              ]
-                          ]
-                      },
-                      "waitAfterCompletion": "0"
-                  },
-                  "c-configure-dag": {
-                    "command": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "powershell.exe -Command \"C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1 -DomainNetBIOSName '",
-                          {
-                            "Ref": "DomainNetBIOSName"
-                          },
-                          "' -DomainAdminUser '",
-                          {
-                              "Ref": "DomainAdminUser"
-                          },
-                          "' -DomainAdminPassword '",
-                          {
-                              "Ref": "DomainAdminPassword"
-                          },
-                          "' -WSFCNode1NetBIOSName '",
-                          {
-                              "Ref": "WSFCNode1NetBIOSName"
-                          },
-                          "' -WSFCNode2NetBIOSName '",
-                          {
-                              "Ref": "WSFCNode2NetBIOSName"
-                          },
-                          "' -WSFCFileServerNetBIOSName '",
-                          {
-                              "Ref": "WSFCFileServerNetBIOSName"
-                          },
-                          "' -ExchangeServerVersion '",
-                          {
-                              "Ref": "ExchangeServerVersion"
-                          },
-                          "' -DAGName 'DAG",
-                          "'\""
-                        ]
-                      ]
-                    },
-                    "waitAfterCompletion": "0"
                   },
                   "d-Invoke-ADReplication-DC1": {
                       "Fn::If": [
@@ -3471,7 +3473,7 @@
           },
           "Prep": {
             "commands": {
-              "b-rename-computer": {
+              "a-rename-computer": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3486,7 +3488,7 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "c-join-domain": {
+              "b-join-domain": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3513,11 +3515,11 @@
                 },
                 "waitAfterCompletion": "forever"
               },
-              "d-install-windows-failover-clustering": {
+              "c-install-windows-failover-clustering": {
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-WindowsFailoverClustering.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "e-install-exchange-prerequisites": {
+              "d-install-exchange-prerequisites": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3532,23 +3534,54 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "f-enable-credssp": {
+              "e-enable-credssp": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
                 "waitAfterCompletion": "0"
               },
-              "g-disable-uac": {
+              "f-disable-uac": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
                 "waitAfterCompletion": "0"
               },
-              "h-reboot": {
+              "g-reboot": {
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "i-open-WSFC-ports": {
+              "h-download-netframework": {
+                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                "waitAfterCompletion": "0"
+              },
+              "i-install-netframework": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                      {
+                        "Ref": "DomainNetBIOSName"
+                      },
+                      "' -DomainAdminUser '",
+                      {
+                          "Ref": "DomainAdminUser"
+                      },
+                      "' -DomainAdminPassword '",
+                      {
+                          "Ref": "DomainAdminPassword"
+                      },
+                      "'\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "0"
+              },
+              "j-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "k-open-WSFC-ports": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "j-Invoke-ADReplication-DC1": {
+              "l-Invoke-ADReplication-DC1": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3572,7 +3605,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "k-Invoke-ADReplication-DC2": {
+              "m-Invoke-ADReplication-DC2": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3596,7 +3629,7 @@
                 },
                 "waitAfterCompletion": "15"
               },
-              "l-download-exchange-kit": {
+              "n-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3614,7 +3647,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "m-expand-exchange-kit": {
+              "o-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3632,7 +3665,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "n-download-ucmaruntime": {
+              "p-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -3698,7 +3731,7 @@
                       {
                         "Ref": "AWS::StackId"
                       },
-                      " -r WSFCNode1",
+                      " -r WSFCNode3",
                       " --region ",
                       {
                         "Ref": "AWS::Region"
@@ -4577,7 +4610,7 @@
               },
               "Prep": {
                 "commands": {
-                  "b-rename-computer": {
+                  "a-rename-computer": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -4592,7 +4625,7 @@
                     },
                     "waitAfterCompletion": "forever"
                   },
-                  "d-install-edge-prerequisites": {
+                  "b-install-edge-prerequisites": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -4607,7 +4640,7 @@
                     },
                     "waitAfterCompletion": "0"
                   },
-                  "e-reset-local-admin": {
+                  "c-reset-local-admin": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -4622,23 +4655,35 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                  "f-enable-credssp": {
+                  "d-enable-credssp": {
                               "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
                               "waitAfterCompletion": "0"
                             },
-                  "g-disable-uac": {
+                  "e-disable-uac": {
                               "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
                               "waitAfterCompletion": "0"
                             },
-                  "h-reboot": {
+                  "f-reboot": {
                     "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                     "waitAfterCompletion": "forever"
                   },
-                  "i-open-WSFC-ports": {
+                  "g-download-netframework": {
+                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                    "waitAfterCompletion": "0"
+                  },
+                  "h-install-netframework": {
+                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1\"",
+                    "waitAfterCompletion": "60"
+                  },
+                  "i-reboot": {
+                    "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                    "waitAfterCompletion": "forever"
+                  },
+                  "j-open-WSFC-ports": {
                     "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
                     "waitAfterCompletion": "0"
                   },
-                  "j-create-edge-dnsrecord": {
+                  "k-create-edge-dnsrecord": {
                     "command": {
                       "Fn::Join": [
                           "",
@@ -4674,7 +4719,7 @@
                     },
                     "waitAfterCompletion": "0"
                   },
-                  "k-download-exchange-kit": {
+                  "l-download-exchange-kit": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -4692,7 +4737,7 @@
                     },
                     "waitAfterCompletion": "0"
                   },
-                  "l-expand-exchange-kit": {
+                  "m-expand-exchange-kit": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -4772,7 +4817,7 @@
                           {
                             "Ref": "AWS::StackId"
                           },
-                          " -r WSFCNode1",
+                          " -r EDGE1",
                           " --region ",
                           {
                             "Ref": "AWS::Region"
@@ -5355,7 +5400,7 @@
                   },
                   "Prep": {
                     "commands": {
-                      "b-rename-computer": {
+                      "a-rename-computer": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5370,7 +5415,7 @@
                         },
                         "waitAfterCompletion": "forever"
                       },
-                      "d-install-edge-prerequisites": {
+                      "b-install-edge-prerequisites": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5385,7 +5430,7 @@
                         },
                         "waitAfterCompletion": "0"
                       },
-                      "e-reset-local-admin": {
+                      "c-reset-local-admin": {
                                     "command": {
                                         "Fn::Join": [
                                             "",
@@ -5400,34 +5445,46 @@
                                     },
                                     "waitAfterCompletion": "0"
                                 },
-                      "f-enable-credssp": {
-                                            "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
-                                            "waitAfterCompletion": "0"
-                                          },
-                      "g-disable-uac": {
+                      "d-enable-credssp": {
+                                  "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
+                                  "waitAfterCompletion": "0"
+                                },
+                      "e-disable-uac": {
                                   "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
                                   "waitAfterCompletion": "0"
                                 },
-                      "h-reboot": {
+                      "f-reboot": {
                         "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                         "waitAfterCompletion": "forever"
                       },
-                      "i-open-WSFC-ports": {
+                      "g-download-netframework": {
+                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                        "waitAfterCompletion": "0"
+                      },
+                      "h-install-netframework": {
+                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1\"",
+                        "waitAfterCompletion": "60"
+                      },
+                      "i-reboot": {
+                        "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                        "waitAfterCompletion": "forever"
+                      },
+                      "j-open-WSFC-ports": {
                         "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
                         "waitAfterCompletion": "0"
                       },
-                      "j-create-edge-dnsrecord": {
+                      "k-create-edge-dnsrecord": {
                         "command": {
                           "Fn::Join": [
                               "",
                               [
                                   "powershell.exe -Command \"C:\\cfn\\scripts\\Configure-EdgeDnsRecord.ps1 -EdgeNodeNetBIOSName '",
                                   {
-                                      "Ref": "EdgeNode2NetBIOSName"
+                                      "Ref": "EdgeNode1NetBIOSName"
                                   },
                                   "' -EdgeNodePrivateIP '",
                                   {
-                                      "Ref": "EdgeNode2PrivateIP1"
+                                      "Ref": "EdgeNode1PrivateIP1"
                                   },
                                   "' -DnsServer '",
                                   {
@@ -5452,7 +5509,7 @@
                         },
                         "waitAfterCompletion": "0"
                       },
-                      "k-download-exchange-kit": {
+                      "l-download-exchange-kit": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5470,7 +5527,7 @@
                         },
                         "waitAfterCompletion": "0"
                       },
-                      "l-expand-exchange-kit": {
+                      "m-expand-exchange-kit": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5550,7 +5607,7 @@
                               {
                                 "Ref": "AWS::StackId"
                               },
-                              " -r WSFCNode1",
+                              " -r EDGE2",
                               " --region ",
                               {
                                 "Ref": "AWS::Region"

@@ -13,6 +13,7 @@ try {
 	
 	if($ExchangeServerVersion -eq "2013") {
         Invoke-Command -ScriptBlock {Start-Process cmd.exe '/c c:\Exchangeinstall\Exchange2013-x64-cu15.exe /extract:c:\Exchangeinstall /passive' -NoNewWindow -Wait} 
+        #Invoke-Command -ScriptBlock {Start-Process cmd.exe '/c c:\Exchangeinstall\Exchange2013-x64-cu16.exe /extract:c:\Exchangeinstall /passive' -NoNewWindow -Wait} 
     }
     elseif ($ExchangeServerVersion -eq "2016") {
         Invoke-Command -ScriptBlock {Start-Process cmd.exe '/c c:\Exchangeinstall\Exchange2016-x64.exe /extract:c:\Exchangeinstall /passive' -NoNewWindow -Wait} 		
