@@ -110,7 +110,7 @@
         ]
     }
   },
-  "Description": "This template deploys two Windows Server Failover Clustering (WSFC) with Exchange Server 2013 or 2016. This template is intended to be installed into an existing VPC that was built using the sample reference architecture titled: \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template. 2016 QS(0042) / 2013 (000E)",
+  "Description": "This template deploys two Windows Server Failover Clustering (WSFC) with Exchange Server 2013 / 2016. This template is intended to be installed into an existing VPC that was built using the sample reference architecture titled: \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template. 2016 QS(0042) / 2013 (000E)",
   "Mappings": {
     "AWSAMIRegionMap": {
         "AMI": {
@@ -1459,7 +1459,11 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "b-install-exchange-organization": {
+              "b-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "c-install-exchange-organization": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1486,7 +1490,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-              "c-install-exchange": {
+              "d-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2409,7 +2413,11 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               },
-              "b-install-exchange": {
+              "b-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "c-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2436,10 +2444,6 @@
                   ]
                 },
                 "waitAfterCompletion": "0"
-              },
-              "c-reboot": {
-                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                "waitAfterCompletion": "forever"
               }
             }
           },
@@ -3441,7 +3445,11 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               },
-              "b-install-exchange": {
+              "b-reboot": {
+                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                "waitAfterCompletion": "forever"
+              },
+              "c-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -4672,8 +4680,24 @@
                     "waitAfterCompletion": "0"
                   },
                   "h-install-netframework": {
-                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1\"",
-                    "waitAfterCompletion": "60"
+                    "command": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                          {
+                            "Ref": "EdgeNode1NetBIOSName"
+                          },
+                          "' -DomainAdminUser 'Administrator",
+                          "' -DomainAdminPassword '",
+                          {
+                              "Ref": "DomainAdminPassword"
+                          },
+                          "'\""
+                        ]
+                      ]
+                    },
+                    "waitAfterCompletion": "0"
                   },
                   "i-reboot": {
                     "command": "powershell.exe -Command \"Restart-Computer -Force\"",
@@ -5462,8 +5486,24 @@
                         "waitAfterCompletion": "0"
                       },
                       "h-install-netframework": {
-                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1\"",
-                        "waitAfterCompletion": "60"
+                        "command": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                              {
+                                "Ref": "EdgeNode2NetBIOSName"
+                              },
+                              "' -DomainAdminUser 'Administrator",
+                              "' -DomainAdminPassword '",
+                              {
+                                  "Ref": "DomainAdminPassword"
+                              },
+                              "'\""
+                            ]
+                          ]
+                        },
+                        "waitAfterCompletion": "0"
                       },
                       "i-reboot": {
                         "command": "powershell.exe -Command \"Restart-Computer -Force\"",
