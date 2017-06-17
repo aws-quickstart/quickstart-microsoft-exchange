@@ -189,8 +189,11 @@
             "ThirdAZ",
             "VPCID",
             "PrivateSubnet1ID",
+			"PrivateSubnet1CIDR",
             "PrivateSubnet2ID",
+			"PrivateSubnet2CIDR",
             "PrivateSubnet3ID",
+			"PrivateSubnet3CIDR",
 			"PublicSubnet1ID",
 			"PublicSubnet2ID"
           ]
@@ -227,11 +230,11 @@
           },
           "Parameters": [
             "ExchangeServerVersion",
-			      "IncludeEdgeTransportRole",
+			"IncludeEdgeTransportRole",
             "EdgeInstanceType",
-			      "EdgeNode1NetBIOSName",
+			"EdgeNode1NetBIOSName",
             "EdgeNode1PrivateIP1",
-			      "EdgeNode2NetBIOSName",
+			"EdgeNode2NetBIOSName",
             "EdgeNode2PrivateIP1",
             "Volume1Size",
             "Volume1Type",
@@ -337,16 +340,25 @@
         "PrivateSubnet1ID": {
           "default": "Private Subnet 1 ID"
         },
+		"PrivateSubnet1CIDR": {
+		  "default": "Private Subnet 1 CIDR"
+		},
         "PrivateSubnet2ID": {
           "default": "Private Subnet 2 ID"
         },
+		"PrivateSubnet2CIDR": {
+		  "default": "Private Subnet 2 CIDR"
+         },
         "PrivateSubnet3ID": {
           "default": "Private Subnet 3 ID (Optional)"
         },
-		 "PublicSubnet1ID": {
+		"PrivateSubnet3CIDR": {
+          "default": "Private Subnet 3 CIDR (Optional)"
+         },
+		"PublicSubnet1ID": {
           "default": "Public Subnet 1 ID (Edge, optional)"
         },
-		 "PublicSubnet2ID": {
+		"PublicSubnet2ID": {
           "default": "Private Subnet 2 ID (Edge, optional)"
         },
         "QSS3BucketName": {
@@ -602,16 +614,34 @@
       "Description": "ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)",
       "Type": "AWS::EC2::Subnet::Id"
     },
+	"PrivateSubnet1CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "Default": "10.0.0.0/19",
+            "Description": "CIDR Block for private subnet 1 located in Availability Zone 1.",
+            "Type": "String"
+        },
     "PrivateSubnet2ID": {
       "Description": "ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd)",
       "Type": "AWS::EC2::Subnet::Id"
     },
+	"PrivateSubnet2CIDR": {
+	  "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+	  "Default": "10.0.32.0/19",
+	  "Description": "CIDR Block for private subnet 2 located in Availability Zone 2.",
+	  "Type": "String"
+        },
     "PrivateSubnet3ID": {
       "Default": "",
       "Description": "ID of the optional private subnet 3 in Availability Zone 3 (e.g., subnet-a0246dcd)",
       "Type": "String"
     },
-	  "PublicSubnet1ID": {
+	"PrivateSubnet3CIDR": {
+	  "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+	  "Default": "10.0.64.0/19",
+	  "Description": "CIDR Block for optional private subnet 3 located in Availability Zone 3.",
+	  "Type": "String"
+      },
+	"PublicSubnet1ID": {
       "Description": "ID of the public subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd)",
       "Type": "AWS::EC2::Subnet::Id"
     },
@@ -850,7 +880,7 @@
       "Description": "Third private IP for Availability Group Listener on optional third WSFC Node",
       "Type": "String"
     },
-	  "EdgeNode1NetBIOSName": {
+	"EdgeNode1NetBIOSName": {
       "AllowedPattern": "[a-zA-Z0-9]+",
       "Default": "EdgeNode1",
       "Description": "NetBIOS name of the first Edge Server (up to 15 characters)",
@@ -864,7 +894,7 @@
       "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
       "Type": "String"
     },
-	  "EdgeNode2NetBIOSName": {
+	"EdgeNode2NetBIOSName": {
       "AllowedPattern": "[a-zA-Z0-9]+",
       "Default": "EdgeNode2",
       "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
@@ -880,34 +910,6 @@
     }
   },
   "Resources": {
-    "ExchangeServerAccessSecurityGroup": {
-      "Properties": {
-        "GroupDescription": "Allows access to Exchange Servers",
-        "VpcId": {
-          "Ref": "VPCID"
-        }
-      },
-      "Type": "AWS::EC2::SecurityGroup"
-    },
-    "WSFCClientSecurityGroup": {
-      "Properties": {
-        "GroupDescription": "Exchange Client access ports",
-        "SecurityGroupIngress": [
-          {
-            "FromPort": "1433",
-            "IpProtocol": "tcp",
-            "SourceSecurityGroupId": {
-              "Ref": "ExchangeServerAccessSecurityGroup"
-            },
-            "ToPort": "1433"
-          }
-        ],
-        "VpcId": {
-          "Ref": "VPCID"
-        }
-      },
-      "Type": "AWS::EC2::SecurityGroup"
-    },
     "WSFCFileServerWaitCondition": {
       "Condition": "IsTwoNode",
       "DependsOn": "WSFCFileServer",
@@ -975,6 +977,21 @@
       "Type": "AWS::CloudFormation::WaitCondition"
     },
     "EdgeNode1WaitHandle": {
+      "Condition": "DeployEdge",
+      "Type": "AWS::CloudFormation::WaitConditionHandle"
+    },
+	  "EdgeNode2WaitCondition": {
+      "Condition": "DeployEdge",
+      "DependsOn": "EDGE2",
+      "Properties": {
+        "Handle": {
+          "Ref": "EdgeNode1WaitHandle"
+        },
+        "Timeout": "9000"
+      },
+      "Type": "AWS::CloudFormation::WaitCondition"
+    },
+    "EdgeNode2WaitHandle": {
       "Condition": "DeployEdge",
       "Type": "AWS::CloudFormation::WaitConditionHandle"
     },
@@ -1357,7 +1374,7 @@
                 "Ref": "WSFCSecurityGroup"
               },
               {
-                "Ref": "WSFCClientSecurityGroup"
+                "Ref": "EXCHClientSecurityGroup"
               }
             ],
             "PrivateIpAddresses": [
@@ -1459,11 +1476,7 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1\"",
                 "waitAfterCompletion": "0"
               },
-              "b-reboot": {
-                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                "waitAfterCompletion": "forever"
-              },
-              "c-install-exchange-organization": {
+              "b-install-exchange-organization": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1490,7 +1503,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-              "d-install-exchange": {
+              "c-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1626,59 +1639,7 @@
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "k-open-WSFC-ports": {
-                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
-                "waitAfterCompletion": "0"
-              },
-              "l-Invoke-ADReplication-DC1": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer1NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "0"
-              },
-              "m-Invoke-ADReplication-DC2": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer2NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "15"
-              },
-              "n-download-exchange-kit": {
+              "m-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1696,7 +1657,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "o-expand-exchange-kit": {
+              "n-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -1714,7 +1675,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "p-download-ucmaruntime": {
+              "o-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -2062,23 +2023,6 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  },
-                  "authentication": "S3AccessCreds"
-              },
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
@@ -2272,7 +2216,7 @@
                 "Ref": "WSFCSecurityGroup"
               },
               {
-                "Ref": "WSFCClientSecurityGroup"
+                "Ref": "EXCHClientSecurityGroup"
               }
             ],
             "PrivateIpAddresses": [
@@ -2413,11 +2357,7 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               },
-              "b-reboot": {
-                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                "waitAfterCompletion": "forever"
-              },
-              "c-install-exchange": {
+              "b-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2553,59 +2493,7 @@
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "k-open-WSFC-ports": {
-                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
-                "waitAfterCompletion": "0"
-              },
-              "l-Invoke-ADReplication-DC1": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer1NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "0"
-              },
-              "m-Invoke-ADReplication-DC2": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer2NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "15"
-              },
-              "n-download-exchange-kit": {
+              "m-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2623,7 +2511,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "o-expand-exchange-kit": {
+              "n-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -2641,7 +2529,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "p-download-ucmaruntime": {
+              "o-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -3006,23 +2894,6 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  },
-                  "authentication": "S3AccessCreds"
-              },
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
@@ -3120,46 +2991,6 @@
           },
           "Configure": {
               "commands": {
-                  "a-create-dag-share": {
-                      "Fn::If": [
-                          "IsTwoNode",
-                          {
-                              "command": {
-                                  "Fn::Join": [
-                                      "",
-                                      [
-                                          "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
-                                          " -Path 'c:\\DAG'",
-                                          " -FolderPath 'c:\\'",
-                                          " -FolderName 'DAG",
-                                          "' -ShareName 'DAG.example.com",
-                                          "' -DomainNetBIOSName '",
-                                          {
-                                              "Ref": "DomainNetBIOSName"
-                                          },
-                                          "' -DomainAdminUser '",
-                                          {
-                                              "Ref": "DomainAdminUser"
-                                          },
-                                          "' -DomainAdminPassword '",
-                                          {
-                                              "Ref": "DomainAdminPassword"
-                                          },
-                                          "' -ServerName '",
-                                          {
-                                              "Ref": "WSFCFileServerNetBIOSName"
-                                          },
-                                          "'\""
-                                      ]
-                                  ]
-                              },
-                              "waitAfterCompletion": "0"
-                          },
-                          {
-                              "Ref": "AWS::NoValue"
-                          }
-                      ]
-                  },
                   "d-Invoke-ADReplication-DC1": {
                       "Fn::If": [
                           "IsTwoNode",
@@ -3325,7 +3156,7 @@
                 "Ref": "WSFCSecurityGroup"
               },
               {
-                "Ref": "WSFCClientSecurityGroup"
+                "Ref": "EXCHClientSecurityGroup"
               }
             ],
             "PrivateIpAddresses": [
@@ -3395,8 +3226,7 @@
             ]
           }
         }
-      },
-      "Type": "AWS::EC2::Instance"
+      }
     },
     "WSFCNode3": {
       "Condition": "ThirdAzIsFullNode",
@@ -3445,11 +3275,7 @@
                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               },
-              "b-reboot": {
-                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                "waitAfterCompletion": "forever"
-              },
-              "c-install-exchange": {
+              "b-install-exchange": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3585,59 +3411,7 @@
                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                 "waitAfterCompletion": "forever"
               },
-              "k-open-WSFC-ports": {
-                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
-                "waitAfterCompletion": "0"
-              },
-              "l-Invoke-ADReplication-DC1": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer1NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "0"
-              },
-              "m-Invoke-ADReplication-DC2": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                      " -UserName '",
-                      {
-                        "Ref": "DomainAdminUser"
-                      },
-                      "' -Password '",
-                      {
-                        "Ref": "DomainAdminPassword"
-                      },
-                      "' -DomainController '",
-                      {
-                        "Ref": "ADServer2NetBIOSName"
-                      },
-                      "'\""
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "15"
-              },
-              "n-download-exchange-kit": {
+              "m-download-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3655,7 +3429,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "o-expand-exchange-kit": {
+              "n-expand-exchange-kit": {
                 "command": {
                   "Fn::Join": [
                     "",
@@ -3673,7 +3447,7 @@
                 },
                 "waitAfterCompletion": "0"
               },
-              "p-download-ucmaruntime": {
+              "o-download-ucmaruntime": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                 "waitAfterCompletion": "0"
               }
@@ -4021,23 +3795,6 @@
                   },
                   "authentication": "S3AccessCreds"
               },
-              "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
-                  "source": {
-                      "Fn::Sub": [
-                          "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
-                          {
-                              "QSS3Region": {
-                                  "Fn::If": [
-                                      "GovCloudCondition",
-                                      "s3-us-gov-west-1",
-                                      "s3"
-                                  ]
-                              }
-                          }
-                      ]
-                  },
-                  "authentication": "S3AccessCreds"
-              },
               "c:\\cfn\\scripts\\Configure-UAC.ps1": {
                   "source": {
                       "Fn::Sub": [
@@ -4231,7 +3988,7 @@
                 "Ref": "WSFCSecurityGroup"
               },
               {
-                "Ref": "WSFCClientSecurityGroup"
+                "Ref": "EXCHClientSecurityGroup"
               }
             ],
             "PrivateIpAddresses": [
@@ -4613,101 +4370,8 @@
                       ]
                     },
                     "waitAfterCompletion": "0"
-                  }
-                }
-              },
-              "Prep": {
-                "commands": {
-                  "a-rename-computer": {
-                    "command": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "powershell.exe -Command \"C:\\cfn\\scripts\\Rename-Computer.ps1 -Restart -NewName '",
-                          {
-                            "Ref": "EdgeNode1NetBIOSName"
-                          },
-                          "'\""
-                        ]
-                      ]
-                    },
-                    "waitAfterCompletion": "forever"
                   },
-                  "b-install-edge-prerequisites": {
-                    "command": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "powershell.exe -Command \"C:\\cfn\\scripts\\Install-EdgePrerequisites.ps1 -ExchangeServerVersion '",
-                          {
-                            "Ref": "ExchangeServerVersion"
-                          },
-                          "'\""
-                        ]
-                      ]
-                    },
-                    "waitAfterCompletion": "0"
-                  },
-                  "c-reset-local-admin": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -command C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1 -password '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'"
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                  "d-enable-credssp": {
-                              "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
-                              "waitAfterCompletion": "0"
-                            },
-                  "e-disable-uac": {
-                              "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
-                              "waitAfterCompletion": "0"
-                            },
-                  "f-reboot": {
-                    "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                    "waitAfterCompletion": "forever"
-                  },
-                  "g-download-netframework": {
-                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                    "waitAfterCompletion": "0"
-                  },
-                  "h-install-netframework": {
-                    "command": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                          {
-                            "Ref": "EdgeNode1NetBIOSName"
-                          },
-                          "' -DomainAdminUser 'Administrator",
-                          "' -DomainAdminPassword '",
-                          {
-                              "Ref": "DomainAdminPassword"
-                          },
-                          "'\""
-                        ]
-                      ]
-                    },
-                    "waitAfterCompletion": "0"
-                  },
-                  "i-reboot": {
-                    "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                    "waitAfterCompletion": "forever"
-                  },
-                  "j-open-WSFC-ports": {
-                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
-                    "waitAfterCompletion": "0"
-                  },
-                  "k-create-edge-dnsrecord": {
+				  "b-create-edge-dnsrecord": {
                     "command": {
                       "Fn::Join": [
                           "",
@@ -4742,8 +4406,112 @@
                       ]
                     },
                     "waitAfterCompletion": "0"
+                  }
+                }
+              },
+              "Prep": {
+                "commands": {
+                  "a-rename-computer": {
+                    "command": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "powershell.exe -Command \"C:\\cfn\\scripts\\Rename-Computer.ps1 -Restart -NewName '",
+                          {
+                            "Ref": "EdgeNode1NetBIOSName"
+                          },
+                          "'\""
+                        ]
+                      ]
+                    },
+                    "waitAfterCompletion": "forever"
                   },
-                  "l-download-exchange-kit": {
+				          "b-set-DnsSuffix": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            {
+                                                "Ref": "DomainDNSName"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
+                                "waitAfterCompletion": "forever"
+                            },
+                  "c-install-edge-prerequisites": {
+                    "command": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "powershell.exe -Command \"C:\\cfn\\scripts\\Install-EdgePrerequisites.ps1 -ExchangeServerVersion '",
+                          {
+                            "Ref": "ExchangeServerVersion"
+                          },
+                          "'\""
+                        ]
+                      ]
+                    },
+                    "waitAfterCompletion": "0"
+                  },
+                  "d-reset-local-admin": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -command C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1 -password '",
+                                            {
+                                                "Ref": "DomainAdminPassword"
+                                            },
+                                            "'"
+                                        ]
+                                    ]
+                                },
+                                "waitAfterCompletion": "0"
+                            },
+                  "e-enable-credssp": {
+                              "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
+                              "waitAfterCompletion": "0"
+                            },
+                  "f-disable-uac": {
+                              "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
+                              "waitAfterCompletion": "0"
+                            },
+                  "g-reboot": {
+                    "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                    "waitAfterCompletion": "forever"
+                  },
+                  "h-download-netframework": {
+                    "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                    "waitAfterCompletion": "0"
+                  },
+                  "i-install-netframework": {
+                    "command": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                          {
+                            "Ref": "EdgeNode1NetBIOSName"
+                          },
+                          "' -DomainAdminUser 'Administrator",
+                          "' -DomainAdminPassword '",
+                          {
+                              "Ref": "DomainAdminPassword"
+                          },
+                          "'\""
+                        ]
+                      ]
+                    },
+                    "waitAfterCompletion": "0"
+                  },
+                  "j-reboot": {
+                    "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                    "waitAfterCompletion": "forever"
+                  },
+                  "k-download-exchange-kit": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -4761,7 +4529,7 @@
                     },
                     "waitAfterCompletion": "0"
                   },
-                  "m-expand-exchange-kit": {
+                  "l-expand-exchange-kit": {
                     "command": {
                       "Fn::Join": [
                         "",
@@ -5038,23 +4806,6 @@
                       },
                       "authentication": "S3AccessCreds"
                   },
-                  "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
-                      "source": {
-                          "Fn::Sub": [
-                              "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
-                              {
-                                  "QSS3Region": {
-                                      "Fn::If": [
-                                          "GovCloudCondition",
-                                          "s3-us-gov-west-1",
-                                          "s3"
-                                      ]
-                                  }
-                              }
-                          ]
-                      },
-                      "authentication": "S3AccessCreds"
-                  },
                   "c:\\cfn\\scripts\\Install-ExchangeEdgeServer.ps1": {
                       "source": {
                           "Fn::Sub": [
@@ -5280,10 +5031,7 @@
                     "Ref": "DomainMemberSGID"
                   },
                   {
-                    "Ref": "WSFCSecurityGroup"
-                  },
-                  {
-                    "Ref": "WSFCClientSecurityGroup"
+                    "Ref": "EXCHEdgeSecurityGroup"
                   }
                 ],
                 "PrivateIpAddresses": [
@@ -5419,112 +5167,19 @@
                           ]
                         },
                         "waitAfterCompletion": "0"
-                      }
-                    }
-                  },
-                  "Prep": {
-                    "commands": {
-                      "a-rename-computer": {
-                        "command": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "powershell.exe -Command \"C:\\cfn\\scripts\\Rename-Computer.ps1 -Restart -NewName '",
-                              {
-                                "Ref": "EdgeNode2NetBIOSName"
-                              },
-                              "'\""
-                            ]
-                          ]
-                        },
-                        "waitAfterCompletion": "forever"
                       },
-                      "b-install-edge-prerequisites": {
-                        "command": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "powershell.exe -Command \"C:\\cfn\\scripts\\Install-EdgePrerequisites.ps1 -ExchangeServerVersion '",
-                              {
-                                "Ref": "ExchangeServerVersion"
-                              },
-                              "'\""
-                            ]
-                          ]
-                        },
-                        "waitAfterCompletion": "0"
-                      },
-                      "c-reset-local-admin": {
-                                    "command": {
-                                        "Fn::Join": [
-                                            "",
-                                            [
-                                                "powershell.exe -command C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1 -password '",
-                                                {
-                                                    "Ref": "DomainAdminPassword"
-                                                },
-                                                "'"
-                                            ]
-                                        ]
-                                    },
-                                    "waitAfterCompletion": "0"
-                                },
-                      "d-enable-credssp": {
-                                  "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
-                                  "waitAfterCompletion": "0"
-                                },
-                      "e-disable-uac": {
-                                  "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
-                                  "waitAfterCompletion": "0"
-                                },
-                      "f-reboot": {
-                        "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                        "waitAfterCompletion": "forever"
-                      },
-                      "g-download-netframework": {
-                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                        "waitAfterCompletion": "0"
-                      },
-                      "h-install-netframework": {
-                        "command": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                              {
-                                "Ref": "EdgeNode2NetBIOSName"
-                              },
-                              "' -DomainAdminUser 'Administrator",
-                              "' -DomainAdminPassword '",
-                              {
-                                  "Ref": "DomainAdminPassword"
-                              },
-                              "'\""
-                            ]
-                          ]
-                        },
-                        "waitAfterCompletion": "0"
-                      },
-                      "i-reboot": {
-                        "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                        "waitAfterCompletion": "forever"
-                      },
-                      "j-open-WSFC-ports": {
-                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\OpenWSFCPorts.ps1\"",
-                        "waitAfterCompletion": "0"
-                      },
-                      "k-create-edge-dnsrecord": {
+					  "b-create-edge-dnsrecord": {
                         "command": {
                           "Fn::Join": [
                               "",
                               [
                                   "powershell.exe -Command \"C:\\cfn\\scripts\\Configure-EdgeDnsRecord.ps1 -EdgeNodeNetBIOSName '",
                                   {
-                                      "Ref": "EdgeNode1NetBIOSName"
+                                      "Ref": "EdgeNode2NetBIOSName"
                                   },
                                   "' -EdgeNodePrivateIP '",
                                   {
-                                      "Ref": "EdgeNode1PrivateIP1"
+                                      "Ref": "EdgeNode2PrivateIP1"
                                   },
                                   "' -DnsServer '",
                                   {
@@ -5548,8 +5203,112 @@
                           ]
                         },
                         "waitAfterCompletion": "0"
+                      }
+                    }
+                  },
+                  "Prep": {
+                    "commands": {
+                      "a-rename-computer": {
+                        "command": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "powershell.exe -Command \"C:\\cfn\\scripts\\Rename-Computer.ps1 -Restart -NewName '",
+                              {
+                                "Ref": "EdgeNode2NetBIOSName"
+                              },
+                              "'\""
+                            ]
+                          ]
+                        },
+                        "waitAfterCompletion": "forever"
                       },
-                      "l-download-exchange-kit": {
+					            "b-set-DnsSuffix": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            {
+                                                "Ref": "DomainDNSName"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
+                                "waitAfterCompletion": "forever"
+                            },
+                      "c-install-edge-prerequisites": {
+                        "command": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "powershell.exe -Command \"C:\\cfn\\scripts\\Install-EdgePrerequisites.ps1 -ExchangeServerVersion '",
+                              {
+                                "Ref": "ExchangeServerVersion"
+                              },
+                              "'\""
+                            ]
+                          ]
+                        },
+                        "waitAfterCompletion": "0"
+                      },
+                      "d-reset-local-admin": {
+                                    "command": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "powershell.exe -command C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1 -password '",
+                                                {
+                                                    "Ref": "DomainAdminPassword"
+                                                },
+                                                "'"
+                                            ]
+                                        ]
+                                    },
+                                    "waitAfterCompletion": "0"
+                                },
+                      "e-enable-credssp": {
+                                  "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
+                                  "waitAfterCompletion": "0"
+                                },
+                      "f-disable-uac": {
+                                  "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Configure-UAC.ps1 -status Disable\"",
+                                  "waitAfterCompletion": "0"
+                                },
+                      "g-reboot": {
+                        "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                        "waitAfterCompletion": "forever"
+                      },
+                      "h-download-netframework": {
+                        "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
+                        "waitAfterCompletion": "0"
+                      },
+                      "i-install-netframework": {
+                        "command": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
+                              {
+                                "Ref": "EdgeNode2NetBIOSName"
+                              },
+                              "' -DomainAdminUser 'Administrator",
+                              "' -DomainAdminPassword '",
+                              {
+                                  "Ref": "DomainAdminPassword"
+                              },
+                              "'\""
+                            ]
+                          ]
+                        },
+                        "waitAfterCompletion": "0"
+                      },
+                      "j-reboot": {
+                        "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                        "waitAfterCompletion": "forever"
+                      },
+                      "k-download-exchange-kit": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5567,7 +5326,7 @@
                         },
                         "waitAfterCompletion": "0"
                       },
-                      "m-expand-exchange-kit": {
+                      "l-expand-exchange-kit": {
                         "command": {
                           "Fn::Join": [
                             "",
@@ -5844,23 +5603,6 @@
                           },
                           "authentication": "S3AccessCreds"
                       },
-                      "c:\\cfn\\scripts\\OpenWSFCPorts.ps1": {
-                          "source": {
-                              "Fn::Sub": [
-                                  "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/OpenWSFCPorts.ps1",
-                                  {
-                                      "QSS3Region": {
-                                          "Fn::If": [
-                                              "GovCloudCondition",
-                                              "s3-us-gov-west-1",
-                                              "s3"
-                                          ]
-                                      }
-                                  }
-                              ]
-                          },
-                          "authentication": "S3AccessCreds"
-                      },
                       "c:\\cfn\\scripts\\Install-ExchangeEdgeServer.ps1": {
                           "source": {
                               "Fn::Sub": [
@@ -6086,10 +5828,7 @@
                         "Ref": "DomainMemberSGID"
                       },
                       {
-                        "Ref": "WSFCSecurityGroup"
-                      },
-                      {
-                        "Ref": "WSFCClientSecurityGroup"
+                        "Ref": "EXCHEdgeSecurityGroup"
                       }
                     ],
                     "PrivateIpAddresses": [
@@ -6211,20 +5950,6 @@
       },
       "Type": "AWS::EC2::SecurityGroupIngress"
     },
-    "WSFCSecurityGroupIngressTcp1433": {
-      "Properties": {
-        "FromPort": "1433",
-        "GroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "IpProtocol": "tcp",
-        "SourceSecurityGroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "ToPort": "1434"
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress"
-    },
     "WSFCSecurityGroupIngressTcp3343": {
       "Properties": {
         "FromPort": "3343",
@@ -6250,20 +5975,6 @@
           "Ref": "WSFCSecurityGroup"
         },
         "ToPort": "445"
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress"
-    },
-    "WSFCSecurityGroupIngressTcp5022": {
-      "Properties": {
-        "FromPort": "5022",
-        "GroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "IpProtocol": "tcp",
-        "SourceSecurityGroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "ToPort": "5022"
       },
       "Type": "AWS::EC2::SecurityGroupIngress"
     },
@@ -6294,21 +6005,7 @@
         "ToPort": "137"
       },
       "Type": "AWS::EC2::SecurityGroupIngress"
-    },
-    "WSFCSecurityGroupIngressUdp1434": {
-      "Properties": {
-        "FromPort": "1434",
-        "GroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "IpProtocol": "udp",
-        "SourceSecurityGroupId": {
-          "Ref": "WSFCSecurityGroup"
-        },
-        "ToPort": "1434"
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress"
-    },
+    }, 
     "WSFCSecurityGroupIngressUdp3343": {
       "Properties": {
         "FromPort": "3343",
@@ -6322,6 +6019,96 @@
         "ToPort": "3343"
       },
       "Type": "AWS::EC2::SecurityGroupIngress"
+    },
+	  "ExchangeServerAccessSecurityGroup": {
+      "Properties": {
+        "GroupDescription": "Allows access to Exchange Servers",
+        "VpcId": {
+          "Ref": "VPCID"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "EXCHClientSecurityGroup": {
+      "Properties": {
+        "GroupDescription": "Exchange Client access ports",
+        "SecurityGroupIngress": [
+          {
+            "FromPort": "443",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "443"
+          },
+		  {
+            "FromPort": "80",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "80"
+          },
+		  {
+            "FromPort": "143",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "143"
+          },
+		  {
+            "FromPort": "993",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "993"
+          },
+		  {
+            "FromPort": "110",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "110"
+          },
+		  {
+            "FromPort": "995",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "995"
+          },
+		  {
+            "FromPort": "587",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "587"
+          },
+		  {
+            "FromPort": "25",
+            "IpProtocol": "tcp",
+            "SourceSecurityGroupId": {
+              "Ref": "ExchangeServerAccessSecurityGroup"
+            },
+            "ToPort": "1433"
+          },
+		  {
+            "FromPort": "25",
+            "IpProtocol": "tcp",
+            "CidrIp": "0.0.0.0/0",
+            "ToPort": "25"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VPCID"
+        }
+      },
+      "Type": "AWS::EC2::SecurityGroup"
     },
     "ExchangeRole": {
         "Type": "AWS::IAM::Role",
@@ -6403,7 +6190,47 @@
             ],
             "Path": "/"
         }
-    }
+    },
+	  "EXCHEdgeSecurityGroup": {
+            "Condition": "DeployEdge",
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable communications for Exchange Edge Transport Servers",
+                "VpcId": {
+                    "Ref": "VPCID"
+                },
+                "SecurityGroupIngress": [
+						{
+                        "IpProtocol": "udp",
+                        "FromPort": "50636",
+                        "ToPort": "50636",
+                        "CidrIp": {
+                            "Ref": "PrivateSubnet1CIDR"
+                        }
+                    },
+                    {
+                        "IpProtocol": "udp",
+                        "FromPort": "50636",
+                        "ToPort": "50636",
+                        "CidrIp": {
+                            "Ref": "PrivateSubnet2CIDR"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "25",
+                        "ToPort": "25",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "25",
+                        "ToPort": "25",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        }
   },
   "Rules": {
     "SubnetsInVPC": {
