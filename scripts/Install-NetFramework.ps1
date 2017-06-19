@@ -28,7 +28,7 @@ try {
     $InstallNetfwPs={
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\NDP462-KB3151800-x86-x64-AllOS-ENU.exe"
-        $Args = "/q /norestart /log 'C:\cfn\log'"
+        $Args = "/q /norestart /log C:\cfn\log\NetFramework_Installer.htm"
 		
 		Start-Process $InstallPath -args $Args -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\NetFrameworkInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\NetFrameworkInstallerErrors.txt" 
         

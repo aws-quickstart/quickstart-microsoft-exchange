@@ -1610,7 +1610,7 @@
               },
               "h-download-netframework": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                "waitAfterCompletion": "0"
+                "waitAfterCompletion": "900"
               },
               "i-install-netframework": {
                 "command": {
@@ -2464,7 +2464,7 @@
               },
               "h-download-netframework": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                "waitAfterCompletion": "0"
+                "waitAfterCompletion": "900"
               },
               "i-install-netframework": {
                 "command": {
@@ -3382,7 +3382,7 @@
               },
               "h-download-netframework": {
                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                "waitAfterCompletion": "0"
+                "waitAfterCompletion": "900"
               },
               "i-install-netframework": {
                 "command": {
