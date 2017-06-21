@@ -28,21 +28,21 @@ param(
 
 
 try {
-    Start-Transcript -Path C:\cfn\log\Configure-EdgeDNSRecord.ps1.txt -Append
+	Start-Transcript -Path C:\cfn\log\Configure-EdgeDNSRecord.ps1.txt -Append
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
-    
-    $EdgeRecordPs={
+	
+	$EdgeRecordPs={
         $ErrorActionPreference = "Stop"
         Add-DnsServerResourceRecordA -Name $Using:EdgeNodeNetBIOSName -IPv4Address $Using:EdgeNodePrivateIP -ZoneName $Using:DomainNetBIOSName
     }
-    
+	
     $Retries = 0
     $Installed = $false
-    while (($Retries -lt 4) -and (!$Installed)) {
+	while (($Retries -lt 4) -and (!$Installed)) {
         try {
 
             Invoke-Command -Scriptblock $EdgeRecordPs -ComputerName $DnsServer -Credential $DomainAdminCreds
@@ -59,7 +59,7 @@ try {
     if (!$Installed) {
           throw $Exception
     }
-    
+	
 }
 catch {
     Write-Verbose "$($_.exception.message)@ $(Get-Date)"

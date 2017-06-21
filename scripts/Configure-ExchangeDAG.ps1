@@ -64,7 +64,7 @@ try {
     $ConfigDAG={
         $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName
          #$addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
-
+            
         Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
         New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:WSFCFileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName 
        
