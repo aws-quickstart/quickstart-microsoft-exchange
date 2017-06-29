@@ -655,7 +655,7 @@
         "QSS3BucketName": {
             "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
             "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
-            "Default": "madarasa-quickstart-reference",
+            "Default": "quickstart-reference",
             "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
             "Type": "String"
         },
@@ -846,6 +846,7 @@
         },
         "WSFCNode3InstanceType": {
             "AllowedValues": [
+                "m4.xlarge",
                 "r3.xlarge",
                 "r3.2xlarge",
                 "r3.4xlarge",
@@ -987,7 +988,7 @@
             "DependsOn": "EDGE2",
             "Properties": {
                 "Handle": {
-                    "Ref": "EdgeNode1WaitHandle"
+                    "Ref": "EdgeNode2WaitHandle"
                 },
                 "Timeout": "9000"
             },
@@ -2349,40 +2350,40 @@
                         }
                     },
                     "Install": {
-                        "commands": {
-                            "a-install-ucma-runtime": {
-                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
-                                "waitAfterCompletion": "0"
-                            },
-                            "b-install-exchange": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-ExchangeServer.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "' -ExchangeServerVersion '",
-                                            {
-                                                "Ref": "ExchangeServerVersion"
-                                            },
-                                            "' -ServerIndex '2",
-                                            "'\""
-                                        ]
-                                    ]
+                      "commands": {
+                        "a-install-ucma-runtime": {
+                          "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
+                          "waitAfterCompletion": "0"
+                        },
+                        "b-install-exchange": {
+                          "command": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "powershell.exe -Command \"C:\\cfn\\scripts\\Install-ExchangeServer.ps1 -DomainNetBIOSName '",
+                                {
+                                  "Ref": "DomainNetBIOSName"
                                 },
-                                "waitAfterCompletion": "0"
-                            }
+                                "' -DomainAdminUser '",
+                                {
+                                  "Ref": "DomainAdminUser"
+                                },
+                                "' -DomainAdminPassword '",
+                                {
+                                  "Ref": "DomainAdminPassword"
+                                },
+                                "' -ExchangeServerVersion '",
+                                {
+                                  "Ref": "ExchangeServerVersion"
+                                },
+                                "' -ServerIndex '2",
+                                "'\""
+                              ]
+                            ]
+                          },
+                          "waitAfterCompletion": "0"
                         }
+                      }
                     },
                     "Prep": {
                         "commands": {
@@ -2986,182 +2987,11 @@
                             }
                         }
                     },
-                    "Configure": {
-                        "commands": {
-                            "a-create-dag-share": {
-                                "Fn::If": [
-                                    "IsTwoNode",
-                                    {
-                                        "command": {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "powershell.exe -Command \"C:\\cfn\\scripts\\Create-Share.ps1",
-                                                    " -Path 'c:\\DAG'",
-                                                    " -FolderPath 'c:\\'",
-                                                    " -FolderName 'DAG",
-                                                    "' -ShareName 'DAG.example.com",
-                                                    "' -DomainNetBIOSName '",
-                                                    {
-                                                        "Ref": "DomainNetBIOSName"
-                                                    },
-                                                    "' -DomainAdminUser '",
-                                                    {
-                                                        "Ref": "DomainAdminUser"
-                                                    },
-                                                    "' -DomainAdminPassword '",
-                                                    {
-                                                        "Ref": "DomainAdminPassword"
-                                                    },
-                                                    "' -ServerName '",
-                                                    {
-                                                        "Ref": "WSFCFileServerNetBIOSName"
-                                                    },
-                                                    "'\""
-                                                ]
-                                            ]
-                                        },
-                                        "waitAfterCompletion": "0"
-                                    },
-                                    {
-                                        "Ref": "AWS::NoValue"
-                                    }
-                                ]
-                            },
-                            "b-add-exchangegroup-to-localgroup": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Add-ExchangeGroup.ps1",
-                                            " -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -ServerName '",
-                                            {
-                                                "Ref": "WSFCFileServerNetBIOSName"
-                                            },
-                                            "' -ExchangeGroupName 'Exchange Trusted Subsystem",
-                                            "' -LocalGroupName 'Administrators",
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "c-configure-dag": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Configure-ExchangeDAG.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "' -WSFCNode1NetBIOSName '",
-                                            {
-                                                "Ref": "WSFCNode1NetBIOSName"
-                                            },
-                                            "' -WSFCNode2NetBIOSName '",
-                                            {
-                                                "Ref": "WSFCNode2NetBIOSName"
-                                            },
-                                            "' -WSFCFileServerNetBIOSName '",
-                                            {
-                                                "Ref": "WSFCFileServerNetBIOSName"
-                                            },
-                                            "' -ExchangeServerVersion '",
-                                            {
-                                                "Ref": "ExchangeServerVersion"
-                                            },
-                                            "' -DAGName 'DAG",
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "d-Invoke-ADReplication-DC1": {
-                                "Fn::If": [
-                                    "IsTwoNode",
-                                    {
-                                        "command": {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                                                    " -UserName '",
-                                                    {
-                                                        "Ref": "DomainAdminUser"
-                                                    },
-                                                    "' -Password '",
-                                                    {
-                                                        "Ref": "DomainAdminPassword"
-                                                    },
-                                                    "' -DomainController '",
-                                                    {
-                                                        "Ref": "ADServer1NetBIOSName"
-                                                    },
-                                                    "'\""
-                                                ]
-                                            ]
-                                        },
-                                        "waitAfterCompletion": "0"
-                                    },
-                                    {
-                                        "Ref": "AWS::NoValue"
-                                    }
-                                ]
-                            },
-                            "e-Invoke-ADReplication-DC2": {
-                                "Fn::If": [
-                                    "IsTwoNode",
-                                    {
-                                        "command": {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "powershell.exe -Command \"C:\\cfn\\scripts\\Invoke-ADReplication.ps1",
-                                                    " -UserName '",
-                                                    {
-                                                        "Ref": "DomainAdminUser"
-                                                    },
-                                                    "' -Password '",
-                                                    {
-                                                        "Ref": "DomainAdminPassword"
-                                                    },
-                                                    "' -DomainController '",
-                                                    {
-                                                        "Ref": "ADServer2NetBIOSName"
-                                                    },
-                                                    "'\""
-                                                ]
-                                            ]
-                                        },
-                                        "waitAfterCompletion": "0"
-                                    },
-                                    {
-                                        "Ref": "AWS::NoValue"
-                                    }
-                                ]
-                            }
-                        }
-                    },
                     "configSets": {
                         "config": [
                             "setup",
                             "Prep",
                             "Install",
-                            "Configure",
                             "Cleanup",
                             "Finalize"
                         ]
@@ -4702,7 +4532,7 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.WSFCNode1.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.EDGE1.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -s ",
                                             {
                                                 "Ref": "AWS::StackId"
@@ -5461,7 +5291,7 @@
                                             "powershell.exe -Command \"",
                                             "New-AWSQuickStartWaitHandle -Handle '",
                                             {
-                                                "Ref": "EdgeNode1WaitHandle"
+                                                "Ref": "EdgeNode2WaitHandle"
                                             },
                                             "'\""
                                         ]
@@ -5498,7 +5328,7 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.WSFCNode1.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.EDGE2.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -s ",
                                             {
                                                 "Ref": "AWS::StackId"
@@ -5998,123 +5828,25 @@
         },
         "WSFCSecurityGroup": {
             "Properties": {
-                "GroupDescription": "Enable the WSFC and Exchange communications",
+                "GroupDescription": "Enable all traffic between Exchange nodes",
                 "VpcId": {
                     "Ref": "VPCID"
                 }
             },
             "Type": "AWS::EC2::SecurityGroup"
         },
-        "WSFCSecurityGroupIngressIcmp": {
-            "Properties": {
-                "FromPort": "-1",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "icmp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "-1"
+        "WSFCSecurityGroupIngressAllTraffic": {
+          "Properties": {
+            "FromPort": "0",
+            "GroupId": {
+              "Ref": "WSFCSecurityGroup"
             },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressTcp135": {
-            "Properties": {
-                "FromPort": "135",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "tcp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "135"
+            "IpProtocol": "-1",
+            "SourceSecurityGroupId": {
+              "Ref": "WSFCSecurityGroup"
             },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressTcp137": {
-            "Properties": {
-                "FromPort": "137",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "tcp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "137"
-            },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressTcp3343": {
-            "Properties": {
-                "FromPort": "3343",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "tcp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "3343"
-            },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressTcp445": {
-            "Properties": {
-                "FromPort": "445",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "tcp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "445"
-            },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressTcp5985": {
-            "Properties": {
-                "FromPort": "5985",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "tcp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "5985"
-            },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressUdp137": {
-            "Properties": {
-                "FromPort": "137",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "udp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "137"
-            },
-            "Type": "AWS::EC2::SecurityGroupIngress"
-        },
-        "WSFCSecurityGroupIngressUdp3343": {
-            "Properties": {
-                "FromPort": "3343",
-                "GroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "IpProtocol": "udp",
-                "SourceSecurityGroupId": {
-                    "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "3343"
-            },
+            "ToPort": "65535"
+          },
             "Type": "AWS::EC2::SecurityGroupIngress"
         },
         "ExchangeServerAccessSecurityGroup": {

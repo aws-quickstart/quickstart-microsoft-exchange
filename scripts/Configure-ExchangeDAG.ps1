@@ -71,8 +71,8 @@ try {
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode1NetBIOSName
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode2NetBIOSName
 
-        Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
-        Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
+        Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
+        Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
 
         #There should also be a restart of the IS service (restart-service MSExchangeIS on each node)
         #Get-MailboxDatabaseCopyStatus * | where {$_.ContentIndexState -eq "Failed"} | Update-MailboxDatabaseCopy -CatalogOnly
@@ -89,8 +89,8 @@ try {
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode1NetBIOSName
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:WSFCNode2NetBIOSName
 
-            Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
-            Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
+            Add-MailboxDatabaseCopy -Identity DB1 -MailboxServer $Using:WSFCNode2NetBIOSName -ActivationPreference 2
+            Add-MailboxDatabaseCopy -Identity DB2 -MailboxServer $Using:WSFCNode1NetBIOSName -ActivationPreference 2
 
             #There should also be a restart of the IS service (restart-service MSExchangeIS on each node)
             #Get-MailboxDatabaseCopyStatus * | where {$_.ContentIndexState -eq "Failed"} | Update-MailboxDatabaseCopy -CatalogOnly

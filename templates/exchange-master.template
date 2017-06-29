@@ -408,7 +408,7 @@
         "QSS3BucketName": {
             "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
             "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
-            "Default": "madarasa-quickstart-reference",
+            "Default": "quickstart-reference",
             "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
             "Type": "String"
         },
@@ -1220,6 +1220,9 @@
                     },
                     "WSFCNode2PrivateIP3": {
                         "Ref": "WSFCNode2PrivateIP3"
+                    },
+                    "WSFCNode3InstanceType": {
+                        "Ref": "WSFCNodeInstanceType"
                     },
                     "WSFCNode3NetBIOSName": {
                         "Ref": "WSFCNode3NetBIOSName"

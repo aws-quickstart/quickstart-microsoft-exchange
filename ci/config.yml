@@ -17,6 +17,48 @@ global:
     - us-west-2
   reporting: true
 tests:
-  master:
-    template_file: Exchange_2013_Master.template
-    parameter_input: Exchange_2013_Master.json
+#  master:
+#    template_file: Exchange_2013_Master.template
+#    parameter_input: Exchange_2013_Master.json
+  defaults:
+    parameter_input: exchange-master-ex2016.json
+    template_file: exchange-master.template
+  exchange-2013:
+    parameter_input: exchange-master-ex2013.json
+    template_file: exchange-master.template
+  exchange-2013_3rdaz-witness:
+    parameter_input: exchange-master-ex2013_3AZ_witness.json
+    regions:
+      - ap-southeast-2
+      - eu-west-1
+      - us-east-1
+      - us-west-2
+    template_file: exchange-master.template
+  exchange-2013_3rdaz-full:
+    parameter_input: exchange-master-ex2013_3AZ_full.json
+    regions:
+      - ap-southeast-2
+      - eu-west-1
+      - us-east-1
+      - us-west-2
+    template_file: exchange-master.template
+  exchange-2016:
+    parameter_input: exchange-master-ex2016.json
+    template_file: exchange-master.template
+  exchange-2016_3rdaz-witness:
+    parameter_input: exchange-master-ex2016_3AZ_witness.json
+    regions:
+      - ap-southeast-2
+      - eu-west-1
+      - us-east-1
+      - us-west-2
+    template_file: exchange-master.template
+  exchange-2016_3rdaz-full:
+    parameter_input: exchange-master-ex2016_3AZ_full.json
+    regions:
+      - ap-southeast-2
+      - eu-west-1
+      - us-east-1
+      - us-west-2
+    template_file: exchange-master.template
+ 
