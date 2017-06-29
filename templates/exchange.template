@@ -3295,7 +3295,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion": "0"
+                                "waitAfterCompletion": "forever"
                             },
                             "e-enable-credssp": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\EnableCredSsp.ps1",
