@@ -23,7 +23,6 @@ try {
     if (!$Installed) {
           throw $Exception
     }
-
 }
 catch {
     $_ | Write-AWSQuickStartException

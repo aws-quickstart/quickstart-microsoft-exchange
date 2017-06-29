@@ -6,13 +6,9 @@ try {
     Start-Transcript -Path C:\cfn\log\Download-NetFramework.ps1.txt -Append
 
     $ErrorActionPreference = "Stop"
-
     $DestPath = "C:\Exchangeinstall"
-    New-Item "$DestPath" -Type directory -Force
-
-    
     $source = "https://download.microsoft.com/download/F/9/4/F942F07D-F26F-4F30-B4E3-EBD54FABA377/NDP462-KB3151800-x86-x64-AllOS-ENU.exe"
-   
+    New-Item "$DestPath" -Type directory -Force
 
     $tries = 5
     while ($tries -ge 1) {

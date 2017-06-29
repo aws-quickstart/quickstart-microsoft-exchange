@@ -62,6 +62,7 @@ try {
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
 
     $ConfigDAG={
+        $ErrorActionPreference = "Stop"
         $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName
          #$addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
             
@@ -80,6 +81,7 @@ try {
     }
     if ($WSFCNode3NetBIOSName) {
         $ConfigDAG={
+            $ErrorActionPreference = "Stop"
             $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName, $Using:WSFCNode3NetBIOSName
             #$addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
             
