@@ -114,63 +114,63 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.05.10",
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.06.14",
                 "WS2016": "Windows_Server-2016-English-Full-Base-2017.05.22"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-539aa834",
+                "WS2012R2": "ami-354d4552",
                 "WS2016": "ami-47c3f820"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-50e13c3e",
+                "WS2012R2": "ami-d38659bd",
                 "WS2016": "ami-6765b809"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-67047908",
+                "WS2012R2": "ami-65b6c90a",
                 "WS2016": "ami-ebd6ab84"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-9e3bbefd",
+                "WS2012R2": "ami-9ab230f9",
                 "WS2016": "ami-bad553d9"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-c4262ca7",
+                "WS2012R2": "ami-f3203190",
                 "WS2016": "ami-bf5743dc"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-687ec20c",
+                "WS2012R2": "ami-00e95664",
                 "WS2016": "ami-bf5ee2db"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-f9528c96",
+                "WS2012R2": "ami-ad3e9ac2",
                 "WS2016": "ami-0f2ff760"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-96d4daf0",
+                "WS2012R2": "ami-1e5d4378",
                 "WS2016": "ami-6e283d08"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-07455263",
+                "WS2012R2": "ami-ad5d4bc9",
                 "WS2016": "ami-f3021597"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-af6708c3",
+                "WS2012R2": "ami-4f3f5423",
                 "WS2016": "ami-69bed005"
             },
             "us-east-1": {
-                "WS2012R2": "ami-271b6d31",
+                "WS2012R2": "ami-e196b0f7",
                 "WS2016": "ami-f1b5cfe7"
             },
             "us-east-2": {
-                "WS2012R2": "ami-7fc4e31a",
+                "WS2012R2": "ami-a4b395c1",
                 "WS2016": "ami-799bbc1c"
             },
             "us-west-1": {
-                "WS2012R2": "ami-59a78139",
+                "WS2012R2": "ami-b4614cd4",
                 "WS2016": "ami-09406069"
             },
             "us-west-2": {
-                "WS2012R2": "ami-3189ec51",
+                "WS2012R2": "ami-8d0c07f4",
                 "WS2016": "ami-c2c3a2a2"
             }
         },
@@ -1607,38 +1607,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1656,7 +1625,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1674,7 +1643,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
+                            "j-download-ucmaruntime": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                                 "waitAfterCompletion": "0"
                             }
@@ -2043,38 +2012,6 @@
                                 "source": {
                                     "Fn::Sub": [
                                         "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2460,38 +2397,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -2509,7 +2415,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -2527,7 +2433,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
+                            "j-download-ucmaruntime": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                                 "waitAfterCompletion": "0"
                             }
@@ -2925,38 +2831,6 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
                             "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
                                 "source": {
                                     "Fn::Sub": [
@@ -3309,38 +3183,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -3358,7 +3201,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -3376,7 +3219,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
+                            "j-download-ucmaruntime": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
                                 "waitAfterCompletion": "0"
                             }
@@ -3745,38 +3588,6 @@
                                 "source": {
                                     "Fn::Sub": [
                                         "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -4411,35 +4222,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "EdgeNode1NetBIOSName"
-                                            },
-                                            "' -DomainAdminUser 'Administrator",
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "k-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -4457,7 +4240,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "l-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -4818,38 +4601,6 @@
                                     ]
                                 },
                                 "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
                             }
                         },
                         "services": {
@@ -5207,35 +4958,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "EdgeNode2NetBIOSName"
-                                            },
-                                            "' -DomainAdminUser 'Administrator",
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "k-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -5253,7 +4976,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "l-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -5614,38 +5337,6 @@
                                     ]
                                 },
                                 "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
                             }
                         },
                         "services": {
