@@ -1,5 +1,4 @@
 global:
-  marketplace-ami: false
   owner: quickstart-eng@amazon.com
   qsname: quickstart-microsoft-exchange
   regions:
@@ -26,7 +25,7 @@ tests:
   exchange-2013:
     parameter_input: exchange-master-ex2013.json
     template_file: exchange-master.template
-  exchange-2013_3rdaz-witness:
+  exchange-2013-3rdaz-witness:
     parameter_input: exchange-master-ex2013_3AZ_witness.json
     regions:
       - ap-southeast-2
@@ -34,7 +33,7 @@ tests:
       - us-east-1
       - us-west-2
     template_file: exchange-master.template
-  exchange-2013_3rdaz-full:
+  exchange-2013-3rdaz-full:
     parameter_input: exchange-master-ex2013_3AZ_full.json
     regions:
       - ap-southeast-2
@@ -45,7 +44,7 @@ tests:
   exchange-2016:
     parameter_input: exchange-master-ex2016.json
     template_file: exchange-master.template
-  exchange-2016_3rdaz-witness:
+  exchange-2016-3rdaz-witness:
     parameter_input: exchange-master-ex2016_3AZ_witness.json
     regions:
       - ap-southeast-2
@@ -53,7 +52,7 @@ tests:
       - us-east-1
       - us-west-2
     template_file: exchange-master.template
-  exchange-2016_3rdaz-full:
+  exchange-2016-3rdaz-full:
     parameter_input: exchange-master-ex2016_3AZ_full.json
     regions:
       - ap-southeast-2

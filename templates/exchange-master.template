@@ -502,7 +502,7 @@
           "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
           "Type": "String"
         },
-    	  "EdgeNode2NetBIOSName": {
+        "EdgeNode2NetBIOSName": {
           "AllowedPattern": "[a-zA-Z0-9]+",
           "Default": "EdgeNode2",
           "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
