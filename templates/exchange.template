@@ -114,63 +114,63 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.05.10",
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.07.13",
                 "WS2016": "Windows_Server-2016-English-Full-Base-2017.05.22"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-539aa834",
+                "WS2012R2": "ami-f5716b92",
                 "WS2016": "ami-47c3f820"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-50e13c3e",
+                "WS2012R2": "ami-6514ca0b",
                 "WS2016": "ami-6765b809"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-67047908",
+                "WS2012R2": "ami-e7afd688",
                 "WS2016": "ami-ebd6ab84"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-9e3bbefd",
+                "WS2012R2": "ami-435acd20",
                 "WS2016": "ami-bad553d9"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-c4262ca7",
+                "WS2012R2": "ami-ab928fc8",
                 "WS2016": "ami-bf5743dc"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-687ec20c",
+                "WS2012R2": "ami-1b4bf47f",
                 "WS2016": "ami-bf5ee2db"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-f9528c96",
+                "WS2012R2": "ami-f618bb99",
                 "WS2016": "ami-0f2ff760"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-96d4daf0",
+                "WS2012R2": "ami-7cb35e05",
                 "WS2016": "ami-6e283d08"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-07455263",
+                "WS2012R2": "ami-74819710",
                 "WS2016": "ami-f3021597"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-af6708c3",
+                "WS2012R2": "ami-a42c58c8",
                 "WS2016": "ami-69bed005"
             },
             "us-east-1": {
-                "WS2012R2": "ami-271b6d31",
+                "WS2012R2": "ami-d79d92c1",
                 "WS2016": "ami-f1b5cfe7"
             },
             "us-east-2": {
-                "WS2012R2": "ami-7fc4e31a",
+                "WS2012R2": "ami-ceaa8bab",
                 "WS2016": "ami-799bbc1c"
             },
             "us-west-1": {
-                "WS2012R2": "ami-59a78139",
+                "WS2012R2": "ami-b31c32d3",
                 "WS2016": "ami-09406069"
             },
             "us-west-2": {
-                "WS2012R2": "ami-3189ec51",
+                "WS2012R2": "ami-3dcbd744",
                 "WS2016": "ami-c2c3a2a2"
             }
         },
@@ -178,6 +178,18 @@
             "AMI": {
                 "2013": "WS2012R2",
                 "2016": "WS2012R2"
+            }
+        },
+        "ExchangeInstallerMap": {
+            "Link": {
+                "2013": "https://download.microsoft.com/download/D/E/1/DE1C3D22-28A6-4A30-9811-0A0539385E51/Exchange2013-x64-cu17.exe",
+                "2016": "https://download.microsoft.com/download/2/D/B/2DB1EEA2-CD9B-48F1-8235-1C9B82D19D68/ExchangeServer2016-x64-cu6.iso"
+            }
+        },
+        "UcmaRuntimeInstallerMap": {
+            "Link": {
+                "2013": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe",
+                "2016": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
             }
         }
     },
@@ -1607,38 +1619,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1646,9 +1627,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -1656,7 +1643,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -1668,16 +1655,46 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                            "j-download-ucmaruntime": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            }                     
                         }
                     },
                     "setup": {
@@ -2043,38 +2060,6 @@
                                 "source": {
                                     "Fn::Sub": [
                                         "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2460,38 +2445,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -2499,9 +2453,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -2509,7 +2469,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -2521,16 +2481,46 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                            "j-download-ucmaruntime": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            } 
                         }
                     },
                     "setup": {
@@ -2925,38 +2915,6 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
                             "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
                                 "source": {
                                     "Fn::Sub": [
@@ -3309,38 +3267,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "DomainNetBIOSName"
-                                            },
-                                            "' -DomainAdminUser '",
-                                            {
-                                                "Ref": "DomainAdminUser"
-                                            },
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "m-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -3348,9 +3275,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -3358,7 +3291,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "n-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -3370,16 +3303,46 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "o-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                            "j-download-ucmaruntime": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            } 
                         }
                     },
                     "setup": {
@@ -3745,38 +3708,6 @@
                                 "source": {
                                     "Fn::Sub": [
                                         "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -4411,35 +4342,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "EdgeNode1NetBIOSName"
-                                            },
-                                            "' -DomainAdminUser 'Administrator",
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "k-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -4447,9 +4350,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -4457,7 +4366,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "l-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -4468,6 +4377,16 @@
                                             " C:\\cfn\\scripts\\Expand-Exchange.ps1 -ExchangeServerVersion '",
                                             {
                                                 "Ref": "ExchangeServerVersion"
+                                            },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -4818,38 +4737,6 @@
                                     ]
                                 },
                                 "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
                             }
                         },
                         "services": {
@@ -5207,35 +5094,7 @@
                                 "command": "powershell.exe -Command \"Restart-Computer -Force\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "h-download-netframework": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Download-NetFramework.ps1\"",
-                                "waitAfterCompletion": "0"
-                            },
-                            "i-install-netframework": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-NetFramework.ps1 -DomainNetBIOSName '",
-                                            {
-                                                "Ref": "EdgeNode2NetBIOSName"
-                                            },
-                                            "' -DomainAdminUser 'Administrator",
-                                            "' -DomainAdminPassword '",
-                                            {
-                                                "Ref": "DomainAdminPassword"
-                                            },
-                                            "'\""
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "0"
-                            },
-                            "j-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
-                                "waitAfterCompletion": "forever"
-                            },
-                            "k-download-exchange-kit": {
+                            "h-download-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -5243,9 +5102,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -5253,7 +5118,7 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "l-expand-exchange-kit": {
+                            "i-expand-exchange-kit": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
@@ -5264,6 +5129,16 @@
                                             " C:\\cfn\\scripts\\Expand-Exchange.ps1 -ExchangeServerVersion '",
                                             {
                                                 "Ref": "ExchangeServerVersion"
+                                            },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -5614,38 +5489,6 @@
                                     ]
                                 },
                                 "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Download-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "C:\\cfn\\scripts\\Install-NetFramework.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
                             }
                         },
                         "services": {

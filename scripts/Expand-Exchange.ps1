@@ -3,24 +3,30 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $ExchangeServerVersion
+    $ExchangeServerVersion,
+
+    [Parameter(Mandatory=$true)]
+    [string]
+    $ExchangeDownloadLink
 
 )
 
 try {
     Start-Transcript -Path C:\cfn\log\Expand-Exchange.ps1.txt -Append
     $ErrorActionPreference = "Stop"
+    $Path = "C:\Exchangeinstall"
+    $filename = $ExchangeDownloadLink.Substring($ExchangeDownloadLink.LastIndexOf("/") + 1)
     
     if($ExchangeServerVersion -eq "2013") {
-        Invoke-Command -ScriptBlock {Start-Process cmd.exe '/c c:\Exchangeinstall\Exchange2013-x64-cu16.exe /extract:c:\Exchangeinstall /passive' -NoNewWindow -Wait} 
+        Invoke-Command -ScriptBlock {Start-Process cmd.exe "/c $Path\$filename /extract:$Path /passive" -NoNewWindow -Wait} 
     }
     elseif ($ExchangeServerVersion -eq "2016") {
-        $isoPath = 'C:\Exchangeinstall\ExchangeServer2016-x64-cu5.iso'
+        $isoPath = $Path + "\" + $filename
         Mount-DiskImage -ImagePath $isoPath
         $driveLetter = (Get-DiskImage $isoPath | Get-Volume).DriveLetter
-        Copy-Item -Path "${driveLetter}:\*" -Destination 'C:\Exchangeinstall' -Recurse
+        Copy-Item -Path "${driveLetter}:\*" -Destination $Path -Recurse
     }
 }
 catch {
-    $_ | Write-AWSQuickStartException
+   # $_ | Write-AWSQuickStartException
 }

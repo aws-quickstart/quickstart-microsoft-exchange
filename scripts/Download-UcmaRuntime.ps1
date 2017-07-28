@@ -1,6 +1,10 @@
 ﻿[CmdletBinding()]
+param(
 
-param()
+    [Parameter(Mandatory=$true)]
+    [string]
+    $source
+)
 
 try {
     Start-Transcript -Path C:\cfn\log\Download-UcmaRuntime.ps1.txt -Append
@@ -9,9 +13,6 @@ try {
 
     $DestPath = "C:\Exchangeinstall"
     New-Item "$DestPath" -Type directory -Force
-
-    $source = "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
-   
 
     $tries = 5
     while ($tries -ge 1) {

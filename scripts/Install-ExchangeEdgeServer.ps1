@@ -39,22 +39,26 @@ try {
 
     $Retries = 0
     $Installed = $false
-    while (($Retries -lt 4) -and (!$Installed)) {
+
+    do {
         try {
             Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName localhost -Credential $LocalAdminCreds
-            $Installed = $true
+            $installed = $true
         }
         catch {
-            $Exception = $_
-            $Retries++
-            if ($Retries -lt 4) {
-                Start-Sleep ($Retries * 60)
+            $exception = $_
+            $retries++
+            if ($retries -lt 6) {
+                Write-Host $exception
+                $linearBackoff = $retries * 60
+                Write-Host "Edge role installation failed. Retrying in $linearBackoff seconds."
+                Start-Sleep -Seconds $linearBackoff
             }
         }
-    }
-    if (!$Installed) {
-          throw $Exception
-    }
+    } while (($retries -lt 6) -and (-not $installed))
+    if (-not $installed) {
+          throw $exception
+    }    
 }
 catch {
     Write-Verbose "$($_.exception.message)@ $(Get-Date)"

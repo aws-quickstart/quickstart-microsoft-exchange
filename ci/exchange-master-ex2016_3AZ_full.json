@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "AvailabilityZones",
-    "ParameterValue": "$[alfred_getaz_3]"
+    "ParameterValue": "$[taskcat_genaz_3]"
   },
   {
     "ParameterKey": "DedicatedHostAMI",
@@ -33,7 +33,7 @@
   },
   {
     "ParameterKey": "DomainAdminPassword",
-    "ParameterValue": "$[alfred_genpass_32]"
+    "ParameterValue": "$[taskcat_genpass_30A]"
   },
   {
     "ParameterKey": "DomainAdminUser",
@@ -69,7 +69,7 @@
   },
   {
     "ParameterKey": "ExchangeServerVersion",
-    "ParameterValue": "2013"
+    "ParameterValue": "2016"
   },
   {
     "ParameterKey": "HostType",
@@ -81,7 +81,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "$[alfred_getkeypair]"
+    "ParameterValue": "mykey"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
@@ -121,11 +121,11 @@
   },
   {
     "ParameterKey": "RestoreModePassword",
-    "ParameterValue": "$[alfred_genpass_32]"
+    "ParameterValue": "$[taskcat_genpass_30A]"
   },
   {
     "ParameterKey": "ThirdAZ",
-    "ParameterValue": "witness"
+    "ParameterValue": "full"
   },
   {
     "ParameterKey": "VolumeIops",
@@ -149,7 +149,7 @@
   },
   {
     "ParameterKey": "WSFCFileServerPrivateIP",
-    "ParameterValue": "10.0.0.200"
+    "ParameterValue": "10.0.64.200"
   },
   {
     "ParameterKey": "WSFCNode1NetBIOSName",
@@ -202,5 +202,9 @@
   {
     "ParameterKey": "WSFCNodeInstanceType",
     "ParameterValue": "m4.xlarge"
+  },
+  {
+    "ParameterKey": "QSS3BucketName",
+    "ParameterValue": "$[taskcat_autobucket]"
   }
 ]
