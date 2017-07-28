@@ -179,6 +179,18 @@
                 "2013": "WS2012R2",
                 "2016": "WS2012R2"
             }
+        },
+        "ExchangeInstallerMap": {
+            "Link": {
+                "2013": "https://download.microsoft.com/download/D/E/1/DE1C3D22-28A6-4A30-9811-0A0539385E51/Exchange2013-x64-cu17.exe",
+                "2016": "https://download.microsoft.com/download/2/D/B/2DB1EEA2-CD9B-48F1-8235-1C9B82D19D68/ExchangeServer2016-x64-cu6.iso"
+            }
+        },
+        "UcmaRuntimeInstallerMap": {
+            "Link": {
+                "2013": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe",
+                "2016": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
+            }
         }
     },
     "Metadata": {
@@ -1615,9 +1627,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -1637,6 +1655,16 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -1644,9 +1672,29 @@
                                 "waitAfterCompletion": "0"
                             },
                             "j-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            }                     
                         }
                     },
                     "setup": {
@@ -2405,9 +2453,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -2427,6 +2481,16 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -2434,9 +2498,29 @@
                                 "waitAfterCompletion": "0"
                             },
                             "j-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            } 
                         }
                     },
                     "setup": {
@@ -3191,9 +3275,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -3213,6 +3303,16 @@
                                             {
                                                 "Ref": "ExchangeServerVersion"
                                             },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -3220,9 +3320,29 @@
                                 "waitAfterCompletion": "0"
                             },
                             "j-download-ucmaruntime": {
-                                "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command C:\\cfn\\scripts\\Download-UcmaRuntime.ps1",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe ",
+                                            "-ExecutionPolicy RemoteSigned ",
+                                            "-Command \"",
+                                            " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "UcmaRuntimeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
+                                            },                                           
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
-                            }
+                            } 
                         }
                     },
                     "setup": {
@@ -4230,9 +4350,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -4251,6 +4377,16 @@
                                             " C:\\cfn\\scripts\\Expand-Exchange.ps1 -ExchangeServerVersion '",
                                             {
                                                 "Ref": "ExchangeServerVersion"
+                                            },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -4966,9 +5102,15 @@
                                             "powershell.exe ",
                                             "-ExecutionPolicy RemoteSigned ",
                                             "-Command \"",
-                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeServerVersion '",
+                                            " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                                "Ref": "ExchangeServerVersion"
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
@@ -4987,6 +5129,16 @@
                                             " C:\\cfn\\scripts\\Expand-Exchange.ps1 -ExchangeServerVersion '",
                                             {
                                                 "Ref": "ExchangeServerVersion"
+                                            },
+                                            "' -ExchangeDownloadLink '",
+                                            {
+                                               "Fn::FindInMap": [
+                                                    "ExchangeInstallerMap",
+                                                    "Link",
+                                                    {
+                                                     "Ref": "ExchangeServerVersion"
+                                                    }
+                                               ]
                                             },
                                             "'\""
                                         ]
