@@ -358,6 +358,56 @@
             "MinLength": "1",
             "Type": "String"
         },
+        "EdgeInstanceType": {
+            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
+            "Type": "String",
+            "Default": "m4.large",
+            "AllowedValues": [
+                "t2.large",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge"
+            ],
+            "ConstraintDescription": "Select a general purpose instance type"
+        },
+        "EdgeNode1NetBIOSName": {
+          "AllowedPattern": "[a-zA-Z0-9]+",
+          "Default": "EdgeNode1",
+          "Description": "NetBIOS name of the first Edge Server (up to 15 characters)",
+          "MaxLength": "15",
+          "MinLength": "1",
+          "Type": "String"
+        },
+        "EdgeNode1PrivateIP1": {
+          "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+          "Default": "10.0.128.12",
+          "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
+          "Type": "String"
+        },
+        "EdgeNode2NetBIOSName": {
+          "AllowedPattern": "[a-zA-Z0-9]+",
+          "Default": "EdgeNode2",
+          "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
+          "MaxLength": "15",
+          "MinLength": "1",
+          "Type": "String"
+        },
+        "EdgeNode2PrivateIP1": {
+          "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+          "Default": "10.0.144.12",
+          "Description": "Primary private IP for the second Edge Server located in Availability Zone 1",
+          "Type": "String"
+        },
+        "ExchangeServerVersion": {
+            "AllowedValues": [
+                "2013",
+                "2016"
+
+            ],
+            "Default": "2013",
+            "Description": "Version of Exchange Server to install on Failover Cluster Nodes",
+            "Type": "String"
+        },
         "HostType": {
             "AllowedValues": [
                 "Shared",
@@ -368,10 +418,31 @@
             "Description": "Host Type, If dedicated or Dedicated Host is selected hosts will be created in each AZ",
             "Type": "String"
         },
+        "IncludeEdgeTransportRole": {
+            "AllowedValues": [
+                "yes",
+                "no"
+
+            ],
+            "Default": "no",
+            "Description": "Set this parameter to yes to include Exchange Edge Transport servers in the public subnets",
+            "Type": "String"
+        },
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
             "Type": "AWS::EC2::KeyPair::KeyName"
         },
+        "NumberOfRDGWHosts": {
+					"AllowedValues": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+				"Default": "1",
+				"Description": "Enter the number of Remote Desktop Gateway hosts to create",
+				"Type": "String"
+		},
         "PrivateSubnet1CIDR": {
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
             "Default": "10.0.0.0/19",
@@ -419,6 +490,20 @@
             "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
             "Type": "String"
         },
+        "RestoreModePassword": {
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "Password for a separate Administrator account when the domain controller is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "True",
+            "Type": "String"
+        },
+        "RDGWCIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/x",
+            "Description": "Allowed CIDR Block for external access to the Remote Desktop Gateways",
+            "Type": "String"
+        },
         "RDGWInstanceType": {
             "AllowedValues": [
                 "t2.large",
@@ -430,92 +515,7 @@
             "Default": "t2.large",
             "Description": "Amazon EC2 instance type for the Remote Desktop Gateway instance(s)",
             "Type": "String"
-        },
-        "NumberOfRDGWHosts": {
-					"AllowedValues": [
-						"1",
-						"2",
-						"3",
-						"4"
-					],
-				"Default": "1",
-				"Description": "Enter the number of Remote Desktop Gateway hosts to create",
-				"Type": "String"
-		},
-        "RDGWCIDR": {
-            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
-            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/x",
-            "Description": "Allowed CIDR Block for external access to the Remote Desktop Gateways",
-            "Type": "String"
-        },
-        "RestoreModePassword": {
-            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
-            "Description": "Password for a separate Administrator account when the domain controller is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols",
-            "MaxLength": "32",
-            "MinLength": "8",
-            "NoEcho": "True",
-            "Type": "String"
-        },
-        "ExchangeServerVersion": {
-            "AllowedValues": [
-                "2013",
-                "2016"
-
-            ],
-            "Default": "2013",
-            "Description": "Version of Exchange Server to install on Failover Cluster Nodes",
-            "Type": "String"
-        },
-        "IncludeEdgeTransportRole": {
-            "AllowedValues": [
-                "yes",
-                "no"
-
-            ],
-            "Default": "no",
-            "Description": "Set this parameter to yes to include Exchange Edge Transport servers in the public subnets",
-            "Type": "String"
-        },
-        "EdgeInstanceType": {
-            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
-            "Type": "String",
-            "Default": "m4.large",
-            "AllowedValues": [
-                "t2.large",
-                "m4.large",
-                "m4.xlarge",
-                "m4.2xlarge"
-            ],
-            "ConstraintDescription": "Select a general purpose instance type"
-        },
-        "EdgeNode1NetBIOSName": {
-          "AllowedPattern": "[a-zA-Z0-9]+",
-          "Default": "EdgeNode1",
-          "Description": "NetBIOS name of the first Edge Server (up to 15 characters)",
-          "MaxLength": "15",
-          "MinLength": "1",
-          "Type": "String"
-        },
-        "EdgeNode1PrivateIP1": {
-          "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-          "Default": "10.0.128.12",
-          "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
-          "Type": "String"
-        },
-        "EdgeNode2NetBIOSName": {
-          "AllowedPattern": "[a-zA-Z0-9]+",
-          "Default": "EdgeNode2",
-          "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
-          "MaxLength": "15",
-          "MinLength": "1",
-          "Type": "String"
-        },
-        "EdgeNode2PrivateIP1": {
-          "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-          "Default": "10.0.144.12",
-          "Description": "Primary private IP for the second Edge Server located in Availability Zone 1",
-          "Type": "String"
-        },
+        },      
         "ThirdAZ": {
             "AllowedValues": [
                 "no",
@@ -524,6 +524,13 @@
             ],
             "Default": "no",
             "Description": "Enable a 3 AZ deployment, the 3rd AZ can either be used just for the witness, or can be a full Exchange cluster node. Note that if witness is chosen, the WFC File Server Private IP Address parameter must be set to an IP in the 3rd subnet range.",
+            "Type": "String"
+        },
+        "VPCCIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.0.0/16",
+            "Description": "CIDR Block for the VPC",
             "Type": "String"
         },
         "VolumeIops": {
@@ -548,14 +555,7 @@
             "Default": "gp2",
             "Description": "Volume type for the Exchange Data and Logs volumes",
             "Type": "String"
-        },
-        "VPCCIDR": {
-            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
-            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
-            "Default": "10.0.0.0/16",
-            "Description": "CIDR Block for the VPC",
-            "Type": "String"
-        },
+        },        
         "WSFCFileServerInstanceType": {
             "Default": "t2.small",
             "AllowedValues": [
@@ -863,6 +863,12 @@
                     "PublicSubnet2CIDR": {
                         "Ref": "PublicSubnet2CIDR"
                     },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/"
+                    },
                     "RestoreModePassword": {
                         "Ref": "RestoreModePassword"
                     },
@@ -874,13 +880,7 @@
                             "VPCStack",
                             "Outputs.VPCID"
                         ]
-                    },
-                    "QSS3BucketName": {
-                        "Ref": "QSS3BucketName"
-                    },
-                    "QSS3KeyPrefix": {
-                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/"
-                    }
+                    }                   
                 }
             }
         },
@@ -939,6 +939,12 @@
                             "Outputs.PublicSubnet2ID"
                         ]
                     },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+					"QSS3KeyPrefix": {
+                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/"
+                    },
                     "RDGWInstanceType": {
                         "Ref": "RDGWInstanceType"
                     },
@@ -950,12 +956,6 @@
                             "VPCStack",
                             "Outputs.VPCID"
                         ]
-                    },
-                    "QSS3BucketName": {
-                        "Ref": "QSS3BucketName"
-                    },
-					"QSS3KeyPrefix": {
-                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/"
                     }
                 }
             }
@@ -1110,6 +1110,30 @@
                     "DomainNetBIOSName": {
                         "Ref": "DomainNetBIOSName"
                     },
+                    "EdgeInstanceType": {
+                        "Ref": "EdgeInstanceType"
+                    },
+                    "EdgeNode1NetBIOSName": {
+                        "Ref": "EdgeNode1NetBIOSName"
+                    },
+                    "EdgeNode1PrivateIP1": {
+                        "Ref": "EdgeNode1PrivateIP1"
+                    },
+					"EdgeNode2NetBIOSName": {
+                        "Ref": "EdgeNode2NetBIOSName"
+                    },
+                    "EdgeNode2PrivateIP1": {
+                        "Ref": "EdgeNode2PrivateIP1"
+                    },
+                    "ExchangeServerVersion": {
+                        "Ref": "ExchangeServerVersion"
+                    },
+                    "HostType": {
+                        "Ref": "HostType"
+                    },
+                    "IncludeEdgeTransportRole": {
+                        "Ref": "IncludeEdgeTransportRole"
+                    },
                     "KeyPairName": {
                         "Ref": "KeyPairName"
                     },
@@ -1160,28 +1184,13 @@
                             "Outputs.PublicSubnet2ID"
                         ]
                     },
-					"ExchangeServerVersion": {
-                        "Ref": "ExchangeServerVersion"
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
                     },
-                    "IncludeEdgeTransportRole": {
-                        "Ref": "IncludeEdgeTransportRole"
+                    "QSS3KeyPrefix": {
+                        "Ref": "QSS3KeyPrefix"
                     },
-					"EdgeInstanceType": {
-                        "Ref": "EdgeInstanceType"
-                    },
-                    "EdgeNode1NetBIOSName": {
-                        "Ref": "EdgeNode1NetBIOSName"
-                    },
-                    "EdgeNode1PrivateIP1": {
-                        "Ref": "EdgeNode1PrivateIP1"
-                    },
-					"EdgeNode2NetBIOSName": {
-                        "Ref": "EdgeNode2NetBIOSName"
-                    },
-                    "EdgeNode2PrivateIP1": {
-                        "Ref": "EdgeNode2PrivateIP1"
-                    },
-                    "ThirdAZ": {
+	                "ThirdAZ": {
                         "Ref": "ThirdAZ"
                     },
                     "VPCID": {
@@ -1189,6 +1198,24 @@
                             "VPCStack",
                             "Outputs.VPCID"
                         ]
+                    },
+                    "Volume1Size": {
+                        "Ref": "VolumeSize"
+                    },
+                    "Volume2Size": {
+                        "Ref": "VolumeSize"
+                    },
+                    "Volume1Type": {
+                        "Ref": "VolumeType"
+                    },
+                    "Volume2Type": {
+                        "Ref": "VolumeType"
+                    },
+                    "Volume1Iops": {
+                        "Ref": "VolumeIops"
+                    },
+                    "Volume2Iops": {
+                        "Ref": "VolumeIops"
                     },
                     "WSFCFileServerPrivateIP": {
                         "Ref": "WSFCFileServerPrivateIP"
@@ -1261,33 +1288,6 @@
                                 "Ref": "WSFCNode3PrivateIP3"
                             }
                         ]
-                    },
-                    "QSS3BucketName": {
-                        "Ref": "QSS3BucketName"
-                    },
-                    "QSS3KeyPrefix": {
-                        "Ref": "QSS3KeyPrefix"
-                    },
-                    "Volume1Size": {
-                        "Ref": "VolumeSize"
-                    },
-                    "Volume2Size": {
-                        "Ref": "VolumeSize"
-                    },
-                    "Volume1Type": {
-                        "Ref": "VolumeType"
-                    },
-                    "Volume2Type": {
-                        "Ref": "VolumeType"
-                    },
-                    "Volume1Iops": {
-                        "Ref": "VolumeIops"
-                    },
-                    "Volume2Iops": {
-                        "Ref": "VolumeIops"
-                    },
-                    "HostType": {
-                        "Ref": "HostType"
                     }
                 }
             }
