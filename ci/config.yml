@@ -1,4 +1,5 @@
 global:
+  marketplace-ami: false
   owner: quickstart-eng@amazon.com
   qsname: quickstart-microsoft-exchange
   regions:
@@ -60,4 +61,3 @@ tests:
       - us-east-1
       - us-west-2
     template_file: exchange-master.template
- 
