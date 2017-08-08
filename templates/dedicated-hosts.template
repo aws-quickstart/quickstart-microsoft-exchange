@@ -18,7 +18,10 @@
         "AutoPlacement": {
             "Description": "Does host allow auto-placement (dedicated) or only allow placement by specifying hostid (host) ",
             "Type": "String",
-            "AllowedValues": ["on", "off"],
+            "AllowedValues": [
+                "on",
+                "off"
+            ],
             "Default": "on"
         },
         "AvailabilityZones": {
@@ -29,12 +32,22 @@
             "Description": "create a host in a 3rd AZ",
             "Type": "String",
             "Default": "no",
-            "AllowedValues": ["no","yes"]
+            "AllowedValues": [
+                "no",
+                "yes"
+            ]
         }
     },
     "Mappings": {},
     "Conditions": {
-        "Create3rdHost": {"Fn::Equals" : [{ "Ref": "3rdAZ" }, "yes"]}
+        "Create3rdHost": {
+            "Fn::Equals": [
+                {
+                    "Ref": "3rdAZ"
+                },
+                "yes"
+            ]
+        }
     },
     "Resources": {
         "DedicatedHost1": {
@@ -98,20 +111,20 @@
     },
     "Outputs": {
         "DedicatedHost1": {
-                "Value": {
-                    "Ref": "DedicatedHost1"
-                }
+            "Value": {
+                "Ref": "DedicatedHost1"
+            }
         },
         "DedicatedHost2": {
-                "Value": {
-                    "Ref": "DedicatedHost2"
-                }
+            "Value": {
+                "Ref": "DedicatedHost2"
+            }
         },
         "DedicatedHost3": {
-                "Value": {
-                    "Ref": "DedicatedHost3"
-                },
-                "Condition": "Create3rdHost"
+            "Value": {
+                "Ref": "DedicatedHost3"
+            },
+            "Condition": "Create3rdHost"
         }
     }
 }

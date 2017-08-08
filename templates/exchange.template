@@ -806,7 +806,7 @@
                 },
                 "io1"
             ]
-        }        
+        }
     },
     "Rules": {
         "SubnetsInVPC": {
@@ -898,14 +898,14 @@
                 "WS2012R2": "ami-3dcbd744",
                 "WS2016FULLBASE": "ami-c4ffe3bd"
             }
-        },       
+        },
         "MediaLinksMapper": {
             "Exchange": {
                 "2013": "https://download.microsoft.com/download/D/E/1/DE1C3D22-28A6-4A30-9811-0A0539385E51/Exchange2013-x64-cu17.exe",
                 "2016": "https://download.microsoft.com/download/2/D/B/2DB1EEA2-CD9B-48F1-8235-1C9B82D19D68/ExchangeServer2016-x64-cu6.iso"
             },
             "UCMA": {
-                "ALL": "https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"                
+                "ALL": "https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
             }
         }
     },
@@ -951,7 +951,7 @@
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -1121,13 +1121,13 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -1149,13 +1149,13 @@
                                             },
                                             "' -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -1175,12 +1175,12 @@
                                                     {
                                                         "Ref": "ADServer1PrivateIP"
                                                     },
-                                                    "' -Force\""                                           
+                                                    "' -Force\""
                                                 ]
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -1701,7 +1701,7 @@
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -1711,7 +1711,7 @@
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
-                            }                           
+                            }
                         }
                     },
                     "Finalize": {
@@ -1871,13 +1871,13 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -1899,13 +1899,13 @@
                                             },
                                             "' -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -1925,12 +1925,12 @@
                                                     {
                                                         "Ref": "ADServer1PrivateIP"
                                                     },
-                                                    "' -Force\""                                           
+                                                    "' -Force\""
                                                 ]
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -1940,7 +1940,7 @@
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
-                            }                            
+                            }
                         }
                     },
                     "setup": {
@@ -2689,7 +2689,7 @@
         "WSFCNode3WaitHandle": {
             "Condition": "ThirdAzIsFullNode",
             "Type": "AWS::CloudFormation::WaitConditionHandle"
-        },     
+        },
         "WSFCFileServer": {
             "Condition": "IsTwoNode",
             "Metadata": {
@@ -3254,12 +3254,12 @@
                                                 "",
                                                 [
                                                     "powershell.exe -command \"C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1",
-                                                    "\""                                           
+                                                    "\""
                                                 ]
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -3280,13 +3280,13 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -3308,13 +3308,13 @@
                                             },
                                             "' -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -3332,11 +3332,12 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
-                                                    "UCMA","ALL"
-                                               ]
-                                            },                                           
+                                                    "UCMA",
+                                                    "ALL"
+                                                ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -3694,7 +3695,7 @@
                                     ]
                                 }
                             }
-                        }                      
+                        }
                     },
                     "configSets": {
                         "config": [
@@ -3929,40 +3930,40 @@
                         }
                     },
                     "Install": {
-                      "commands": {
-                        "a-install-ucma-runtime": {
-                          "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
-                          "waitAfterCompletion": "0"
-                        },
-                        "b-install-exchange": {
-                          "command": {
-                            "Fn::Join": [
-                              "",
-                              [
-                                "powershell.exe -Command \"C:\\cfn\\scripts\\Install-ExchangeServer.ps1 -DomainNetBIOSName '",
-                                {
-                                  "Ref": "DomainNetBIOSName"
+                        "commands": {
+                            "a-install-ucma-runtime": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Install-UcmaRuntime.ps1",
+                                "waitAfterCompletion": "0"
+                            },
+                            "b-install-exchange": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-ExchangeServer.ps1 -DomainNetBIOSName '",
+                                            {
+                                                "Ref": "DomainNetBIOSName"
+                                            },
+                                            "' -DomainAdminUser '",
+                                            {
+                                                "Ref": "DomainAdminUser"
+                                            },
+                                            "' -DomainAdminPassword '",
+                                            {
+                                                "Ref": "DomainAdminPassword"
+                                            },
+                                            "' -ExchangeServerVersion '",
+                                            {
+                                                "Ref": "ExchangeServerVersion"
+                                            },
+                                            "' -ServerIndex '2",
+                                            "'\""
+                                        ]
+                                    ]
                                 },
-                                "' -DomainAdminUser '",
-                                {
-                                  "Ref": "DomainAdminUser"
-                                },
-                                "' -DomainAdminPassword '",
-                                {
-                                  "Ref": "DomainAdminPassword"
-                                },
-                                "' -ExchangeServerVersion '",
-                                {
-                                  "Ref": "ExchangeServerVersion"
-                                },
-                                "' -ServerIndex '2",
-                                "'\""
-                              ]
-                            ]
-                          },
-                          "waitAfterCompletion": "0"
+                                "waitAfterCompletion": "0"
+                            }
                         }
-                      }
                     },
                     "Prep": {
                         "commands": {
@@ -4048,12 +4049,12 @@
                                                 "",
                                                 [
                                                     "powershell.exe -command \"C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1",
-                                                    "\""                                           
+                                                    "\""
                                                 ]
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -4074,13 +4075,13 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -4102,13 +4103,13 @@
                                             },
                                             "' -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -4126,11 +4127,12 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
-                                                    "UCMA","ALL"
-                                               ]
-                                            },                                           
+                                                    "UCMA",
+                                                    "ALL"
+                                                ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -4838,12 +4840,12 @@
                                                 "",
                                                 [
                                                     "powershell.exe -command \"C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeDisks.ps1",
-                                                    "\""                                           
+                                                    "\""
                                                 ]
                                             ]
                                         },
                                         {
-                                            "Fn::Join" : [
+                                            "Fn::Join": [
                                                 "",
                                                 [
                                                     "powershell.exe -Command exit"
@@ -4864,13 +4866,13 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-ExchangeKit.ps1 -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -4892,13 +4894,13 @@
                                             },
                                             "' -ExchangeDownloadLink '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
                                                     "Exchange",
                                                     {
-                                                     "Ref": "ExchangeServerVersion"
+                                                        "Ref": "ExchangeServerVersion"
                                                     }
-                                               ]
+                                                ]
                                             },
                                             "'\""
                                         ]
@@ -4916,11 +4918,12 @@
                                             "-Command \"",
                                             " C:\\cfn\\scripts\\Download-UcmaRuntime.ps1 -source '",
                                             {
-                                               "Fn::FindInMap": [
+                                                "Fn::FindInMap": [
                                                     "MediaLinksMapper",
-                                                    "UCMA","ALL"
-                                               ]
-                                            },                                           
+                                                    "UCMA",
+                                                    "ALL"
+                                                ]
+                                            },
                                             "'\""
                                         ]
                                     ]
@@ -5694,7 +5697,7 @@
                 }
             },
             "Type": "AWS::EC2::VolumeAttachment"
-        },   
+        },
         "WSFCSecurityGroup": {
             "Properties": {
                 "GroupDescription": "Enable all traffic between Exchange nodes",
@@ -5705,19 +5708,19 @@
             "Type": "AWS::EC2::SecurityGroup"
         },
         "WSFCSecurityGroupIngressAllTraffic": {
-          "Properties": {
-            "FromPort": "0",
-            "GroupId": {
-              "Ref": "WSFCSecurityGroup"
+            "Properties": {
+                "FromPort": "0",
+                "GroupId": {
+                    "Ref": "WSFCSecurityGroup"
+                },
+                "IpProtocol": "-1",
+                "SourceSecurityGroupId": {
+                    "Ref": "WSFCSecurityGroup"
+                },
+                "ToPort": "65535"
             },
-            "IpProtocol": "-1",
-            "SourceSecurityGroupId": {
-              "Ref": "WSFCSecurityGroup"
-            },
-            "ToPort": "65535"
-          },
             "Type": "AWS::EC2::SecurityGroupIngress"
-        }   
+        }
     },
     "Outputs": {
         "DomainAdmin": {
@@ -5760,5 +5763,5 @@
                 "Ref": "WSFCNode3NetBIOSName"
             }
         }
-    }    
+    }
 }
