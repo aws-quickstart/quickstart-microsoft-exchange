@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "AvailabilityZones",
-    "ParameterValue": "$[taskcat_genaz_3]"
+    "ParameterValue": "$[alfred_getaz_3]"
   },
   {
     "ParameterKey": "DedicatedHostAMI",
@@ -33,7 +33,7 @@
   },
   {
     "ParameterKey": "DomainAdminPassword",
-    "ParameterValue": "$[taskcat_genpass_30A]"
+    "ParameterValue": "$[alfred_genpass_30]"
   },
   {
     "ParameterKey": "DomainAdminUser",
@@ -81,7 +81,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "mykey"
+    "ParameterValue": "$[alfred_getkeypair]"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
@@ -121,7 +121,7 @@
   },
   {
     "ParameterKey": "RestoreModePassword",
-    "ParameterValue": "$[taskcat_genpass_30A]"
+    "ParameterValue": "$[alfred_genpass_30]"
   },
   {
     "ParameterKey": "ThirdAZ",
@@ -202,13 +202,5 @@
   {
     "ParameterKey": "WSFCNodeInstanceType",
     "ParameterValue": "m4.xlarge"
-  },
-  {
-    "ParameterKey": "QSS3BucketName",
-    "ParameterValue": "$[taskcat_autobucket]"
-  },
-  {
-    "ParameterKey": "QSS3KeyPrefix",
-    "ParameterValue": "quickstart-microsoft-exchange/"
   }
 ]
