@@ -15,7 +15,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]
     $ExchangeServerVersion,
-   
+
     [string]
     [Parameter(Mandatory=$true)]
     $ServerIndex
@@ -33,13 +33,13 @@ try {
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
-        if($Using:ExchangeServerVersion -eq "2013") {	
+        if($Using:ExchangeServerVersion -eq "2013") {
             $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:ClientAccess,Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
         elseif ($Using:ExchangeServerVersion -eq "2016") {
             $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
-        
+
         Start-Process $InstallPath -args $ExchangeArgs -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\ExchangeServerInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\ExchangeServerInstallerErrors.txt"
     }
 
@@ -48,7 +48,7 @@ try {
 
     do {
         try {
-            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName localhost -Credential $DomainAdminCreds
+            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName $env:COMPUTERNAME -Credential $DomainAdminCreds
             $installed = $true
         }
         catch {

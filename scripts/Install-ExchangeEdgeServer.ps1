@@ -4,7 +4,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]
     $EdgeNodeNetBIOSName,
-    
+
     [Parameter(Mandatory=$true)]
     [string]
     $DomainAdminPassword,
@@ -27,13 +27,13 @@ try {
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
-        if($Using:ExchangeServerVersion -eq "2013") {	
+        if($Using:ExchangeServerVersion -eq "2013") {
             $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
         elseif ($Using:ExchangeServerVersion -eq "2016") {
             $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
-        
+
         Start-Process $InstallPath -args $ExchangeArgs -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\ExchangeEdgeInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\ExchangeEdgeInstallerErrors.txt"
     }
 
@@ -42,7 +42,7 @@ try {
 
     do {
         try {
-            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName localhost -Credential $LocalAdminCreds
+            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName $env:COMPUTERNAME -Credential $LocalAdminCreds
             $installed = $true
         }
         catch {
@@ -58,7 +58,7 @@ try {
     } while (($retries -lt 6) -and (-not $installed))
     if (-not $installed) {
           throw $exception
-    }    
+    }
 }
 catch {
     Write-Verbose "$($_.exception.message)@ $(Get-Date)"
