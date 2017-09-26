@@ -162,43 +162,43 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.07.13"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.09.13"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-f5716b92"
+                "WS2012R2": "ami-ca5b99ac"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-6514ca0b"
+                "WS2012R2": "ami-1c07dc72"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-e7afd688"
+                "WS2012R2": "ami-a4f3b4cb"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-435acd20"
+                "WS2012R2": "ami-440b7e27"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-ab928fc8"
+                "WS2012R2": "ami-ed33d48f"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-f618bb99"
+                "WS2012R2": "ami-9500b7fa"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-7cb35e05"
+                "WS2012R2": "ami-4a18db33"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-a42c58c8"
+                "WS2012R2": "ami-e9344985"
             },
             "us-east-1": {
-                "WS2012R2": "ami-d79d92c1"
+                "WS2012R2": "ami-23d93c59"
             },
             "us-east-2": {
-                "WS2012R2": "ami-ceaa8bab"
+                "WS2012R2": "ami-f9e1c39c"
             },
             "us-west-1": {
-                "WS2012R2": "ami-b31c32d3"
+                "WS2012R2": "ami-794a7c19"
             },
             "us-west-2": {
-                "WS2012R2": "ami-3dcbd744"
+                "WS2012R2": "ami-9d9360e5"
             }
         }
     },
