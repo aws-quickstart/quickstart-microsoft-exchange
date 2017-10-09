@@ -59,6 +59,7 @@
                         "EdgeNode1PrivateIP1",
                         "EdgeNode2NetBIOSName",
                         "EdgeNode2PrivateIP1",
+                        "EncryptDataVolumes",
                         "Volume1Size",
                         "Volume1Type",
                         "Volume1Iops",
@@ -150,6 +151,9 @@
                 },
                 "EdgeInstanceType": {
                     "default": "Instance type for Edge server"
+                },
+                "EncryptDataVolumes": {
+                    "default": "Encrypt Data volumes"
                 },
                 "IncludeEdgeTransportRole": {
                     "default": "Include Edge Server"
@@ -377,6 +381,55 @@
             "Description": "Version of Exchange Server to install on WSFC Nodes. Options include either \"2013\" or \"2016\"",
             "Type": "String"
         },
+        "EdgeInstanceType": {
+            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
+            "Type": "String",
+            "Default": "t2.large",
+            "AllowedValues": [
+                "t2.large",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge"
+            ],
+            "ConstraintDescription": "Select a general purpose instance type"
+        },
+        "EdgeNode1NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "EdgeNode1",
+            "Description": "NetBIOS name of the first Edge Server (up to 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "EdgeNode1PrivateIP1": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+            "Default": "10.0.128.12",
+            "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
+            "Type": "String"
+        },
+        "EdgeNode2NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "EdgeNode2",
+            "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "EdgeNode2PrivateIP1": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+            "Default": "10.0.144.12",
+            "Description": "Primary private IP for the second Edge Server located in Availability Zone 1",
+            "Type": "String"
+        },
+        "EncryptDataVolumes": {
+            "AllowedValues": [
+                "false",
+                "true"
+            ],
+            "Default": "false",
+            "Description": "Set this parameter to true to encrypt the data and logs volumes",
+            "Type": "String"
+        },
         "HostType": {
             "AllowedValues": [
                 "Shared",
@@ -385,6 +438,15 @@
             ],
             "Default": "Shared",
             "Description": "Host Type, NB: For dedicated types, you must already have suitable dedicated hosts in your account",
+            "Type": "String"
+        },
+        "IncludeEdgeTransportRole": {
+            "AllowedValues": [
+                "yes",
+                "no"
+            ],
+            "Default": "no",
+            "Description": "Set this parameter to yes to include Exchange Edge Transport servers in the public subnets",
             "Type": "String"
         },
         "KeyPairName": {
@@ -442,27 +504,6 @@
             "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
             "Default": "microsoft/exchange/latest/",
             "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
-            "Type": "String"
-        },
-        "EdgeInstanceType": {
-            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
-            "Type": "String",
-            "Default": "t2.large",
-            "AllowedValues": [
-                "t2.large",
-                "m4.large",
-                "m4.xlarge",
-                "m4.2xlarge"
-            ],
-            "ConstraintDescription": "Select a general purpose instance type"
-        },
-        "IncludeEdgeTransportRole": {
-            "AllowedValues": [
-                "yes",
-                "no"
-            ],
-            "Default": "no",
-            "Description": "Set this parameter to yes to include Exchange Edge Transport servers in the public subnets",
             "Type": "String"
         },
         "ThirdAZ": {
@@ -660,34 +701,6 @@
             "Default": "10.0.64.102",
             "Description": "Third private IP for Availability Group Listener on optional third WSFC Node",
             "Type": "String"
-        },
-        "EdgeNode1NetBIOSName": {
-            "AllowedPattern": "[a-zA-Z0-9]+",
-            "Default": "EdgeNode1",
-            "Description": "NetBIOS name of the first Edge Server (up to 15 characters)",
-            "MaxLength": "15",
-            "MinLength": "1",
-            "Type": "String"
-        },
-        "EdgeNode1PrivateIP1": {
-            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-            "Default": "10.0.128.12",
-            "Description": "Primary private IP for the first Edge Server located in Availability Zone 1",
-            "Type": "String"
-        },
-        "EdgeNode2NetBIOSName": {
-            "AllowedPattern": "[a-zA-Z0-9]+",
-            "Default": "EdgeNode2",
-            "Description": "NetBIOS name of the second Edge Server (up to 15 characters)",
-            "MaxLength": "15",
-            "MinLength": "1",
-            "Type": "String"
-        },
-        "EdgeNode2PrivateIP1": {
-            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-            "Default": "10.0.144.12",
-            "Description": "Primary private IP for the second Edge Server located in Availability Zone 1",
-            "Type": "String"
         }
     },
     "Conditions": {
@@ -781,6 +794,14 @@
                     "Ref": "ThirdAZ"
                 },
                 "witness"
+            ]
+        },
+        "UseEncryptedDataVolumes": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EncryptDataVolumes"
+                },
+                "true"
             ]
         },
         "Vol1IsIo1": {
@@ -5473,6 +5494,17 @@
                         }
                     ]
                 },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
                 "Size": {
                     "Ref": "Volume1Size"
                 },
@@ -5488,6 +5520,17 @@
                     "Fn::GetAtt": [
                         "WSFCNode1",
                         "AvailabilityZone"
+                    ]
+                },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
                     ]
                 },
                 "Iops": {
@@ -5518,6 +5561,17 @@
                         "AvailabilityZone"
                     ]
                 },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
                 "Iops": {
                     "Fn::If": [
                         "Vol1IsIo1",
@@ -5544,6 +5598,17 @@
                     "Fn::GetAtt": [
                         "WSFCNode2",
                         "AvailabilityZone"
+                    ]
+                },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
                     ]
                 },
                 "Iops": {
@@ -5575,6 +5640,17 @@
                         "AvailabilityZone"
                     ]
                 },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
                 "Iops": {
                     "Fn::If": [
                         "Vol1IsIo1",
@@ -5602,6 +5678,17 @@
                     "Fn::GetAtt": [
                         "WSFCNode3",
                         "AvailabilityZone"
+                    ]
+                },
+                "Encrypted": {
+                    "Fn::If": [
+                        "UseEncryptedDataVolumes",
+                        {
+                            "Ref": "EncryptDataVolumes"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
                     ]
                 },
                 "Iops": {

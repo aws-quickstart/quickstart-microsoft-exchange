@@ -70,6 +70,7 @@
                         "EdgeNode1PrivateIP1",
                         "EdgeNode2NetBIOSName",
                         "EdgeNode2PrivateIP1",
+                        "EncryptDataVolumes",
                         "VolumeIops",
                         "VolumeSize",
                         "VolumeType"
@@ -194,6 +195,9 @@
                 },
                 "EdgeInstanceType": {
                     "default": "Edge Role Instance Type"
+                },
+                "EncryptDataVolumes": {
+                    "default": "Encrypt Data volumes"
                 },
                 "ThirdAZ": {
                     "default": "Third AZ"
@@ -396,6 +400,15 @@
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
             "Default": "10.0.144.12",
             "Description": "Primary private IP for the second Edge Server located in Availability Zone 1",
+            "Type": "String"
+        },
+        "EncryptDataVolumes": {
+            "AllowedValues": [
+                "false",
+                "true"
+            ],
+            "Default": "false",
+            "Description": "Set this parameter to true to encrypt the data and logs volumes",
             "Type": "String"
         },
         "ExchangeServerVersion": {
@@ -1125,6 +1138,9 @@
                     },
                     "ExchangeServerVersion": {
                         "Ref": "ExchangeServerVersion"
+                    },
+                    "EncryptDataVolumes": {
+                        "Ref": "EncryptDataVolumes"
                     },
                     "HostType": {
                         "Ref": "HostType"
