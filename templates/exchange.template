@@ -922,8 +922,8 @@
         },
         "MediaLinksMapper": {
             "Exchange": {
-                "2013": "https://download.microsoft.com/download/D/E/1/DE1C3D22-28A6-4A30-9811-0A0539385E51/Exchange2013-x64-cu17.exe",
-                "2016": "https://download.microsoft.com/download/2/D/B/2DB1EEA2-CD9B-48F1-8235-1C9B82D19D68/ExchangeServer2016-x64-cu6.iso"
+                "2013": "https://download.microsoft.com/download/5/9/8/598B1735-BC2E-43FC-88DD-0CDFF838EE09/Exchange2013-x64-cu18.exe",
+                "2016": "https://download.microsoft.com/download/0/7/4/074FADBD-4422-4BBC-8C04-B56428667E36/ExchangeServer2016-x64-cu7.iso"
             },
             "UCMA": {
                 "ALL": "https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
@@ -3120,7 +3120,7 @@
                     "Finalize": {
                         "commands": {
                             "a-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                                "command": "powershell.exe -Command \"shutdown /r /t 30\"",
                                 "waitAfterCompletion": "forever"
                             },
                             "b-signal-success": {
@@ -3942,7 +3942,7 @@
                     "Finalize": {
                         "commands": {
                             "a-reboot": {
-                                "command": "powershell.exe -Command \"Restart-Computer -Force\"",
+                                "command": "powershell.exe -Command \"shutdown /r /t 30\"",
                                 "waitAfterCompletion": "forever"
                             },
                             "b-signal-success": {
