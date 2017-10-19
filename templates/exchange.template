@@ -860,64 +860,64 @@
         },
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.09.13",
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2017.09.13"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.10.13",
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2017.10.13"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-ca5b99ac",
-                "WS2016FULLBASE": "ami-de8d40b8"
+                "WS2012R2": "ami-4d34eb2b",
+                "WS2016FULLBASE": "ami-4325fa25"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-1c07dc72",
-                "WS2016FULLBASE": "ami-073be069"
+                "WS2012R2": "ami-82fe5bec",
+                "WS2016FULLBASE": "ami-4dfa5f23"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-a4f3b4cb",
-                "WS2016FULLBASE": "ami-6af0b705"
+                "WS2012R2": "ami-27286b48",
+                "WS2016FULLBASE": "ami-ac3370c3"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-440b7e27",
-                "WS2016FULLBASE": "ami-1c61147f"
+                "WS2012R2": "ami-0e13686d",
+                "WS2016FULLBASE": "ami-ed067d8e"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-ed33d48f",
-                "WS2016FULLBASE": "ami-663bdc04"
+                "WS2012R2": "ami-2013f142",
+                "WS2016FULLBASE": "ami-42638120"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-eccc7588",
-                "WS2016FULLBASE": "ami-58c1783c"
+                "WS2012R2": "ami-8bff47ef",
+                "WS2016FULLBASE": "ami-87f44ce3"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-9500b7fa",
-                "WS2016FULLBASE": "ami-29fd4b46"
+                "WS2012R2": "ami-e8843b87",
+                "WS2016FULLBASE": "ami-5b7ac534"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-4a18db33",
-                "WS2016FULLBASE": "ami-e92fec90"
+                "WS2012R2": "ami-1ecc1e67",
+                "WS2016FULLBASE": "ami-b7e93bce"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-ab1e0dcf",
-                "WS2016FULLBASE": "ami-6c021108"
+                "WS2012R2": "ami-4cbba928",
+                "WS2016FULLBASE": "ami-06bcae62"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-e9344985",
-                "WS2016FULLBASE": "ami-1d364b71"
+                "WS2012R2": "ami-5d512f31",
+                "WS2016FULLBASE": "ami-f14a349d"
             },
             "us-east-1": {
-                "WS2012R2": "ami-23d93c59",
-                "WS2016FULLBASE": "ami-5648ad2c"
+                "WS2012R2": "ami-f6529b8c",
+                "WS2016FULLBASE": "ami-e3bb7399"
             },
             "us-east-2": {
-                "WS2012R2": "ami-f9e1c39c",
-                "WS2016FULLBASE": "ami-d3e7c5b6"
+                "WS2012R2": "ami-80765ae5",
+                "WS2016FULLBASE": "ami-77765a12"
             },
             "us-west-1": {
-                "WS2012R2": "ami-794a7c19",
-                "WS2016FULLBASE": "ami-32320452"
+                "WS2012R2": "ami-955c6ef5",
+                "WS2016FULLBASE": "ami-0a41736a"
             },
             "us-west-2": {
-                "WS2012R2": "ami-9d9360e5",
-                "WS2016FULLBASE": "ami-47897a3f"
+                "WS2012R2": "ami-f318de8b",
+                "WS2016FULLBASE": "ami-343ef84c"
             }
         },
         "MediaLinksMapper": {
