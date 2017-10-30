@@ -10,6 +10,7 @@ global:
     - ap-southeast-2
     - eu-central-1
     - eu-west-1
+    - eu-west-2
     # - sa-east-1 Unsupported only in CI due to GetAZs on ref acct
     - us-east-1
     - us-east-2
@@ -25,12 +26,13 @@ tests:
 #    template_file: exchange-master.template
   exchange-2013:
     parameter_input: exchange-master-ex2013.json
+    regions:
+      - us-east-1
+      - us-west-2
     template_file: exchange-master.template
   exchange-2013-3rdaz-witness:
     parameter_input: exchange-master-ex2013_3AZ_witness.json
     regions:
-      - ap-southeast-2
-      - eu-west-1
       - us-east-1
       - us-west-2
     template_file: exchange-master.template
@@ -38,26 +40,25 @@ tests:
     parameter_input: exchange-master-ex2013_3AZ_full.json
     regions:
       - ap-southeast-2
-      - eu-west-1
-      - us-east-1
       - us-west-2
     template_file: exchange-master.template
-  exchange-2016:
+  exchange-2016-enc:
     parameter_input: exchange-master-ex2016.json
+    regions:
+      - us-east-1
+      - eu-east-1
+      - eu-west-2
+      - ap-southeast-2
     template_file: exchange-master.template
   exchange-2016-3rdaz-witness:
     parameter_input: exchange-master-ex2016_3AZ_witness.json
     regions:
       - ap-southeast-2
       - eu-west-1
-      - us-east-1
-      - us-west-2
     template_file: exchange-master.template
-  exchange-2016-3rdaz-full:
+  exchange-2016-3rdaz-full-enc:
     parameter_input: exchange-master-ex2016_3AZ_full.json
     regions:
       - ap-southeast-2
-      - eu-west-1
-      - us-east-1
       - us-west-2
     template_file: exchange-master.template

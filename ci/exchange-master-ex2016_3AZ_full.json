@@ -68,6 +68,10 @@
     "ParameterValue": "10.0.144.12"
   },
   {
+    "ParameterKey": "EncryptDataVolumes",
+    "ParameterValue": "true"
+  },
+  {
     "ParameterKey": "ExchangeServerVersion",
     "ParameterValue": "2016"
   },
