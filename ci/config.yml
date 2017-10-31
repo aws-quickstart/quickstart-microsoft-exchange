@@ -46,7 +46,7 @@ tests:
     parameter_input: exchange-master-ex2016.json
     regions:
       - us-east-1
-      - eu-east-1
+      - eu-west-1
       - eu-west-2
       - ap-southeast-2
     template_file: exchange-master.template
