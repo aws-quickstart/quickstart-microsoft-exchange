@@ -176,11 +176,20 @@
             "ap-southeast-2": {
                 "WS2012R2": "ami-30a55952"
             },
+            "ca-central-1": {
+                "WS2012R2": "ami-41ab2e25"
+            },
             "eu-central-1": {
                 "WS2012R2": "ami-3204995d"
             },
             "eu-west-1": {
                 "WS2012R2": "ami-cc821eb5"
+            },
+            "eu-west-2": {
+                "WS2012R2": "ami-9f677cfb"
+            },
+            "eu-west-3": {
+                "WS2012R2": "ami-a5fd4bd8"
             },
             "sa-east-1": {
                 "WS2012R2": "ami-d6c785ba"
