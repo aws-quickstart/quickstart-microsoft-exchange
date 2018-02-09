@@ -9,25 +9,22 @@
         "EXCHInstanceType": {
             "Description": "Amazon EC2 instance type for the Exchange Servers",
             "Type": "String",
-            "Default": "r3.xlarge",
+            "Default": "r4.xlarge",
             "AllowedValues": [
-                "r3.xlarge",
-                "r3.2xlarge",
-                "r3.4xlarge"
-            ],
-            "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed"
+                "r4.xlarge",
+                "r4.2xlarge",
+                "r4.4xlarge"
+            ]
         },
         "EdgeInstanceType": {
             "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
             "Type": "String",
-            "Default": "m3.large",
+            "Default": "m4.large",
             "AllowedValues": [
-                "m3.medium",
-                "m3.large",
-                "m3.xlarge",
-                "m3.2xlarge"
-            ],
-            "ConstraintDescription": "Select a general purpose instance type"
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge"
+            ]
         },
         "DomainDNSName": {
             "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. corp.example.com",
@@ -693,7 +690,6 @@
                 "InstanceType": {
                     "Ref": "EXCHInstanceType"
                 },
-                "EbsOptimized": "true",
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -1092,7 +1088,6 @@
                 "InstanceType": {
                     "Ref": "EXCHInstanceType"
                 },
-                "EbsOptimized": "true",
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
