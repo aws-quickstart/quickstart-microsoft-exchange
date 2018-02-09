@@ -570,7 +570,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command c:\\cfn\\scripts\\Download-File.ps1 -Source https://download.microsoft.com/download/5/9/8/598B1735-BC2E-43FC-88DD-0CDFF838EE09/Exchange2013-x64-cu18.exe",
+                                            "powershell.exe -Command c:\\cfn\\scripts\\Download-File.ps1 -Source https://download.microsoft.com/download/3/A/4/3A4E9E23-E698-477D-B1E3-CA235CE3DB7C/Exchange2013-x64-cu19.exe",
                                             " -Destination \\\\",
                                             {
                                                 "Ref": "ADServerNetBIOSName1"
