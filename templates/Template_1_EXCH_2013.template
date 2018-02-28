@@ -1,139 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "(000E) - This template deploys two Exchange Server 2013 servers. This template is intended to be installed into an existing VPC that was built using the sample reference architecture titled: \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Metadata": {
-        "AWS::CloudFormation::Interface": {
-            "ParameterGroups": [
-                {
-                    "Label": {
-                        "default": "Network Configuration"
-                    },
-                    "Parameters": [
-                        "DMZ1CIDR",
-                        "DMZ2CIDR",
-                        "KeyPairName",
-                        "PrivSub1CIDR",
-                        "PrivSub2CIDR",
-                        "PrivateSubnet1Id",
-                        "PrivateSubnet2Id",
-                        "PublicSubnet1Id",
-                        "PublicSubnet2Id",
-                        "PublicSubnet1CIDR",
-                        "PublicSubnet2CIDR",
-                        "VPC",
-                        "VPCCIDR"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "Microsoft Exchange Configuration"
-                    },
-                    "Parameters": [
-                        "EdgeInstanceType",
-                        "EXCHInstanceType",
-                        "EXCH1PrivateIp",
-                        "EXCH2PrivateIp",
-                        "EXCH1PrivateIp2",
-                        "EXCH2PrivateIp2",
-                        "DomainDNSName",
-                        "DomainNetBIOSName",
-                        "IncludeEdge"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "Microsoft Active Directory Configuration"
-                    },
-                    "Parameters": [
-                        "ADInstanceType",
-                        "AD2InstanceType",
-                        "ADServer1PrivateIp",
-                        "ADServer2PrivateIp",
-                        "ADServerNetBIOSName1",
-                        "ADServerNetBIOSName2",
-                        "DomainMemberSGID",
-                        "DomainAdminUser",
-                        "DomainDNSName",
-                        "DomainAdminPassword"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "AWS Quick Start Configuration"
-                    },
-                    "Parameters": [
-                        "QSS3BucketName",
-                        "QSS3KeyPrefix"
-                    ]
-                }
-            ],
-            "ParameterLabels": {
-                "ADServer1InstanceType": {
-                    "default": "Domain Controller 1 Instance Type"
-                },
-                "ADServer1NetBIOSName": {
-                    "default": "Domain Controller 1 NetBIOS Name"
-                },
-                "ADServer1PrivateIP": {
-                    "default": "Domain Controller 1 Private IP Address"
-                },
-                "ADServer2InstanceType": {
-                    "default": "Domain Controller 2 Instance Type"
-                },
-                "ADServer2NetBIOSName": {
-                    "default": "Domain Controller 2 NetBIOS Name"
-                },
-                "ADServer2PrivateIP": {
-                    "default": "Domain Controller 2 Private IP Address"
-                },
-                "DMZ1CIDR": {
-                    "default": "Public Subnet 1 CIDR"
-                },
-                "DMZ2CIDR": {
-                    "default": "Public Subnet 2 CIDR"
-                },
-                "DomainAdminPassword": {
-                    "default": "Domain Admin Password"
-                },
-                "DomainAdminUser": {
-                    "default": "Domain Admin User Name"
-                },
-                "DomainDNSName": {
-                    "default": "Domain DNS Name"
-                },
-                "DomainNetBIOSName": {
-                    "default": "Domain NetBIOS Name"
-                },
-                "KeyPairName": {
-                    "default": "Key Pair Name"
-                },
-                "PrivSub1CIDR": {
-                    "default": "Private Subnet 1 CIDR"
-                },
-                "PrivateSubnet1ID": {
-                    "default": "Private Subnet 1 ID"
-                },
-                "PrivSub2CIDR": {
-                    "default": "Private Subnet 2 CIDR"
-                },
-                "PrivateSubnet2ID": {
-                    "default": "Private Subnet 2 ID"
-                },
-                "QSS3BucketName": {
-                    "default": "Quick Start S3 Bucket Name"
-                },
-                "QSS3KeyPrefix": {
-                    "default": "Quick Start S3 Key Prefix"
-                },
-                "VPCCIDR": {
-                    "default": "VPC CIDR"
-                },
-                "VPCID": {
-                    "default": "VPC ID"
-                }
-            }
-        }
-    },
     "Parameters": {
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
@@ -163,8 +30,8 @@
             "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. corp.example.com",
             "Type": "String",
             "Default": "example.com",
-            "MinLength": "2",
-            "MaxLength": "255",
+            "MinLength": "3",
+            "MaxLength": "25",
             "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
         },
         "DomainNetBIOSName": {
@@ -282,20 +149,6 @@
             "Default": "10.0.64.0/19",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
-        "QSS3BucketName": {
-            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
-            "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
-            "Default": "quickstart-reference",
-            "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
-            "Type": "String"
-        },
-        "QSS3KeyPrefix": {
-            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
-            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
-            "Default": "microsoft/exchange/latest/",
-            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
-            "Type": "String"
-        },
         "VPCCIDR": {
             "Description": "CIDR Block used by the VPC",
             "Type": "String",
@@ -306,55 +159,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.02.23"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.01.12"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-764d0810"
+                "WS2012R2": "ami-1a7ee47c"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-7ca70a12"
-            },
-            "ap-northeast-3": {
-                "WS2012R2": "ami-1619176b"
+                "WS2012R2": "ami-0b4eee65"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-c5b7ebaa"
+                "WS2012R2": "ami-c488dfab"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-0a4b0276"
+                "WS2012R2": "ami-c83944b4"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-e80ec98a"
+                "WS2012R2": "ami-30a55952"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-3ed95e5a"
+                "WS2012R2": "ami-41ab2e25"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-e241238d"
+                "WS2012R2": "ami-3204995d"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-8b631bf2"
+                "WS2012R2": "ami-cc821eb5"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-b8cd29df"
+                "WS2012R2": "ami-9f677cfb"
             },
             "eu-west-3": {
-                "WS2012R2": "ami-5b74c226"
+                "WS2012R2": "ami-a5fd4bd8"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-e38fc78f"
+                "WS2012R2": "ami-d6c785ba"
             },
             "us-east-1": {
-                "WS2012R2": "ami-3118fa4c"
+                "WS2012R2": "ami-013e197b"
             },
             "us-east-2": {
-                "WS2012R2": "ami-014a7d64"
+                "WS2012R2": "ami-02446e67"
             },
             "us-west-1": {
-                "WS2012R2": "ami-34b4bc54"
+                "WS2012R2": "ami-92fefdf2"
             },
             "us-west-2": {
-                "WS2012R2": "ami-c1f37db9"
+                "WS2012R2": "ami-afe051d7"
             }
         }
     },
@@ -365,14 +215,6 @@
                     "Ref": "IncludeEdge"
                 },
                 "true"
-            ]
-        },
-        "GovCloudCondition": {
-            "Fn::Equals": [
-                {
-                    "Ref": "AWS::Region"
-                },
-                "us-gov-west-1"
             ]
         }
     },
@@ -433,85 +275,9 @@
             "Condition": "DeployEdge",
             "Type": "AWS::CloudFormation::WaitConditionHandle"
         },
-        "ExchangeHostRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "s3:GetObject"
-                                    ],
-                                    "Resource": {
-                                        "Fn::Sub": [
-                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
-                                            {
-                                                "Partition": {
-                                                    "Fn::If": [
-                                                        "GovCloudCondition",
-                                                        "aws-us-gov",
-                                                        "aws"
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    "Effect": "Allow"
-                                }
-                            ]
-                        },
-                        "PolicyName": "aws-quick-start-s3-policy"
-                    }
-                ],
-                "Path": "/",
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Principal": {
-                                "Service": [
-                                    "ec2.amazonaws.com"
-                                ]
-                            },
-                            "Effect": "Allow"
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                }
-            }
-        },
-        "ExchangeHostProfile": {
-            "Type": "AWS::IAM::InstanceProfile",
-            "Properties": {
-                "Roles": [
-                    {
-                        "Ref": "ExchangeHostRole"
-                    }
-                ],
-                "Path": "/"
-            }
-        },
         "EXCH1": {
             "Type": "AWS::EC2::Instance",
             "Metadata": {
-                "AWS::CloudFormation::Authentication": {
-                    "S3AccessCreds": {
-                        "type": "S3",
-                        "roleName": {
-                            "Ref": "ExchangeHostRole"
-                        },
-                        "buckets": [
-                            {
-                                "Ref": "QSS3BucketName"
-                            }
-                        ]
-                    }
-                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -566,125 +332,6 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Create-Share.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Create-Share.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Create-Folder.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Create-Folder.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Disable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Enable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-ExchangeFiles.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
                             "c:\\cfn\\scripts\\Install.bat": {
                                 "content": {
                                     "Fn::Join": [
@@ -708,144 +355,56 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-ExchangeVolume.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPreReq.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\modules\\AWSQuickStart.zip": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
-                            "C:\\cfn\\scripts\\Install-Exch2013Org.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-Exch2013Org.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-Exch2013.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-Exch2013.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Create-Share.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Create-Share.ps1"
                             },
-                            "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Create-Folder.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Create-Folder.ps1"
                             },
-                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-UcmaRuntime.ps1"
                             },
                             "c:\\cfn\\downloads\\UcmaRuntimeSetup.exe": {
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Join-Domain.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Install-Exch2013Org.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013Org.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Install-Exch2013.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Expand-ExchangeFiles.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -862,8 +421,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"",
-                                            "New-AWSQuickStartWaitHandle -Handle '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\CreateWaitHandle.ps1 -Handle '",
                                             {
                                                 "Ref": "EXCH1WaitHandle"
                                             },
@@ -1141,9 +699,6 @@
                 "InstanceType": {
                     "Ref": "EXCHInstanceType"
                 },
-                "IamInstanceProfile": {
-                    "Ref": "ExchangeHostProfile"
-                },
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -1235,19 +790,6 @@
             "Type": "AWS::EC2::Instance",
             "DependsOn": "EXCH1WaitCondition",
             "Metadata": {
-                "AWS::CloudFormation::Authentication": {
-                    "S3AccessCreds": {
-                        "type": "S3",
-                        "roleName": {
-                            "Ref": "ExchangeHostRole"
-                        },
-                        "buckets": [
-                            {
-                                "Ref": "QSS3BucketName"
-                            }
-                        ]
-                    }
-                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -1320,195 +862,44 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
-                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Disable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
                             },
-                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Enable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\modules\\AWSQuickStart.zip": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
-                            "C:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-ExchangeFiles.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-Exch2013.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-Exch2013.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
                             },
-                            "C:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-ExchangeVolume.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPreReq.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
-                            },
-                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-UcmaRuntime.ps1"
                             },
                             "c:\\cfn\\downloads\\UcmaRuntimeSetup.exe": {
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Join-Domain.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Install-Exch2013.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Expand-ExchangeFiles.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -1525,8 +916,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"",
-                                            "New-AWSQuickStartWaitHandle -Handle '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\CreateWaitHandle.ps1 -Handle '",
                                             {
                                                 "Ref": "EXCH2WaitHandle"
                                             },
@@ -1707,9 +1097,6 @@
                 "InstanceType": {
                     "Ref": "EXCHInstanceType"
                 },
-                "IamInstanceProfile": {
-                    "Ref": "ExchangeHostProfile"
-                },
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -1802,19 +1189,6 @@
             "DependsOn": "EXCH1WaitCondition",
             "Condition": "DeployEdge",
             "Metadata": {
-                "AWS::CloudFormation::Authentication": {
-                    "S3AccessCreds": {
-                        "type": "S3",
-                        "roleName": {
-                            "Ref": "ExchangeHostRole"
-                        },
-                        "buckets": [
-                            {
-                                "Ref": "QSS3BucketName"
-                            }
-                        ]
-                    }
-                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -1916,158 +1290,35 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
-                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Disable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\modules\\AWSQuickStart.zip": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
-                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Enable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePreReq.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-Edge2013.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-Edge2013.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Edge2013.ps1"
                             },
-                            "C:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/New-EdgeDnsRecord.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
                             },
-                            "C:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/New-EdgeDnsRecord.ps1"
                             },
-                            "C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {
@@ -2080,7 +1331,18 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-create-waithandle": {
-                                "command": "powershell.exe -command Write-AWSQuickStartStatus",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\CreateWaitHandle.ps1 -Handle '",
+                                            {
+                                                "Ref": "EDGE1WaitHandle"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
                             },
                             "d-reset-local-admin": {
@@ -2220,9 +1482,6 @@
                 "InstanceType": {
                     "Ref": "EdgeInstanceType"
                 },
-                "IamInstanceProfile": {
-                    "Ref": "ExchangeHostProfile"
-                },
                 "NetworkInterfaces": [
                     {
                         "DeleteOnTermination": "true",
@@ -2290,19 +1549,6 @@
             "DependsOn": "EXCH1WaitCondition",
             "Condition": "DeployEdge",
             "Metadata": {
-                "AWS::CloudFormation::Authentication": {
-                    "S3AccessCreds": {
-                        "type": "S3",
-                        "roleName": {
-                            "Ref": "ExchangeHostRole"
-                        },
-                        "buckets": [
-                            {
-                                "Ref": "QSS3BucketName"
-                            }
-                        ]
-                    }
-                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -2404,158 +1650,35 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
-                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Disable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\modules\\AWSQuickStart.zip": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
-                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Enable-AutoLogon.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePreReq.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
                             },
-                            "C:\\cfn\\scripts\\Install-Edge2013.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-Edge2013.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Edge2013.ps1"
                             },
-                            "C:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/New-EdgeDnsRecord.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
                             },
-                            "C:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/New-EdgeDnsRecord.ps1"
                             },
-                            "C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": {
-                                    "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
-                                        {
-                                            "QSS3Region": {
-                                                "Fn::If": [
-                                                    "GovCloudCondition",
-                                                    "s3-us-gov-west-1",
-                                                    "s3"
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                },
-                                "authentication": "S3AccessCreds"
+                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {
@@ -2568,7 +1691,18 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-create-waithandle": {
-                                "command": "powershell.exe -command Write-AWSQuickStartStatus",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\CreateWaitHandle.ps1 -Handle '",
+                                            {
+                                                "Ref": "EDGE2WaitHandle"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
                             },
                             "d-reset-local-admin": {
@@ -2707,9 +1841,6 @@
                 },
                 "InstanceType": {
                     "Ref": "EdgeInstanceType"
-                },
-                "IamInstanceProfile": {
-                    "Ref": "ExchangeHostProfile"
                 },
                 "NetworkInterfaces": [
                     {

@@ -29,8 +29,7 @@
                         "EXCH1PrivateIp2",
                         "EXCH2PrivateIp",
                         "EXCH2PrivateIp2",
-                        "IncludeEdge",
-                        "UserCount"
+                        "IncludeEdge"
                     ]
                 },
                 {
@@ -249,7 +248,7 @@
             "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
             "Type": "String",
             "Default": "example.com",
-            "MinLength": "3",
+            "MinLength": "2",
             "MaxLength": "255",
             "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
         },
@@ -352,11 +351,6 @@
             "Type": "String",
             "Default": "10.0.32.0/19",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
-        },
-        "UserCount": {
-            "Description": "Total number of test user accounts to create in Active Directory",
-            "Type": "Number",
-            "Default": "25"
         },
         "VPCCIDR": {
             "Description": "CIDR Block for the VPC",
@@ -788,9 +782,6 @@
                     },
                     "QSS3KeyPrefix": {
                         "Ref": "QSS3KeyPrefix"
-                    },
-                    "UserCount": {
-                        "Ref": "UserCount"
                     },
                     "VPCCIDR": {
                         "Fn::GetAtt": [
