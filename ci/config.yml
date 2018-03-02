@@ -17,6 +17,9 @@ global:
     - us-west-2
   reporting: true
 tests:
-  master:
+  master-old:
     template_file: Exchange_2013_Master.template
     parameter_input: Exchange_2013_Master.json
+  master:
+    template_file: exchange-master.template
+    parameter_input: exchange-master.json

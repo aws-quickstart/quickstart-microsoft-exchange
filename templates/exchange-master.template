@@ -1,0 +1,796 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This template deploys two Exchange 2013 servers. This template also deploys the require AD architecture outlined in \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Network Configuration"
+                    },
+                    "Parameters": [
+                        "AvailabilityZones",
+                        "KeyPairName",
+                        "DMZ1CIDR",
+                        "DMZ2CIDR",
+                        "PrivSub1CIDR",
+                        "PrivSub2CIDR",
+                        "VPCCIDR"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Exchange Configuration"
+                    },
+                    "Parameters": [
+                        "EdgeInstanceType",
+                        "EXCHInstanceType",
+                        "EXCH1PrivateIp",
+                        "EXCH1PrivateIp2",
+                        "EXCH2PrivateIp",
+                        "EXCH2PrivateIp2",
+                        "IncludeEdge"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Active Directory Configuration"
+                    },
+                    "Parameters": [
+                        "ADInstanceType",
+                        "AD2InstanceType",
+                        "AD1PrivateIp",
+                        "AD2PrivateIp",
+                        "ADServerNetBIOSName1",
+                        "ADServerNetBIOSName2",
+                        "ADServer1PrivateIP",
+                        "ADServer2PrivateIP",
+                        "DomainAdminUser",
+                        "DomainDNSName",
+                        "DomainNetBIOSName",
+                        "DomainAdminPassword",
+                        "RestoreModePassword"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "RDGW Configuration"
+                    },
+                    "Parameters": [
+                        "NumberOfRDGWHosts",
+                        "RDGWCIDR",
+                        "RDGWInstanceType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AWS Quick Start Configuration"
+                    },
+                    "Parameters": [
+                        "QSS3BucketName",
+                        "QSS3KeyPrefix"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "ADInstanceType": {
+                    "default": "Domain Controller 1 Instance Type"
+                },
+                "ADServerNetBIOSName1": {
+                    "default": "Domain Controller 1 NetBIOS Name"
+                },
+                "ADServer1PrivateIP": {
+                    "default": "Domain Controller 1 Private IP Address"
+                },
+                "AD2InstanceType": {
+                    "default": "Domain Controller 2 Instance Type"
+                },
+                "ADServerNetBIOSName2": {
+                    "default": "Domain Controller 2 NetBIOS Name"
+                },
+                "ADServer2PrivateIP": {
+                    "default": "Domain Controller 2 Private IP Address"
+                },
+                "AD1PrivateIp": {
+                    "default": "AD 1 Private IP"
+                },
+                "AD2PrivateIp": {
+                    "default": "AD 2 Private IP"
+                },
+                "DMZ1CIDR": {
+                    "default": "Public Subnet 1 CIDR"
+                },
+                "DMZ2CIDR": {
+                    "default": "Public Subnet 2 CIDR"
+                },
+                "DomainAdminPassword": {
+                    "default": "Domain Admin Password"
+                },
+                "DomainAdminUser": {
+                    "default": "Domain Admin User Name"
+                },
+                "DomainDNSName": {
+                    "default": "Domain DNS Name"
+                },
+                "DomainNetBIOSName": {
+                    "default": "Domain NetBIOS Name"
+                },
+                "EdgeInstanceType": {
+                    "default": "Edge Instance Type"
+                },
+                "EXCH1PrivateIp": {
+                    "default": "Exchange 1 Private IP"
+                },
+                "EXCH2PrivateIp2": {
+                    "default": "Exchange 2 Private IP"
+                },
+                "EXCH1PrivateIp2": {
+                    "default": "Exchange 1 Private IP"
+                },
+                "EXCH2PrivateIp": {
+                    "default": "Exchange 2 Private IP"
+                },
+                "IncludeEdge": {
+                    "default": "Edge Instance Type"
+                },
+                "KeyPairName": {
+                    "default": "Key Pair Name"
+                },
+                "NumberOfRDGWHosts": {
+                    "default": "Number of RDGW"
+                },
+                "PrivSub1CIDR": {
+                    "default": "Private Subnet 1 CIDR"
+                },
+                "PrivateSubnet1ID": {
+                    "default": "Private Subnet 1 ID"
+                },
+                "PrivSub2CIDR": {
+                    "default": "Private Subnet 2 CIDR"
+                },
+                "PrivateSubnet2ID": {
+                    "default": "Private Subnet 2 ID"
+                },
+                "RDGWCIDR": {
+                    "default": "CIDR allowed to access RDGW"
+                },
+                "RDGWInstanceType": {
+                    "default": "RDGW Instance Type"
+                },
+                "QSS3BucketName": {
+                    "default": "Quick Start S3 Bucket Name"
+                },
+                "QSS3KeyPrefix": {
+                    "default": "Quick Start S3 Key Prefix"
+                },
+                "RestoreModePassword": {
+                    "default": "Restore Mode Password"
+                },
+                "VPCCIDR": {
+                    "default": "VPC CIDR"
+                },
+                "VPCID": {
+                    "default": "VPC ID"
+                }
+            }
+        }
+    },
+    "Parameters": {
+        "ADInstanceType": {
+            "Description": "Amazon EC2 instance type for the first Active Directory Instance",
+            "Type": "String",
+            "Default": "m4.xlarge",
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ]
+        },
+        "AD2InstanceType": {
+            "Description": "Amazon EC2 instance type for the second Active Directory Instance",
+            "Type": "String",
+            "Default": "m4.xlarge",
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ]
+        },
+        "AD1PrivateIp": {
+            "Description": "Fixed private IP for the first Active Directory server located in AZ1",
+            "Type": "String",
+            "Default": "10.0.0.10"
+        },
+        "AD2PrivateIp": {
+            "Description": "Fixed private IP for the second Active Directory serverr located in AZ2",
+            "Type": "String",
+            "Default": "10.0.32.10"
+        },
+        "ADServerNetBIOSName1": {
+            "Description": "NetBIOS name of the 1st AD Server (upto 15 characters)",
+            "Type": "String",
+            "Default": "DC1",
+            "MinLength": "1",
+            "MaxLength": "15",
+            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+        },
+        "ADServerNetBIOSName2": {
+            "Description": "NetBIOS name of the 2nd AD Server (upto 15 characters)",
+            "Type": "String",
+            "Default": "DC2",
+            "MinLength": "1",
+            "MaxLength": "15",
+            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+        },
+        "AvailabilityZones": {
+            "Description": "List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.",
+            "Type": "List<AWS::EC2::AvailabilityZone::Name>"
+        },
+        "DomainAdminUser": {
+            "Description": "User name for the account that will be added as Domain Administrator. This is separate from the default \"Administrator\" account",
+            "Type": "String",
+            "Default": "StackAdmin",
+            "MinLength": "5",
+            "MaxLength": "25",
+            "AllowedPattern": "[a-zA-Z0-9]*"
+        },
+        "DomainAdminPassword": {
+            "Description": "Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols",
+            "Type": "String",
+            "MinLength": "8",
+            "MaxLength": "32",
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "NoEcho": "true"
+        },
+        "DomainDNSName": {
+            "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
+            "Type": "String",
+            "Default": "example.com",
+            "MinLength": "2",
+            "MaxLength": "255",
+            "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
+        },
+        "DomainNetBIOSName": {
+            "Description": "NetBIOS name of the domain (upto 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
+            "Type": "String",
+            "Default": "example",
+            "MinLength": "1",
+            "MaxLength": "15",
+            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+        },
+        "DMZ1CIDR": {
+            "Description": "CIDR Block for the Public DMZ Subnet located in AZ1",
+            "Type": "String",
+            "Default": "10.0.128.0/20",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "DMZ2CIDR": {
+            "Description": "CIDR Block for the Public DMZ Subnet located in AZ2",
+            "Type": "String",
+            "Default": "10.0.144.0/20",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "EXCH1PrivateIp": {
+            "Description": "Primary private IP for the first Exchange Server",
+            "Type": "String",
+            "Default": "10.0.0.150"
+        },
+        "EXCH1PrivateIp2": {
+            "Description": "Secondary private IP for the first Exchange Server",
+            "Type": "String",
+            "Default": "10.0.0.151"
+        },
+        "EXCH2PrivateIp": {
+            "Description": "Primary private IP for the second Exchange Server",
+            "Type": "String",
+            "Default": "10.0.32.150"
+        },
+        "EXCH2PrivateIp2": {
+            "Description": "Secondary private IP for the second Exchange Server",
+            "Type": "String",
+            "Default": "10.0.32.151"
+        },
+        "EXCHInstanceType": {
+            "Description": "Amazon EC2 instance type for the Exchange Servers",
+            "Type": "String",
+            "Default": "r4.xlarge",
+            "AllowedValues": [
+                "r4.xlarge",
+                "r4.2xlarge",
+                "r4.4xlarge"
+            ]
+        },
+        "EdgeInstanceType": {
+            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
+            "Type": "String",
+            "Default": "m4.large",
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m5.large",
+                "m5.xlarge",
+                "m5.2xlarge",
+                "m5.4xlarge"
+            ]
+        },
+        "IncludeEdge": {
+            "Description": "Set this parameter to true to include Exchange Edge Transport servers in the public subnets",
+            "AllowedValues": [
+                "true",
+                "false"
+            ],
+            "Type": "String",
+            "Default": "false"
+        },
+        "KeyPairName": {
+            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "NumberOfRDGWHosts": {
+            "AllowedValues": [
+                "1",
+                "2",
+                "3",
+                "4"
+            ],
+            "Default": "1",
+            "Description": "Enter the number of Remote Desktop Gateway hosts to create",
+            "Type": "String"
+        },
+        "PrivSub1CIDR": {
+            "Description": "CIDR block for the AD Server tier located in AZ1.",
+            "Type": "String",
+            "Default": "10.0.0.0/19",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "PrivSub2CIDR": {
+            "Description": "CIDR block for the AD Server tier located in AZ2.",
+            "Type": "String",
+            "Default": "10.0.32.0/19",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "VPCCIDR": {
+            "Description": "CIDR Block for the VPC",
+            "Type": "String",
+            "Default": "10.0.0.0/16",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "QSS3BucketName": {
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Default": "quickstart-reference",
+            "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Type": "String"
+        },
+        "QSS3KeyPrefix": {
+            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Default": "microsoft/exchange/latest/",
+            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Type": "String"
+        },
+        "RDGWInstanceType": {
+            "Description": "Amazon EC2 instance type for the Remote Desktop Gateway instances",
+            "Type": "String",
+            "Default": "t2.large",
+            "AllowedValues": [
+                "t2.large",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge",
+                "m5.large",
+                "m5.xlarge",
+                "m5.2xlarge",
+                "m5.4xlarge"
+            ]
+        },
+        "RestoreModePassword": {
+            "Description": "Password for a separate Administrator account when the domain controller is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols",
+            "Type": "String",
+            "MinLength": "8",
+            "MaxLength": "32",
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "NoEcho": "True"
+        },
+        "RDGWCIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "Description": "Allowed CIDR Block for external access to the Remote Desktop Gateways",
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "GovCloudCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
+        }
+    },
+    "Rules": {
+        "CheckSupportedInstances": {
+            "RuleCondition": {
+                "Fn::Or" : [
+                    {"Fn::Contains" : [[ "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge" ], {"Ref" : "ADInstanceType"}]},
+                    {"Fn::Contains" : [[ "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge" ], {"Ref" : "AD2InstanceType"}]}
+                ]
+            },
+            "Assertions": [
+                {
+                    "Assert": {
+                        "Fn::Not": [
+                            {
+                                "Fn::Contains": [
+                                    [
+                                        "eu-west-3"
+                                    ],
+                                    {
+                                        "Ref": "AWS::Region"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "AssertDescription": "M4 instances are not available in the Paris region"
+                }
+            ]
+        }
+    },
+    "Resources": {
+        "VPCStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template",
+                        {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "AvailabilityZones": {
+                        "Fn::Join": [
+                            ",",
+                            {
+                                "Ref": "AvailabilityZones"
+                            }
+                        ]
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "NumberOfAZs": "2",
+                    "PrivateSubnet1ACIDR": {
+                        "Ref": "PrivSub1CIDR"
+                    },
+                    "PrivateSubnet2ACIDR": {
+                        "Ref": "PrivSub2CIDR"
+                    },
+                    "PublicSubnet1CIDR": {
+                        "Ref": "DMZ1CIDR"
+                    },
+                    "PublicSubnet2CIDR": {
+                        "Ref": "DMZ2CIDR"
+                    },
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
+                    }
+                }
+            }
+        },
+        "ADStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-1.template",
+                        {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "ADServer1PrivateIP": {
+                        "Ref": "AD1PrivateIp"
+                    },
+                    "ADServer2PrivateIP": {
+                        "Ref": "AD2PrivateIp"
+                    },
+                    "ADServer1InstanceType": {
+                        "Ref": "ADInstanceType"
+                    },
+                    "ADServer2InstanceType": {
+                        "Ref": "AD2InstanceType"
+                    },
+                    "ADServer1NetBIOSName": {
+                        "Ref": "ADServerNetBIOSName1"
+                    },
+                    "ADServer2NetBIOSName": {
+                        "Ref": "ADServerNetBIOSName2"
+                    },
+                    "PublicSubnet1CIDR": {
+                        "Ref": "DMZ1CIDR"
+                    },
+                    "PublicSubnet2CIDR": {
+                        "Ref": "DMZ2CIDR"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "PrivateSubnet1CIDR": {
+                        "Ref": "PrivSub1CIDR"
+                    },
+                    "PrivateSubnet2CIDR": {
+                        "Ref": "PrivSub2CIDR"
+                    },
+                    "PrivateSubnet1ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PrivateSubnet1AID"
+                        ]
+                    },
+                    "PrivateSubnet2ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PrivateSubnet2AID"
+                        ]
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/"
+                    },
+                    "RestoreModePassword": {
+                        "Ref": "RestoreModePassword"
+                    },
+                    "VPCCIDR": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCCIDR"
+                        ]
+                    }
+                }
+            }
+        },
+        "RDGWStack": {
+            "DependsOn": "ADStack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/templates/rdgw-domain.template",
+                        {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainMemberSGID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.DomainMemberSGID"
+                        ]
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "NumberOfRDGWHosts": {
+                        "Ref": "NumberOfRDGWHosts"
+                    },
+                    "PublicSubnet1ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet1ID"
+                        ]
+                    },
+                    "PublicSubnet2ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet2ID"
+                        ]
+                    },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/"
+                    },
+                    "RDGWInstanceType": {
+                        "Ref": "RDGWInstanceType"
+                    },
+                    "RDGWCIDR": {
+                        "Ref": "RDGWCIDR"
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    }
+                }
+            }
+        },
+        "ExchStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "DependsOn": "ADStack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/exchange.template",
+                        {
+                            "QSS3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "ADServer1PrivateIp": {
+                        "Ref": "AD1PrivateIp"
+                    },
+                    "ADServer2PrivateIp": {
+                        "Ref": "AD2PrivateIp"
+                    },
+                    "ADServerNetBIOSName1": {
+                        "Ref": "ADServerNetBIOSName1"
+                    },
+                    "ADServerNetBIOSName2": {
+                        "Ref": "ADServerNetBIOSName2"
+                    },
+                    "EXCHInstanceType": {
+                        "Ref": "EXCHInstanceType"
+                    },
+                    "EdgeInstanceType": {
+                        "Ref": "EdgeInstanceType"
+                    },
+                    "IncludeEdge": {
+                        "Ref": "IncludeEdge"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainMemberSGID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.DomainMemberSGID"
+                        ]
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "VPC": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "PrivSub1CIDR": {
+                        "Ref": "PrivSub1CIDR"
+                    },
+                    "EXCH1PrivateIp": {
+                        "Ref": "EXCH1PrivateIp"
+                    },
+                    "EXCH1PrivateIp2": {
+                        "Ref": "EXCH1PrivateIp2"
+                    },
+                    "PrivSub2CIDR": {
+                        "Ref": "PrivSub2CIDR"
+                    },
+                    "EXCH2PrivateIp": {
+                        "Ref": "EXCH2PrivateIp"
+                    },
+                    "EXCH2PrivateIp2": {
+                        "Ref": "EXCH2PrivateIp2"
+                    },
+                    "PrivateSubnet1Id": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PrivateSubnet1AID"
+                        ]
+                    },
+                    "PrivateSubnet2Id": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PrivateSubnet2AID"
+                        ]
+                    },
+                    "PublicSubnet1Id": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet1ID"
+                        ]
+                    },
+                    "PublicSubnet2Id": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet2ID"
+                        ]
+                    },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                        "Ref": "QSS3KeyPrefix"
+                    },
+                    "VPCCIDR": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCCIDR"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
