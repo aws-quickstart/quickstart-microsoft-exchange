@@ -24,6 +24,10 @@
         "ParameterValue": "DC2"
     },
     {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": "$[alfred_genaz_2]"
+    },
+    {
         "ParameterKey": "DMZ1CIDR",
         "ParameterValue": "10.0.32.0/20"
     },
@@ -80,16 +84,16 @@
         "ParameterValue": "$[alfred_getkeypair]"
     },
     {
-        "ParameterKey": "NATInstanceType",
-        "ParameterValue": "t2.small"
-    },
-    {
         "ParameterKey": "PrivSub1CIDR",
         "ParameterValue": "10.0.0.0/19"
     },
     {
         "ParameterKey": "PrivSub2CIDR",
         "ParameterValue": "10.0.64.0/19"
+    },
+    {
+        "ParameterKey": "RDGWCIDR",
+        "ParameterValue": "10.0.0.0/16"
     },
     {
         "ParameterKey": "RDGWInstanceType",
