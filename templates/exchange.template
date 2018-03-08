@@ -860,70 +860,74 @@
         },
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2017.10.13",
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2017.10.13"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.02.23",
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.02.23"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-4d34eb2b",
-                "WS2016FULLBASE": "ami-4325fa25"
+                "WS2012R2": "ami-764d0810",
+                "WS2016FULLBASE": "ami-d36623b5"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-82fe5bec",
-                "WS2016FULLBASE": "ami-4dfa5f23"
+                "WS2012R2": "ami-7ca70a12",
+                "WS2016FULLBASE": "ami-74a00d1a"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-27286b48",
-                "WS2016FULLBASE": "ami-ac3370c3"
+                "WS2012R2": "ami-c5b7ebaa",
+                "WS2016FULLBASE": "ami-4bacf024"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-0e13686d",
-                "WS2016FULLBASE": "ami-ed067d8e"
+                "WS2012R2": "ami-0a4b0276",
+                "WS2016FULLBASE": "ami-c15910bd"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-2013f142",
-                "WS2016FULLBASE": "ami-42638120"
+                "WS2012R2": "ami-e80ec98a",
+                "WS2016FULLBASE": "ami-5d09ce3f"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-8bff47ef",
-                "WS2016FULLBASE": "ami-87f44ce3"
+                "WS2012R2": "ami-3ed95e5a",
+                "WS2016FULLBASE": "ami-83db5ce7"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-e8843b87",
-                "WS2016FULLBASE": "ami-5b7ac534"
+                "WS2012R2": "ami-e241238d",
+                "WS2016FULLBASE": "ami-0145276e"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-1ecc1e67",
-                "WS2016FULLBASE": "ami-b7e93bce"
+                "WS2012R2": "ami-8b631bf2",
+                "WS2016FULLBASE": "ami-ba522ac3"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-4cbba928",
-                "WS2016FULLBASE": "ami-06bcae62"
+                "WS2012R2": "ami-b8cd29df",
+                "WS2016FULLBASE": "ami-15cb2f72"
+            },
+			"eu-west-3": {
+                "WS2012R2": "ami-5b74c226",
+                "WS2016FULLBASE": "ami-bf75c3c2"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-5d512f31",
-                "WS2016FULLBASE": "ami-f14a349d"
+                "WS2012R2": "ami-e38fc78f",
+                "WS2016FULLBASE": "ami-b780c8db"
             },
             "us-east-1": {
-                "WS2012R2": "ami-f6529b8c",
-                "WS2016FULLBASE": "ami-e3bb7399"
+                "WS2012R2": "ami-3118fa4",
+                "WS2016FULLBASE": "ami-4176943c"
             },
             "us-east-2": {
-                "WS2012R2": "ami-80765ae5",
-                "WS2016FULLBASE": "ami-77765a12"
+                "WS2012R2": "ami-014a7d64",
+                "WS2016FULLBASE": "ami-16370073"
             },
             "us-west-1": {
-                "WS2012R2": "ami-955c6ef5",
-                "WS2016FULLBASE": "ami-0a41736a"
+                "WS2012R2": "ami-34b4bc54",
+                "WS2016FULLBASE": "ami-e8b6be88"
             },
             "us-west-2": {
-                "WS2012R2": "ami-f318de8b",
-                "WS2016FULLBASE": "ami-343ef84c"
+                "WS2012R2": "ami-c1f37db9",
+                "WS2016FULLBASE": "ami-74800e0c"
             }
         },
         "MediaLinksMapper": {
             "Exchange": {
-                "2013": "https://download.microsoft.com/download/5/9/8/598B1735-BC2E-43FC-88DD-0CDFF838EE09/Exchange2013-x64-cu18.exe",
-                "2016": "https://download.microsoft.com/download/0/7/4/074FADBD-4422-4BBC-8C04-B56428667E36/ExchangeServer2016-x64-cu7.iso"
+                "2013": "https://download.microsoft.com/download/3/A/4/3A4E9E23-E698-477D-B1E3-CA235CE3DB7C/Exchange2013-x64-cu19.exe",
+                "2016": "https://download.microsoft.com/download/1/F/7/1F777B44-32CB-4F3D-B486-3D0F566D79A9/ExchangeServer2016-x64-cu8.iso"
             },
             "UCMA": {
                 "ALL": "https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
@@ -2497,7 +2501,7 @@
         },
         "ExchangeServerAccessSecurityGroup": {
             "Properties": {
-                "GroupDescription": "Allows access to Exchange Servers",
+                "GroupDescription": "Allows client access to Exchange Servers",
                 "VpcId": {
                     "Ref": "VPCID"
                 }
@@ -2509,6 +2513,7 @@
                 "GroupDescription": "Exchange Client access ports",
                 "SecurityGroupIngress": [
                     {
+						"Description" : "Encrypted web connections from clients",
                         "FromPort": "443",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2517,6 +2522,7 @@
                         "ToPort": "443"
                     },
                     {
+						"Description" : "Unencrypted web connections from clients",
                         "FromPort": "80",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2525,6 +2531,7 @@
                         "ToPort": "80"
                     },
                     {
+						"Description" : "IMAP4 clients",
                         "FromPort": "143",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2533,6 +2540,7 @@
                         "ToPort": "143"
                     },
                     {
+						"Description" : "Secure IMAP4 clients",
                         "FromPort": "993",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2541,6 +2549,7 @@
                         "ToPort": "993"
                     },
                     {
+						"Description" : "POP3 clients",
                         "FromPort": "110",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2549,6 +2558,7 @@
                         "ToPort": "110"
                     },
                     {
+						"Description" : "Secure POP3 clients",
                         "FromPort": "995",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2557,6 +2567,7 @@
                         "ToPort": "995"
                     },
                     {
+						"Description" : "Authenticated SMTP clients",
                         "FromPort": "587",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
@@ -2565,17 +2576,12 @@
                         "ToPort": "587"
                     },
                     {
+						"Description" : "SMTP clients",
                         "FromPort": "25",
                         "IpProtocol": "tcp",
                         "SourceSecurityGroupId": {
                             "Ref": "ExchangeServerAccessSecurityGroup"
                         },
-                        "ToPort": "1433"
-                    },
-                    {
-                        "FromPort": "25",
-                        "IpProtocol": "tcp",
-                        "CidrIp": "0.0.0.0/0",
                         "ToPort": "25"
                     }
                 ],
@@ -2658,6 +2664,7 @@
                 },
                 "SecurityGroupIngress": [
                     {
+						"Description" : "Edge Server directory synchronization",
                         "IpProtocol": "udp",
                         "FromPort": "50636",
                         "ToPort": "50636",
@@ -2666,6 +2673,7 @@
                         }
                     },
                     {
+						"Description" : "Edge Server directory synchronization",
                         "IpProtocol": "udp",
                         "FromPort": "50636",
                         "ToPort": "50636",
@@ -2674,6 +2682,7 @@
                         }
                     },
                     {
+						"Description" : "Edge Server directory synchronization",
                         "IpProtocol": "udp",
                         "FromPort": "50636",
                         "ToPort": "50636",
@@ -2682,6 +2691,7 @@
                         }
                     },
                     {
+						"Description" : "Inbound mail over SMTP",
                         "IpProtocol": "tcp",
                         "FromPort": "25",
                         "ToPort": "25",
@@ -5560,6 +5570,44 @@
             },
             "Type": "AWS::EC2::Instance"
         },
+		"loadBalancer" : {
+			"Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+		    "Properties": {
+				"Scheme" : "internal",
+				"Type" : "network",
+				"Subnets" : [ {"Ref": "PrivateSubnet1ID"}, {"Ref" : "PrivateSubnet2ID"}]
+		  }
+		},
+		"TargetGroup" : {
+			"Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+			"Properties" : {
+				"Name": "ExchangeNodes",
+				"Port": 10,
+				"Protocol": "TCP",
+				"TargetGroupAttributes": [{
+					"Key": "deregistration_delay.timeout_seconds",
+					"Value": "20"
+				}],
+				"VpcId": {"Fn::Select": [
+						"0",
+						{
+						  "Ref": "VPC"
+						}
+					  ]}
+			  }
+		},
+		"Listener": {
+			"Type": "AWS::ElasticLoadBalancingV2::Listener",
+			"Properties": {
+				"DefaultActions": [{
+					"Type": "forward",
+					"TargetGroupArn": { "Ref": "TargetGroup" }
+					}],
+				"LoadBalancerArn": { "Ref": "loadBalancer" },
+				"Port": "80",
+				"Protocol": "TCP"
+			}
+		},
         "WSFCNode1Volume1": {
             "Properties": {
                 "AvailabilityZone": {
@@ -5881,15 +5929,14 @@
         },
         "WSFCSecurityGroupIngressAllTraffic": {
             "Properties": {
-                "FromPort": "0",
+			    "Description" : "All traffic allowed between Exchange nodes",
                 "GroupId": {
                     "Ref": "WSFCSecurityGroup"
                 },
                 "IpProtocol": "-1",
                 "SourceSecurityGroupId": {
                     "Ref": "WSFCSecurityGroup"
-                },
-                "ToPort": "65535"
+                }
             },
             "Type": "AWS::EC2::SecurityGroupIngress"
         }
