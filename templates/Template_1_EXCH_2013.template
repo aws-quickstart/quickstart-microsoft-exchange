@@ -356,55 +356,55 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Initialize-ExchangeVolume.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Create-Share.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Create-Share.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Create-Share.ps1"
                             },
                             "c:\\cfn\\scripts\\Create-Folder.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Create-Folder.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Create-Folder.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-ExchPreReq.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-UcmaRuntime.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-UcmaRuntime.ps1"
                             },
                             "c:\\cfn\\downloads\\UcmaRuntimeSetup.exe": {
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
                             "c:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Exch2013Org.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013Org.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Exch2013Org.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Exch2013.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Exch2013.ps1"
                             },
                             "c:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Expand-ExchangeFiles.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Expand-ExchangeFiles.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -863,43 +863,43 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\scripts\\Initialize-ExchangeVolume.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Initialize-ExchangeVolume.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Initialize-ExchangeVolume.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-ExchPreReq.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-ExchPreReq.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-ExchPreReq.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-UcmaRuntime.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-UcmaRuntime.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-UcmaRuntime.ps1"
                             },
                             "c:\\cfn\\downloads\\UcmaRuntimeSetup.exe": {
                                 "source": "http://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
                             },
                             "c:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Exch2013.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Exch2013.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Exch2013.ps1"
                             },
                             "c:\\cfn\\scripts\\Expand-ExchangeFiles.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Expand-ExchangeFiles.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Expand-ExchangeFiles.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Invoke-ADReplication.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1"
                             }
                         },
                         "commands": {
@@ -1291,34 +1291,34 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-EdgePreReq.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Edge2013.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Edge2013.ps1"
                             },
                             "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Set-PrimaryDnsSuffix.ps1"
                             },
                             "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/New-EdgeDnsRecord.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/New-EdgeDnsRecord.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Reset-LocalAdminPassword.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {
@@ -1651,34 +1651,34 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "c:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "c:\\cfn\\scripts\\CreateWaitHandle.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/CreateWaitHandle.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-EdgePreReq.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-EdgePreReq.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-EdgePreReq.ps1"
                             },
                             "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Install-Edge2013.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Edge2013.ps1"
                             },
                             "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Set-PrimaryDnsSuffix.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Set-PrimaryDnsSuffix.ps1"
                             },
                             "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/New-EdgeDnsRecord.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/New-EdgeDnsRecord.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/scripts/Reset-LocalAdminPassword.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {

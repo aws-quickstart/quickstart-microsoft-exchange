@@ -203,7 +203,7 @@
         "ADStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/activedirectory/latest/templates/Template_1_AD_2012.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-activedirectory/templates/Template_1_AD_2012.template",
                 "Parameters": {
                     "AD1PrivateIp": {
                         "Ref": "AD1PrivateIp"
@@ -272,7 +272,7 @@
             "Type": "AWS::CloudFormation::Stack",
             "DependsOn": "ADStack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/exchange/latest/templates/Template_1_EXCH_2013.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/templates/Template_1_EXCH_2013.template",
                 "Parameters": {
                     "ADServer1PrivateIp": {
                         "Ref": "AD1PrivateIp"
