@@ -1215,14 +1215,13 @@
                     {
                         "DeviceName": "/dev/xvdb",
                         "VirtualName": "ephemeral0"
-                    }
-                ],
-                "Volumes": [
+                    },
                     {
-                        "VolumeId": {
-                            "Ref": "EXCH1Volume1"
-                        },
-                        "Device": "/dev/xvdf"
+                        "DeviceName": "/dev/xvdf",
+                        "Ebs": {
+                            "VolumeSize": "1000",
+                            "VolumeType": "gp2"
+                        }
                     }
                 ],
                 "KeyName": {
@@ -1781,14 +1780,13 @@
                     {
                         "DeviceName": "/dev/xvdb",
                         "VirtualName": "ephemeral0"
-                    }
-                ],
-                "Volumes": [
+                    },
                     {
-                        "VolumeId": {
-                            "Ref": "EXCH2Volume1"
-                        },
-                        "Device": "/dev/xvdf"
+                        "DeviceName": "/dev/xvdf",
+                        "Ebs": {
+                            "VolumeSize": "1000",
+                            "VolumeType": "gp2"
+                        }
                     }
                 ],
                 "KeyName": {
@@ -2810,36 +2808,6 @@
                 "Domain": "vpc",
                 "InstanceId": {
                     "Ref": "EDGE2"
-                }
-            }
-        },
-        "EXCH1Volume1": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "Size": "1000",
-                "VolumeType": "gp2",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        0,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                }
-            }
-        },
-        "EXCH2Volume1": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "Size": "1000",
-                "VolumeType": "gp2",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        1,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
                 }
             }
         },
