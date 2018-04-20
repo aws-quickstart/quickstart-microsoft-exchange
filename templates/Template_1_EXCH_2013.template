@@ -1305,8 +1305,8 @@
                             "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Edge2013.ps1"
                             },
-                            "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Set-PrimaryDnsSuffix.ps1"
+                            "c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1": {
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1"
                             },
                             "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/New-EdgeDnsRecord.ps1"
@@ -1318,7 +1318,7 @@
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Reset-LocalAdminPassword.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {
@@ -1380,12 +1380,12 @@
                                 "command": "powershell.exe -Command Rename-Computer -NewName EDGE1 -Restart",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-execute-powershell-script-SetDnsSuffix": {
+                            "b-execute-powershell-script-SetDNSSuffix": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1 -Suffix '",
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
@@ -1665,8 +1665,8 @@
                             "c:\\cfn\\scripts\\Install-Edge2013.ps1": {
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Install-Edge2013.ps1"
                             },
-                            "c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
-                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Set-PrimaryDnsSuffix.ps1"
+                            "c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1": {
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1"
                             },
                             "c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1": {
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/New-EdgeDnsRecord.ps1"
@@ -1678,7 +1678,7 @@
                                 "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Enable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
-                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/scripts/Reset-LocalAdminPassword.ps1"
+                                "source": "https://s3.amazonaws.com/aws-quickstart/quickstart-microsoft-exchange/submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1"
                             }
                         },
                         "commands": {
@@ -1740,12 +1740,12 @@
                                 "command": "powershell.exe -Command Rename-Computer -NewName EDGE2 -Restart",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-execute-powershell-script-SetDnsSuffix": {
+                            "b-execute-powershell-script-SetDNSSuffix": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1 -Suffix '",
                                             {
                                                 "Ref": "DomainDNSName"
                                             },

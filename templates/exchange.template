@@ -2018,10 +2018,10 @@
                                 },
                                 "authentication": "S3AccessCreds"
                             },
-                            "C:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
+                            "C:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2038,7 +2038,7 @@
                             "C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2118,12 +2118,12 @@
                                 "command": "powershell.exe -Command Rename-Computer -NewName EDGE1 -Restart",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-execute-powershell-script-SetDnsSuffix": {
+                            "b-execute-powershell-script-SetDNSSuffix": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1 -Suffix '",
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
@@ -2506,10 +2506,10 @@
                                 },
                                 "authentication": "S3AccessCreds"
                             },
-                            "C:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1": {
+                            "C:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2526,7 +2526,7 @@
                             "C:\\cfn\\scripts\\Reset-LocalAdminPassword.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1",
                                         {
                                             "QSS3Region": {
                                                 "Fn::If": [
@@ -2606,12 +2606,12 @@
                                 "command": "powershell.exe -Command Rename-Computer -NewName EDGE2 -Restart",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-execute-powershell-script-SetDnsSuffix": {
+                            "b-execute-powershell-script-SetDNSSuffix": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDnsSuffix.ps1 -Suffix '",
+                                            "powershell.exe -command \"c:\\cfn\\scripts\\Set-PrimaryDNSSuffix.ps1 -Suffix '",
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
