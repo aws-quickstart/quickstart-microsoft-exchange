@@ -9,35 +9,22 @@
                         "default": "Network Configuration"
                     },
                     "Parameters": [
-                        "DMZ1CIDR",
-                        "DMZ2CIDR",
-                        "KeyPairName",
-                        "PrivSub1CIDR",
-                        "PrivSub2CIDR",
-                        "PrivateSubnet1Id",
-                        "PrivateSubnet2Id",
-                        "PublicSubnet1Id",
-                        "PublicSubnet2Id",
-                        "PublicSubnet1CIDR",
-                        "PublicSubnet2CIDR",
-                        "VPC",
-                        "VPCCIDR"
+                        "PrivateSubnet1CIDR",
+                        "PrivateSubnet1ID",
+                        "PrivateSubnet2CIDR",
+                        "PrivateSubnet2ID",
+                        "PublicSubnet1ID",
+                        "PublicSubnet2ID",
+                        "VPCCIDR",
+                        "VPCID"
                     ]
                 },
                 {
                     "Label": {
-                        "default": "Microsoft Exchange Configuration"
+                        "default": "Amazon EC2 Configuration"
                     },
                     "Parameters": [
-                        "EdgeInstanceType",
-                        "EXCHInstanceType",
-                        "EXCH1PrivateIp",
-                        "EXCH2PrivateIp",
-                        "EXCH1PrivateIp2",
-                        "EXCH2PrivateIp2",
-                        "DomainDNSName",
-                        "DomainNetBIOSName",
-                        "IncludeEdge"
+                        "KeyPairName"
                     ]
                 },
                 {
@@ -45,16 +32,29 @@
                         "default": "Microsoft Active Directory Configuration"
                     },
                     "Parameters": [
-                        "ADInstanceType",
-                        "AD2InstanceType",
-                        "ADServer1PrivateIp",
-                        "ADServer2PrivateIp",
-                        "ADServerNetBIOSName1",
-                        "ADServerNetBIOSName2",
-                        "DomainMemberSGID",
-                        "DomainAdminUser",
+                        "ADServer1NetBIOSName",
+                        "ADServer1PrivateIP",
+                        "ADServer2NetBIOSName",
+                        "ADServer2PrivateIP",
                         "DomainDNSName",
-                        "DomainAdminPassword"
+                        "DomainNetBIOSName",
+                        "DomainAdminUser",
+                        "DomainAdminPassword",
+                        "DomainMemberSGID"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Exchange Configuration"
+                    },
+                    "Parameters": [
+                        "EXCHInstanceType",
+                        "EXCH1PrivateIP1",
+                        "EXCH1PrivateIP2",
+                        "EXCH2PrivateIP1",
+                        "EXCH2PrivateIP2",
+                        "IncludeEdge",
+                        "EdgeInstanceType"
                     ]
                 },
                 {
@@ -68,29 +68,17 @@
                 }
             ],
             "ParameterLabels": {
-                "ADServer1InstanceType": {
-                    "default": "Domain Controller 1 Instance Type"
-                },
                 "ADServer1NetBIOSName": {
                     "default": "Domain Controller 1 NetBIOS Name"
                 },
                 "ADServer1PrivateIP": {
                     "default": "Domain Controller 1 Private IP Address"
                 },
-                "ADServer2InstanceType": {
-                    "default": "Domain Controller 2 Instance Type"
-                },
                 "ADServer2NetBIOSName": {
                     "default": "Domain Controller 2 NetBIOS Name"
                 },
                 "ADServer2PrivateIP": {
                     "default": "Domain Controller 2 Private IP Address"
-                },
-                "DMZ1CIDR": {
-                    "default": "Public Subnet 1 CIDR"
-                },
-                "DMZ2CIDR": {
-                    "default": "Public Subnet 2 CIDR"
                 },
                 "DomainAdminPassword": {
                     "default": "Domain Admin Password"
@@ -101,23 +89,53 @@
                 "DomainDNSName": {
                     "default": "Domain DNS Name"
                 },
+                "DomainMemberSGID": {
+                    "default": "Security Group ID for AD Domain Members"
+                },
                 "DomainNetBIOSName": {
                     "default": "Domain NetBIOS Name"
+                },
+                "EXCH1PrivateIP1": {
+                    "default": "Exchange 1 Private IP"
+                },
+                "EXCH1PrivateIP2": {
+                    "default": "Exchange 1 Private IP"
+                },
+                "EXCH2PrivateIP1": {
+                    "default": "Exchange 2 Private IP"
+                },
+                "EXCH2PrivateIP2": {
+                    "default": "Exchange 2 Private IP"
+                },
+                "EXCHInstanceType": {
+                    "default": "Exchange Instance Type"
+                },
+                "EdgeInstanceType": {
+                    "default": "Edge Instance Type"
+                },
+                "IncludeEdge": {
+                    "default": "Edge Instance Type"
                 },
                 "KeyPairName": {
                     "default": "Key Pair Name"
                 },
-                "PrivSub1CIDR": {
+                "PrivateSubnet1CIDR": {
                     "default": "Private Subnet 1 CIDR"
                 },
                 "PrivateSubnet1ID": {
                     "default": "Private Subnet 1 ID"
                 },
-                "PrivSub2CIDR": {
+                "PrivateSubnet2CIDR": {
                     "default": "Private Subnet 2 CIDR"
                 },
                 "PrivateSubnet2ID": {
                     "default": "Private Subnet 2 ID"
+                },
+                "PublicSubnet1ID": {
+                    "default": "Public Subnet 1 ID"
+                },
+                "PublicSubnet2ID": {
+                    "default": "Public Subnet 2 ID"
                 },
                 "QSS3BucketName": {
                     "default": "Quick Start S3 Bucket Name"
@@ -135,152 +153,150 @@
         }
     },
     "Parameters": {
-        "KeyPairName": {
-            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
-            "Type": "AWS::EC2::KeyPair::KeyName"
-        },
-        "EXCHInstanceType": {
-            "Description": "Amazon EC2 instance type for the Exchange Servers",
-            "Type": "String",
-            "Default": "r4.xlarge",
-            "AllowedValues": [
-                "r4.xlarge",
-                "r4.2xlarge",
-                "r4.4xlarge"
-            ]
-        },
-        "EdgeInstanceType": {
-            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
-            "Type": "String",
-            "Default": "m4.large",
-            "AllowedValues": [
-                "m4.large",
-                "m4.xlarge",
-                "m4.2xlarge"
-            ]
-        },
-        "DomainDNSName": {
-            "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. corp.example.com",
-            "Type": "String",
-            "Default": "example.com",
-            "MinLength": "2",
-            "MaxLength": "255",
-            "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
-        },
-        "DomainNetBIOSName": {
-            "Description": "NetBIOS name of the domain (upto 15 characters) for users of earlier versions of Windows e.g. CORP",
-            "Type": "String",
-            "Default": "example",
-            "MinLength": "1",
-            "MaxLength": "15",
-            "AllowedPattern": "[a-zA-Z0-9\\-]+"
-        },
-        "ADServerNetBIOSName1": {
-            "Description": "NetBIOS name of the existing Domain Controller in AZ1",
-            "Type": "String",
+        "ADServer1NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9\\-]+",
             "Default": "DC1",
-            "MinLength": "1",
+            "Description": "NetBIOS name of the existing Domain Controller in AZ1",
             "MaxLength": "15",
-            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+            "MinLength": "1",
+            "Type": "String"
         },
-        "ADServerNetBIOSName2": {
-            "Description": "NetBIOS name of the existing Domain Controller in AZ2",
-            "Type": "String",
+        "ADServer1PrivateIP": {
+            "Default": "10.0.0.10",
+            "Description": "Fixed private IP for the first existing Active Directory server located in AZ1",
+            "Type": "String"
+        },
+        "ADServer2NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9\\-]+",
             "Default": "DC2",
-            "MinLength": "1",
+            "Description": "NetBIOS name of the existing Domain Controller in AZ2",
             "MaxLength": "15",
-            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+            "MinLength": "1",
+            "Type": "String"
         },
-        "DomainAdminUser": {
-            "Description": "User name for the account that will be added as Domain Administrator. This is separate from the default \"Administrator\" account",
-            "Type": "String",
-            "Default": "StackAdmin",
-            "MinLength": "5",
-            "MaxLength": "25",
-            "AllowedPattern": "[a-zA-Z0-9]*"
+        "ADServer2PrivateIP": {
+            "Default": "10.0.64.10",
+            "Description": "Fixed private IP for the second existing Active Directory serverr located in AZ2",
+            "Type": "String"
         },
         "DomainAdminPassword": {
-            "Description": "Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols",
-            "Type": "String",
-            "MinLength": "8",
-            "MaxLength": "32",
             "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
-            "NoEcho": "true"
+            "Description": "Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "true",
+            "Type": "String"
         },
-        "ADServer1PrivateIp": {
-            "Description": "Fixed private IP for the first existing Active Directory server located in AZ1",
-            "Type": "String",
-            "Default": "10.0.0.10"
+        "DomainAdminUser": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "Default": "StackAdmin",
+            "Description": "User name for the account that will be added as Domain Administrator. This is separate from the default \"Administrator\" account",
+            "MaxLength": "25",
+            "MinLength": "5",
+            "Type": "String"
         },
-        "ADServer2PrivateIp": {
-            "Description": "Fixed private IP for the second existing Active Directory serverr located in AZ2",
-            "Type": "String",
-            "Default": "10.0.64.10"
-        },
-        "EXCH1PrivateIp": {
-            "Description": "Primary private IP for the first Exchange Server",
-            "Type": "String",
-            "Default": "10.0.0.150"
-        },
-        "EXCH1PrivateIp2": {
-            "Description": "Secondary private IP for the first Exchange Server",
-            "Type": "String",
-            "Default": "10.0.0.151"
-        },
-        "EXCH2PrivateIp": {
-            "Description": "Primary private IP for the second Exchange Server",
-            "Type": "String",
-            "Default": "10.0.64.150"
-        },
-        "EXCH2PrivateIp2": {
-            "Description": "Secondary private IP for the second Exchange Server",
-            "Type": "String",
-            "Default": "10.0.64.151"
-        },
-        "IncludeEdge": {
-            "Description": "Set this parameter to true to include Exchange Edge Transport servers in the public subnets",
-            "AllowedValues": [
-                "true",
-                "false"
-            ],
-            "Type": "String",
-            "Default": "false"
+        "DomainDNSName": {
+            "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+",
+            "Default": "example.com",
+            "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. corp.example.com",
+            "MaxLength": "255",
+            "MinLength": "2",
+            "Type": "String"
         },
         "DomainMemberSGID": {
             "Description": "ID of the Domain Member Security Group (e.g., sg-7f16e910)",
             "Type": "AWS::EC2::SecurityGroup::Id"
         },
-        "VPC": {
-            "Description": "ID of the VPC (e.g., vpc-0343606e)",
-            "Type": "AWS::EC2::VPC::Id"
+        "DomainNetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9\\-]+",
+            "Default": "example",
+            "Description": "NetBIOS name of the domain (upto 15 characters) for users of earlier versions of Windows e.g. CORP",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
         },
-        "PrivateSubnet1Id": {
+        "EXCH1PrivateIP1": {
+            "Default": "10.0.0.150",
+            "Description": "Primary private IP for the first Exchange Server",
+            "Type": "String"
+        },
+        "EXCH1PrivateIP2": {
+            "Default": "10.0.0.151",
+            "Description": "Secondary private IP for the first Exchange Server",
+            "Type": "String"
+        },
+        "EXCH2PrivateIP1": {
+            "Default": "10.0.64.150",
+            "Description": "Primary private IP for the second Exchange Server",
+            "Type": "String"
+        },
+        "EXCH2PrivateIP2": {
+            "Default": "10.0.64.151",
+            "Description": "Secondary private IP for the second Exchange Server",
+            "Type": "String"
+        },
+        "EXCHInstanceType": {
+            "AllowedValues": [
+                "r4.xlarge",
+                "r4.2xlarge",
+                "r4.4xlarge"
+            ],
+            "Default": "r4.xlarge",
+            "Description": "Amazon EC2 instance type for the Exchange Servers",
+            "Type": "String"
+        },
+        "EdgeInstanceType": {
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge"
+            ],
+            "Default": "m4.large",
+            "Description": "Amazon EC2 instance type for the Exchange Edge Transport Servers",
+            "Type": "String"
+        },
+        "IncludeEdge": {
+            "AllowedValues": [
+                "true",
+                "false"
+            ],
+            "Default": "false",
+            "Description": "Set this parameter to true to include Exchange Edge Transport servers in the public subnets",
+            "Type": "String"
+        },
+        "KeyPairName": {
+            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "PrivateSubnet1CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.0.0/19",
+            "Description": "CIDR block for private subnet 1 located in Availability Zone 1.",
+            "Type": "String"
+        },
+        "PrivateSubnet1ID": {
             "Description": "ID of the subnet you want to provision the first Exchange Server into (e.g., subnet-a0246dcd)",
             "Type": "AWS::EC2::Subnet::Id"
         },
-        "PrivateSubnet2Id": {
+        "PrivateSubnet2CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.32.0/19",
+            "Description": "CIDR block for private subnet 2 located in Availability Zone 2.",
+            "Type": "String"
+        },
+        "PrivateSubnet2ID": {
             "Description": "ID of the subnet you want to provision the second Exchange Server into (e.g., subnet-e3246d8e)",
             "Type": "AWS::EC2::Subnet::Id"
         },
-        "PublicSubnet1Id": {
+        "PublicSubnet1ID": {
             "Description": "ID of the public subnet you want to provision the first Edge Server into (e.g., subnet-a0246dcd)",
             "Type": "AWS::EC2::Subnet::Id"
         },
-        "PublicSubnet2Id": {
+        "PublicSubnet2ID": {
             "Description": "ID of the public subnet you want to provision the second Edge Server into (e.g., subnet-e3246d8e)",
             "Type": "AWS::EC2::Subnet::Id"
-        },
-        "PrivSub1CIDR": {
-            "Description": "CIDR Block for Private Subnet located in AZ1",
-            "Type": "String",
-            "Default": "10.0.0.0/19",
-            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
-        },
-        "PrivSub2CIDR": {
-            "Description": "CIDR Block for for Private Subnet located in AZ2",
-            "Type": "String",
-            "Default": "10.0.64.0/19",
-            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
         },
         "QSS3BucketName": {
             "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
@@ -297,10 +313,14 @@
             "Type": "String"
         },
         "VPCCIDR": {
-            "Description": "CIDR Block used by the VPC",
-            "Type": "String",
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
             "Default": "10.0.0.0/16",
-            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+            "Description": "CIDR Block used by the VPC",
+            "Type": "String"
+        },
+        "VPCID": {
+            "Description": "ID of the VPC (e.g., vpc-0343606e)",
+            "Type": "AWS::EC2::VPC::Id"
         }
     },
     "Mappings": {
@@ -693,13 +713,13 @@
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-UcmaRuntime.ps1\n",
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-Exch2013Org.ps1 -InstallPath \\\\",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             "\\exchinstall",
                                             "\n",
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-Exch2013.ps1 -InstallPath \\\\",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             "\\exchinstall ",
                                             "-Server 1",
@@ -910,11 +930,11 @@
                                             "\"",
                                             "Get-NetAdapter | Set-DnsClientServerAddress -ServerAddresses ",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             ",",
                                             {
-                                                "Ref": "ADServer2PrivateIp"
+                                                "Ref": "ADServer2PrivateIP"
                                             },
                                             "\""
                                         ]
@@ -959,7 +979,7 @@
                                         [
                                             "powershell.exe -Command c:\\cfn\\scripts\\Create-Folder.ps1 -ComputerName ",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             " -UserName ",
                                             {
@@ -986,7 +1006,7 @@
                                         [
                                             "powershell.exe -Command c:\\cfn\\scripts\\Create-Share.ps1 -ComputerName ",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             " -UserName ",
                                             {
@@ -1015,7 +1035,7 @@
                                             "powershell.exe -Command c:\\cfn\\scripts\\Download-File.ps1 -Source https://download.microsoft.com/download/3/A/4/3A4E9E23-E698-477D-B1E3-CA235CE3DB7C/Exchange2013-x64-cu19.exe",
                                             " -Destination \\\\",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             "\\exchinstall\\Exchange2013-x64.exe"
                                         ]
@@ -1030,7 +1050,7 @@
                                         [
                                             "powershell.exe -Command c:\\cfn\\scripts\\Expand-ExchangeFiles.ps1 -ComputerName ",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             " -UserName ",
                                             {
@@ -1105,7 +1125,7 @@
                                             },
                                             " -DomainController ",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             }
                                         ]
                                     ]
@@ -1149,19 +1169,19 @@
                         "DeleteOnTermination": "true",
                         "DeviceIndex": 0,
                         "SubnetId": {
-                            "Ref": "PrivateSubnet1Id"
+                            "Ref": "PrivateSubnet1ID"
                         },
                         "PrivateIpAddresses": [
                             {
                                 "Primary": "true",
                                 "PrivateIpAddress": {
-                                    "Ref": "EXCH1PrivateIp"
+                                    "Ref": "EXCH1PrivateIP1"
                                 }
                             },
                             {
                                 "Primary": "false",
                                 "PrivateIpAddress": {
-                                    "Ref": "EXCH1PrivateIp2"
+                                    "Ref": "EXCH1PrivateIP2"
                                 }
                             }
                         ],
@@ -1311,7 +1331,7 @@
                                             "\n",
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-Exch2013.ps1 -InstallPath \\\\",
                                             {
-                                                "Ref": "ADServerNetBIOSName1"
+                                                "Ref": "ADServer1NetBIOSName"
                                             },
                                             "\\exchinstall ",
                                             "-Server 2",
@@ -1573,11 +1593,11 @@
                                             "\"",
                                             "Get-NetAdapter | Set-DnsClientServerAddress -ServerAddresses ",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             ",",
                                             {
-                                                "Ref": "ADServer2PrivateIp"
+                                                "Ref": "ADServer2PrivateIP"
                                             },
                                             "\""
                                         ]
@@ -1671,7 +1691,7 @@
                                             },
                                             " -DomainController ",
                                             {
-                                                "Ref": "ADServerNetBIOSName2"
+                                                "Ref": "ADServer2NetBIOSName"
                                             }
                                         ]
                                     ]
@@ -1715,19 +1735,19 @@
                         "DeleteOnTermination": "true",
                         "DeviceIndex": 0,
                         "SubnetId": {
-                            "Ref": "PrivateSubnet2Id"
+                            "Ref": "PrivateSubnet2ID"
                         },
                         "PrivateIpAddresses": [
                             {
                                 "Primary": "true",
                                 "PrivateIpAddress": {
-                                    "Ref": "EXCH2PrivateIp"
+                                    "Ref": "EXCH2PrivateIP1"
                                 }
                             },
                             {
                                 "Primary": "false",
                                 "PrivateIpAddress": {
-                                    "Ref": "EXCH2PrivateIp2"
+                                    "Ref": "EXCH2PrivateIP2"
                                 }
                             }
                         ],
@@ -1876,7 +1896,7 @@
                                         [
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-Edge2013.ps1 -InstallPath \\\\",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             "\\exchinstall ",
                                             " -Username ",
@@ -1894,7 +1914,7 @@
                                             "\n",
                                             "powershell.exe -command c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1 -Name EDGE1 -DnsServer ",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             " -ZoneName ",
                                             {
@@ -2146,11 +2166,11 @@
                                             "\"",
                                             "Get-NetAdapter | Set-DnsClientServerAddress -ServerAddresses ",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             ",",
                                             {
-                                                "Ref": "ADServer2PrivateIp"
+                                                "Ref": "ADServer2PrivateIP"
                                             },
                                             "\""
                                         ]
@@ -2228,7 +2248,7 @@
                         "DeleteOnTermination": "true",
                         "DeviceIndex": 0,
                         "SubnetId": {
-                            "Ref": "PublicSubnet1Id"
+                            "Ref": "PublicSubnet1ID"
                         },
                         "GroupSet": [
                             {
@@ -2364,7 +2384,7 @@
                                         [
                                             "powershell.exe -command c:\\cfn\\scripts\\Install-Edge2013.ps1 -InstallPath \\\\",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             "\\exchinstall ",
                                             " -Username ",
@@ -2382,7 +2402,7 @@
                                             "\n",
                                             "powershell.exe -command c:\\cfn\\scripts\\New-EdgeDnsRecord.ps1 -Name EDGE2 -DnsServer ",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             " -ZoneName ",
                                             {
@@ -2634,11 +2654,11 @@
                                             "\"",
                                             "Get-NetAdapter | Set-DnsClientServerAddress -ServerAddresses ",
                                             {
-                                                "Ref": "ADServer2PrivateIp"
+                                                "Ref": "ADServer2PrivateIP"
                                             },
                                             ",",
                                             {
-                                                "Ref": "ADServer1PrivateIp"
+                                                "Ref": "ADServer1PrivateIP"
                                             },
                                             "\""
                                         ]
@@ -2716,7 +2736,7 @@
                         "DeleteOnTermination": "true",
                         "DeviceIndex": 0,
                         "SubnetId": {
-                            "Ref": "PublicSubnet2Id"
+                            "Ref": "PublicSubnet2ID"
                         },
                         "GroupSet": [
                             {
@@ -2828,7 +2848,7 @@
             "Properties": {
                 "GroupDescription": "Enable communications between Exchange Servers",
                 "VpcId": {
-                    "Ref": "VPC"
+                    "Ref": "VPCID"
                 },
                 "SecurityGroupIngress": [
                     {
@@ -2863,7 +2883,7 @@
             "Properties": {
                 "GroupDescription": "Enable communications from clients to Exchange Servers",
                 "VpcId": {
-                    "Ref": "VPC"
+                    "Ref": "VPCID"
                 },
                 "SecurityGroupIngress": [
                     {
@@ -2947,7 +2967,7 @@
             "Properties": {
                 "GroupDescription": "Enable communications for Exchange Edge Transport Servers",
                 "VpcId": {
-                    "Ref": "VPC"
+                    "Ref": "VPCID"
                 },
                 "SecurityGroupIngress": [
                     {
@@ -2955,7 +2975,7 @@
                         "FromPort": "50389",
                         "ToPort": "50389",
                         "CidrIp": {
-                            "Ref": "PrivSub1CIDR"
+                            "Ref": "PrivateSubnet1CIDR"
                         }
                     },
                     {
@@ -2963,7 +2983,7 @@
                         "FromPort": "50389",
                         "ToPort": "50389",
                         "CidrIp": {
-                            "Ref": "PrivSub2CIDR"
+                            "Ref": "PrivateSubnet2CIDR"
                         }
                     },
                     {
@@ -2971,7 +2991,7 @@
                         "FromPort": "50636",
                         "ToPort": "50636",
                         "CidrIp": {
-                            "Ref": "PrivSub1CIDR"
+                            "Ref": "PrivateSubnet1CIDR"
                         }
                     },
                     {
@@ -2979,7 +2999,7 @@
                         "FromPort": "50636",
                         "ToPort": "50636",
                         "CidrIp": {
-                            "Ref": "PrivSub2CIDR"
+                            "Ref": "PrivateSubnet2CIDR"
                         }
                     },
                     {
