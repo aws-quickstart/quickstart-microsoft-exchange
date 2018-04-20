@@ -537,29 +537,23 @@
                     ]
                 },
                 "Parameters": {
-                    "ADServer1PrivateIP": {
-                        "Ref": "ADServer1PrivateIP"
-                    },
-                    "ADServer2PrivateIP": {
-                        "Ref": "ADServer2PrivateIP"
-                    },
                     "ADServer1InstanceType": {
                         "Ref": "ADServer1InstanceType"
-                    },
-                    "ADServer2InstanceType": {
-                        "Ref": "ADServer2InstanceType"
                     },
                     "ADServer1NetBIOSName": {
                         "Ref": "ADServer1NetBIOSName"
                     },
+                    "ADServer1PrivateIP": {
+                        "Ref": "ADServer1PrivateIP"
+                    },
+                    "ADServer2InstanceType": {
+                        "Ref": "ADServer2InstanceType"
+                    },
                     "ADServer2NetBIOSName": {
                         "Ref": "ADServer2NetBIOSName"
                     },
-                    "PublicSubnet1CIDR": {
-                        "Ref": "PublicSubnet1CIDR"
-                    },
-                    "PublicSubnet2CIDR": {
-                        "Ref": "PublicSubnet2CIDR"
+                    "ADServer2PrivateIP": {
+                        "Ref": "ADServer2PrivateIP"
                     },
                     "DomainAdminPassword": {
                         "Ref": "DomainAdminPassword"
@@ -579,14 +573,14 @@
                     "PrivateSubnet1CIDR": {
                         "Ref": "PrivateSubnet1CIDR"
                     },
-                    "PrivateSubnet2CIDR": {
-                        "Ref": "PrivateSubnet2CIDR"
-                    },
                     "PrivateSubnet1ID": {
                         "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.PrivateSubnet1AID"
                         ]
+                    },
+                    "PrivateSubnet2CIDR": {
+                        "Ref": "PrivateSubnet2CIDR"
                     },
                     "PrivateSubnet2ID": {
                         "Fn::GetAtt": [
@@ -594,11 +588,11 @@
                             "Outputs.PrivateSubnet2AID"
                         ]
                     },
-                    "VPCID": {
-                        "Fn::GetAtt": [
-                            "VPCStack",
-                            "Outputs.VPCID"
-                        ]
+                    "PublicSubnet1CIDR": {
+                        "Ref": "PublicSubnet1CIDR"
+                    },
+                    "PublicSubnet2CIDR": {
+                        "Ref": "PublicSubnet2CIDR"
                     },
                     "QSS3BucketName": {
                         "Ref": "QSS3BucketName"
@@ -613,6 +607,12 @@
                         "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.VPCCIDR"
+                        ]
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
                         ]
                     }
                 }
@@ -679,11 +679,11 @@
                     "QSS3KeyPrefix": {
                         "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/"
                     },
-                    "RDGWInstanceType": {
-                        "Ref": "RDGWInstanceType"
-                    },
                     "RDGWCIDR": {
                         "Ref": "RDGWCIDR"
+                    },
+                    "RDGWInstanceType": {
+                        "Ref": "RDGWInstanceType"
                     },
                     "VPCID": {
                         "Fn::GetAtt": [
@@ -713,26 +713,17 @@
                     ]
                 },
                 "Parameters": {
-                    "ADServer1PrivateIP": {
-                        "Ref": "ADServer1PrivateIP"
-                    },
-                    "ADServer2PrivateIP": {
-                        "Ref": "ADServer2PrivateIP"
-                    },
                     "ADServer1NetBIOSName": {
                         "Ref": "ADServer1NetBIOSName"
+                    },
+                    "ADServer1PrivateIP": {
+                        "Ref": "ADServer1PrivateIP"
                     },
                     "ADServer2NetBIOSName": {
                         "Ref": "ADServer2NetBIOSName"
                     },
-                    "EXCHInstanceType": {
-                        "Ref": "EXCHInstanceType"
-                    },
-                    "EdgeInstanceType": {
-                        "Ref": "EdgeInstanceType"
-                    },
-                    "IncludeEdge": {
-                        "Ref": "IncludeEdge"
+                    "ADServer2PrivateIP": {
+                        "Ref": "ADServer2PrivateIP"
                     },
                     "DomainAdminPassword": {
                         "Ref": "DomainAdminPassword"
@@ -752,26 +743,11 @@
                     "DomainNetBIOSName": {
                         "Ref": "DomainNetBIOSName"
                     },
-                    "KeyPairName": {
-                        "Ref": "KeyPairName"
-                    },
-                    "VPCID": {
-                        "Fn::GetAtt": [
-                            "VPCStack",
-                            "Outputs.VPCID"
-                        ]
-                    },
-                    "PrivateSubnet1CIDR": {
-                        "Ref": "PrivateSubnet1CIDR"
-                    },
                     "EXCH1PrivateIP1": {
                         "Ref": "EXCH1PrivateIP1"
                     },
                     "EXCH1PrivateIP2": {
                         "Ref": "EXCH1PrivateIP2"
-                    },
-                    "PrivateSubnet2CIDR": {
-                        "Ref": "PrivateSubnet2CIDR"
                     },
                     "EXCH2PrivateIP1": {
                         "Ref": "EXCH2PrivateIP1"
@@ -779,11 +755,29 @@
                     "EXCH2PrivateIP2": {
                         "Ref": "EXCH2PrivateIP2"
                     },
+                    "EXCHInstanceType": {
+                        "Ref": "EXCHInstanceType"
+                    },
+                    "EdgeInstanceType": {
+                        "Ref": "EdgeInstanceType"
+                    },
+                    "IncludeEdge": {
+                        "Ref": "IncludeEdge"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "PrivateSubnet1CIDR": {
+                        "Ref": "PrivateSubnet1CIDR"
+                    },
                     "PrivateSubnet1ID": {
                         "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.PrivateSubnet1AID"
                         ]
+                    },
+                    "PrivateSubnet2CIDR": {
+                        "Ref": "PrivateSubnet2CIDR"
                     },
                     "PrivateSubnet2ID": {
                         "Fn::GetAtt": [
@@ -813,6 +807,12 @@
                         "Fn::GetAtt": [
                             "VPCStack",
                             "Outputs.VPCCIDR"
+                        ]
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
                         ]
                     }
                 }
