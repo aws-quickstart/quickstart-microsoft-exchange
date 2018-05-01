@@ -2098,7 +2098,19 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-create-waithandle": {
-                                "command": "powershell.exe -command Write-AWSQuickStartStatus",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -Command \"",
+                                            "New-AWSQuickStartWaitHandle -Handle '",
+                                            {
+                                                "Ref": "EDGE1WaitHandle"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
                             },
                             "d-reset-local-admin": {
@@ -2586,7 +2598,19 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-create-waithandle": {
-                                "command": "powershell.exe -command Write-AWSQuickStartStatus",
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -Command \"",
+                                            "New-AWSQuickStartWaitHandle -Handle '",
+                                            {
+                                                "Ref": "EDGE2WaitHandle"
+                                            },
+                                            "'\""
+                                        ]
+                                    ]
+                                },
                                 "waitAfterCompletion": "0"
                             },
                             "d-reset-local-admin": {
