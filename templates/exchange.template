@@ -76,19 +76,17 @@
                         "WSFCFileServerInstanceType",
                         "WSFCFileServerNetBIOSName",
                         "WSFCFileServerPrivateIP",
-                        "WSFCNode1InstanceType",
+                        "WSFCNodeInstanceType",
                         "WSFCNode1NetBIOSName",
                         "WSFCNode1PrivateIP1",
                         "WSFCNode1PrivateIP2",
                         "WSFCNode1PrivateIP3",
                         "DedicatedHostIDNode1",
-                        "WSFCNode2InstanceType",
                         "WSFCNode2NetBIOSName",
                         "WSFCNode2PrivateIP1",
                         "WSFCNode2PrivateIP2",
                         "WSFCNode2PrivateIP3",
                         "DedicatedHostIDNode2",
-                        "WSFCNode3InstanceType",
                         "WSFCNode3NetBIOSName",
                         "WSFCNode3PrivateIP1",
                         "WSFCNode3PrivateIP2",
@@ -227,8 +225,8 @@
                 "WSFCFileServerPrivateIP": {
                     "default": "File Server Private IP Address"
                 },
-                "WSFCNode1InstanceType": {
-                    "default": "Instance Type for Cluster Node 1"
+                "WSFCNodeInstanceType": {
+                    "default": "Instance Type for Cluster Nodes"
                 },
                 "WSFCNode1NetBIOSName": {
                     "default": "Cluster Node 1 NetBIOS Name"
@@ -242,9 +240,6 @@
                 "WSFCNode1PrivateIP3": {
                     "default": "Cluster Node 1 Private IP Address 3"
                 },
-                "WSFCNode2InstanceType": {
-                    "default": "Instance Type for Cluster Node 2"
-                },
                 "WSFCNode2NetBIOSName": {
                     "default": "Cluster Node 2 NetBIOS Name"
                 },
@@ -256,9 +251,6 @@
                 },
                 "WSFCNode2PrivateIP3": {
                     "default": "Cluster Node 2 Private IP Address 3"
-                },
-                "WSFCNode3InstanceType": {
-                    "default": "Instance Type for Cluster Node 3 (Optional)"
                 },
                 "WSFCNode3NetBIOSName": {
                     "default": "Cluster Node 3 NetBIOS Name"
@@ -316,6 +308,14 @@
             "Description": "Fixed private IP for the second Active Directory server located in Availability Zone 2",
             "Type": "String"
         },
+		"CertificateArn": {
+			"AllowedPattern": "arn:aws:acm:[^:]+:([0-9]{12}):certificate\/.+",
+            "Default": "arn:aws:acm:[REGION]:123456789012:certificate/[GUID]",
+            "Description": "Certificate ARN to be used by ALB",
+            "MaxLength": "90",
+            "MinLength": "20",
+            "Type": "String"
+        },
         "DedicatedHostAMI": {
             "Default": "",
             "Description": "If host type is set to \"Dedicated\" or \"Dedicated Host\", you need to specify your imported BYOL AMI id",
@@ -334,6 +334,15 @@
         "DedicatedHostIDNode3": {
             "Default": "",
             "Description": "Dedicated HostID for the optional Node3, Only used if HostType is set to \"host\"",
+            "Type": "String"
+        },
+		"DeployLoadBalancer": {
+            "AllowedValues": [
+                "false",
+                "true"
+            ],
+            "Default": "false",
+            "Description": "Set this parameter to true to configure an Application Load Balancer (ALB)",
             "Type": "String"
         },
         "DomainAdminPassword": {
@@ -585,7 +594,7 @@
             "Description": "Primary private IP for the fileserver located in Availability Zone 1",
             "Type": "String"
         },
-        "WSFCNode1InstanceType": {
+		"WSFCNodeInstanceType": {
             "AllowedValues": [
                 "m4.xlarge",
                 "r3.xlarge",
@@ -595,7 +604,7 @@
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge allowed",
             "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the first WSFC Node",
+            "Description": "Amazon EC2 instance type for the second WSFC Node",
             "Type": "String"
         },
         "WSFCNode1NetBIOSName": {
@@ -623,20 +632,7 @@
             "Default": "10.0.0.102",
             "Description": "Third private IP for Availability Group Listener on first WSFC Node",
             "Type": "String"
-        },
-        "WSFCNode2InstanceType": {
-            "AllowedValues": [
-                "m4.xlarge",
-                "r3.xlarge",
-                "r3.2xlarge",
-                "r3.4xlarge",
-                "r3.8xlarge"
-            ],
-            "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge allowed",
-            "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the second WSFC Node",
-            "Type": "String"
-        },
+        },  
         "WSFCNode2NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "WSFCNode2",
@@ -661,19 +657,6 @@
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
             "Default": "10.0.32.102",
             "Description": "Third private IP for Availability Group Listener on second WSFC Node",
-            "Type": "String"
-        },
-        "WSFCNode3InstanceType": {
-            "AllowedValues": [
-                "m4.xlarge",
-                "r3.xlarge",
-                "r3.2xlarge",
-                "r3.4xlarge",
-                "r3.8xlarge"
-            ],
-            "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge allowed",
-            "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the second WSFC Node",
             "Type": "String"
         },
         "WSFCNode3NetBIOSName": {
@@ -722,6 +705,14 @@
                     "Ref": "IncludeEdgeTransportRole"
                 },
                 "yes"
+            ]
+        },
+		"DeployLoadBalancer": {
+            "Fn::Equals": [
+                {
+                    "Ref": "DeployLoadBalancer"
+                },
+                "true"
             ]
         },
         "Exchange2016Selected": {
@@ -860,74 +851,78 @@
         },
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.02.23",
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.02.23"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.06.22",
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.06.13"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-764d0810",
-                "WS2016FULLBASE": "ami-d36623b5"
+                "WS2012R2": "ami-4e0cc331",
+                "WS2016FULLBASE": "ami-120cc36d"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-7ca70a12",
-                "WS2016FULLBASE": "ami-74a00d1a"
+                "WS2012R2": "ami-2968c247",
+                "WS2016FULLBASE": "ami-7969c317"
+            },
+            "ap-northeast-3": {
+                "WS2012R2": "ami-48aca235",
+                "WS2016FULLBASE": "ami-b4aaa4c9"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-c5b7ebaa",
-                "WS2016FULLBASE": "ami-4bacf024"
+                "WS2012R2": "ami-e795bd88",
+                "WS2016FULLBASE": "ami-5f95bd30"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-0a4b0276",
-                "WS2016FULLBASE": "ami-c15910bd"
+                "WS2012R2": "ami-de2a2da2",
+                "WS2016FULLBASE": "ami-053d3a79"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-e80ec98a",
-                "WS2016FULLBASE": "ami-5d09ce3f"
+                "WS2012R2": "ami-75f32c17",
+                "WS2016FULLBASE": "ami-42f02f20"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-3ed95e5a",
-                "WS2016FULLBASE": "ami-83db5ce7"
+                "WS2012R2": "ami-800685e4",
+                "WS2016FULLBASE": "ami-140b8870"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-e241238d",
-                "WS2016FULLBASE": "ami-0145276e"
+                "WS2012R2": "ami-e8093a03",
+                "WS2016FULLBASE": "ami-63f5c688"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-8b631bf2",
-                "WS2016FULLBASE": "ami-ba522ac3"
+                "WS2012R2": "ami-3e7a7647",
+                "WS2016FULLBASE": "ami-987a76e1"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-b8cd29df",
-                "WS2016FULLBASE": "ami-15cb2f72"
+                "WS2012R2": "ami-629a7405",
+                "WS2016FULLBASE": "ami-479b7520"
             },
 			"eu-west-3": {
-                "WS2012R2": "ami-5b74c226",
-                "WS2016FULLBASE": "ami-bf75c3c2"
+                "WS2012R2": "ami-c911a0b4",
+                "WS2016FULLBASE": "ami-1511a068"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-e38fc78f",
-                "WS2016FULLBASE": "ami-b780c8db"
+                "WS2012R2": "ami-5c6e3530",
+                "WS2016FULLBASE": "ami-ff6e3593"
             },
             "us-east-1": {
-                "WS2012R2": "ami-3118fa4",
-                "WS2016FULLBASE": "ami-4176943c"
+                "WS2012R2": "ami-b8f3b5c7",
+                "WS2016FULLBASE": "ami-0327667c"
             },
             "us-east-2": {
-                "WS2012R2": "ami-014a7d64",
-                "WS2016FULLBASE": "ami-16370073"
+                "WS2012R2": "ami-da003ebf",
+                "WS2016FULLBASE": "ami-3bfac45e"
             },
             "us-west-1": {
-                "WS2012R2": "ami-34b4bc54",
-                "WS2016FULLBASE": "ami-e8b6be88"
+                "WS2012R2": "ami-832acee0",
+                "WS2016FULLBASE": "ami-b236d2d1"
             },
             "us-west-2": {
-                "WS2012R2": "ami-c1f37db9",
-                "WS2016FULLBASE": "ami-74800e0c"
+                "WS2012R2": "ami-aeffbcd6",
+                "WS2016FULLBASE": "ami-3703414f"
             }
         },
         "MediaLinksMapper": {
             "Exchange": {
-                "2013": "https://download.microsoft.com/download/3/A/4/3A4E9E23-E698-477D-B1E3-CA235CE3DB7C/Exchange2013-x64-cu19.exe",
-                "2016": "https://download.microsoft.com/download/1/F/7/1F777B44-32CB-4F3D-B486-3D0F566D79A9/ExchangeServer2016-x64-cu8.iso"
+                "2013": "https://download.microsoft.com/download/3/9/B/39B25E37-2265-4FBC-AF87-7CA6CA089615/Exchange2013-x64-cu20.exe",
+                "2016": "https://download.microsoft.com/download/5/8/C/58CA2823-6764-4355-B9DE-EB196E43BC81/ExchangeServer2016-x64-cu9.iso"
             },
             "UCMA": {
                 "ALL": "https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe"
@@ -2700,6 +2695,22 @@
                 ]
             }
         },
+        "LoadBalancerSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Condition": "DeployLoadBalancer",
+            "Properties" : {
+               "GroupDescription" : "Allow https to the load balancer",
+               "VpcId" : {
+                    "Ref": "VPCID"
+                },
+               "SecurityGroupIngress" : [{
+                     "IpProtocol" : "tcp",
+                     "FromPort" : "443",
+                     "ToPort" : "443",
+                     "CidrIp" : "0.0.0.0/0"
+                  }]
+            }
+        },     
         "WSFCFileServerWaitCondition": {
             "Condition": "IsTwoNode",
             "DependsOn": "WSFCFileServer",
@@ -2755,7 +2766,7 @@
             "Condition": "ThirdAzIsFullNode",
             "Type": "AWS::CloudFormation::WaitConditionHandle"
         },
-        "WSFCFileServer": {
+		"WSFCFileServer": {
             "Condition": "IsTwoNode",
             "Metadata": {
                 "AWS::CloudFormation::Authentication": {
@@ -3761,6 +3772,22 @@
                                     ]
                                 }
                             },
+                            "C:\\cfn\\scripts\\Configure-LoadbalancerDnsRecord.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
                             "C:\\cfn\\scripts\\Add-ExchangeGroup.ps1": {
                                 "source": {
                                     "Fn::Sub": [
@@ -3860,7 +3887,7 @@
                     "Ref": "ExchangeProfile"
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNode1InstanceType"
+                    "Ref": "WSFCNodeInstanceType"
                 },
                 "KeyName": {
                     "Ref": "KeyPairName"
@@ -4689,7 +4716,7 @@
                     "Ref": "ExchangeProfile"
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNode2InstanceType"
+                    "Ref": "WSFCNodeInstanceType"
                 },
                 "KeyName": {
                     "Ref": "KeyPairName"
@@ -5480,7 +5507,7 @@
                     "Ref": "ExchangeProfile"
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNode3InstanceType"
+                    "Ref": "WSFCNodeInstanceType"
                 },
                 "KeyName": {
                     "Ref": "KeyPairName"
@@ -5571,32 +5598,62 @@
             "Type": "AWS::EC2::Instance"
         },
 		"loadBalancer" : {
+			"Condition": "DeployLoadBalancer",
 			"Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+			"DependsOn": ["WSFCNode1WaitCondition", "WSFCNode2WaitCondition"],
 		    "Properties": {
 				"Scheme" : "internal",
-				"Type" : "network",
-				"Subnets" : [ {"Ref": "PrivateSubnet1ID"}, {"Ref" : "PrivateSubnet2ID"}]
-		  }
+				"SecurityGroups": [
+                    {
+                        "Ref": "ExchangeServerAccessSecurityGroup"
+                    },
+                    {
+                        "Ref": "LoadBalancerSecurityGroup"
+                    }
+                ],
+				"Subnets" : {
+                        "Fn::If": [
+                            "IsTwoNode",
+                           [{"Ref": "PrivateSubnet1ID"}, {"Ref": "PrivateSubnet2ID"}],
+                           [ {"Ref": "PrivateSubnet1ID"}, {"Ref": "PrivateSubnet2ID"}, {"Ref": "PrivateSubnet3ID"}]
+                        ]
+				},
+				"Type" : "application"
+			}
 		},
 		"TargetGroup" : {
+			"Condition": "DeployLoadBalancer",
+			"DependsOn": ["loadBalancer"],
 			"Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
 			"Properties" : {
+				"HealthCheckIntervalSeconds" : 60,
+				"HealthCheckTimeoutSeconds": "5",
+				"HealthyThresholdCount" : "5",
+				"HealthCheckPath" : "/owa/auth/logon.aspx",
+				"HealthCheckProtocol": "HTTPS",
+				"HealthCheckPort": "443",
+				"Matcher" : {
+					"HttpCode" : "200"
+				},
 				"Name": "ExchangeNodes",
-				"Port": 10,
-				"Protocol": "TCP",
+				"Port": 443,
+				"Protocol": "HTTPS",
 				"TargetGroupAttributes": [{
 					"Key": "deregistration_delay.timeout_seconds",
 					"Value": "20"
 				}],
-				"VpcId": {"Fn::Select": [
-						"0",
-						{
-						  "Ref": "VPC"
-						}
-					  ]}
+				"Targets": [
+				 { "Id": {"Ref" : "WSFCNode1"}, "Port": "443" },
+				 { "Id": {"Ref" : "WSFCNode2"}, "Port": "443" }
+				],
+				"UnhealthyThresholdCount" : 5,
+				"VpcId": {
+                    "Ref": "VPCID"
+                }
 			  }
 		},
 		"Listener": {
+			"Condition": "DeployLoadBalancer",
 			"Type": "AWS::ElasticLoadBalancingV2::Listener",
 			"Properties": {
 				"DefaultActions": [{
@@ -5604,8 +5661,16 @@
 					"TargetGroupArn": { "Ref": "TargetGroup" }
 					}],
 				"LoadBalancerArn": { "Ref": "loadBalancer" },
-				"Port": "80",
-				"Protocol": "TCP"
+				"Port": "443",
+				"Protocol": "HTTPS",
+				"Certificates": [
+                    {
+                        "CertificateArn": {
+                            "Ref": "CertificateArn"
+                        }
+                    }
+                ],
+				"SslPolicy": "ELBSecurityPolicy-2016-08"
 			}
 		},
         "WSFCNode1Volume1": {

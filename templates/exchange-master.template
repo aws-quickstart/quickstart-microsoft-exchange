@@ -76,6 +76,15 @@
                         "VolumeType"
                     ]
                 },
+				{
+                    "Label": {
+                        "default": "Load Balancer Configuration"
+                    },
+                    "Parameters": [
+                        "DeployLoadBalancer",
+                        "CertificateArn"
+                    ]
+                },
                 {
                     "Label": {
                         "default": "Failover Cluster Configuration"
@@ -132,6 +141,9 @@
                 },
                 "DedicatedHostAMI": {
                     "default": "BYOL AMI to use on dedicated host"
+                },
+				"DeployLoadBalancer": {
+                    "default": "Deploy Application Load Balancer"
                 },
                 "DomainAdminPassword": {
                     "default": "Domain Admin Password"
@@ -325,6 +337,14 @@
             "Description": "List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and that 2 AZ's must be provided unless the Third AZ parameter is specified, in which case 3 AZ's must me provided.",
             "Type": "List<AWS::EC2::AvailabilityZone::Name>"
         },
+		"CertificateArn": {
+			"AllowedPattern": "arn:aws:acm:[^:]+:([0-9]{12}):certificate\/.+",
+            "Default": "arn:aws:acm:[REGION]:123456789012:certificate/[GUID]",
+            "Description": "Certificate ARN to be used by ALB",
+            "MaxLength": "90",
+            "MinLength": "20",
+            "Type": "String"
+        },
         "DedicatedHostAMI": {
             "Default": "",
             "Description": "If host type is set to \"Dedicated\" or \"Dedicated Host\", you need to specify your imported BYOL AMI id",
@@ -360,6 +380,15 @@
             "Description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
             "MaxLength": "15",
             "MinLength": "1",
+            "Type": "String"
+        },
+		"DeployLoadBalancer": {
+            "AllowedValues": [
+                "false",
+                "true"
+            ],
+            "Default": "false",
+            "Description": "Set this parameter to true to configure an Application Load Balancer (ALB)",
             "Type": "String"
         },
         "EdgeInstanceType": {
@@ -1050,6 +1079,9 @@
                     "ADServer2PrivateIP": {
                         "Ref": "ADServer2PrivateIP"
                     },
+					"CertificateArn": {
+                        "Ref": "CertificateArn"
+                    },
                     "DedicatedHostAMI": {
                         "Ref": "DedicatedHostAMI"
                     },
@@ -1102,6 +1134,9 @@
                                 ]
                             }
                         ]
+                    },
+					"DeployLoadBalancer": {
+                        "Ref": "DeployLoadBalancer"
                     },
                     "DomainAdminPassword": {
                         "Ref": "DomainAdminPassword"
@@ -1234,7 +1269,7 @@
                     "WSFCFileServerPrivateIP": {
                         "Ref": "WSFCFileServerPrivateIP"
                     },
-                    "WSFCNode1InstanceType": {
+                    "WSFCNodeInstanceType": {
                         "Ref": "WSFCNodeInstanceType"
                     },
                     "WSFCNode1NetBIOSName": {
@@ -1249,9 +1284,6 @@
                     "WSFCNode1PrivateIP3": {
                         "Ref": "WSFCNode1PrivateIP3"
                     },
-                    "WSFCNode2InstanceType": {
-                        "Ref": "WSFCNodeInstanceType"
-                    },
                     "WSFCNode2NetBIOSName": {
                         "Ref": "WSFCNode2NetBIOSName"
                     },
@@ -1263,9 +1295,6 @@
                     },
                     "WSFCNode2PrivateIP3": {
                         "Ref": "WSFCNode2PrivateIP3"
-                    },
-                    "WSFCNode3InstanceType": {
-                        "Ref": "WSFCNodeInstanceType"
                     },
                     "WSFCNode3NetBIOSName": {
                         "Ref": "WSFCNode3NetBIOSName"
