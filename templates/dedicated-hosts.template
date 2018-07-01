@@ -3,7 +3,7 @@
     "Description": "",
     "Metadata": {},
     "Parameters": {
-        "WSFCNodeInstanceType": {
+        "ExchangeNodeInstanceType": {
             "AllowedValues": [
                 "r3.xlarge",
                 "r3.2xlarge",
@@ -12,7 +12,7 @@
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
             "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the WSFC Nodes",
+            "Description": "Amazon EC2 instance type for the Exchange Nodes",
             "Type": "String"
         },
         "AutoPlacement": {
@@ -65,7 +65,7 @@
                     ]
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNodeInstanceType"
+                    "Ref": "ExchangeNodeInstanceType"
                 }
             }
         },
@@ -84,7 +84,7 @@
                     ]
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNodeInstanceType"
+                    "Ref": "ExchangeNodeInstanceType"
                 }
             }
         },
@@ -104,7 +104,7 @@
                     ]
                 },
                 "InstanceType": {
-                    "Ref": "WSFCNodeInstanceType"
+                    "Ref": "ExchangeNodeInstanceType"
                 }
             }
         }

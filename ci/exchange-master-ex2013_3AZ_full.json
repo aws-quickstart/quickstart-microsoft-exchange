@@ -144,63 +144,63 @@
     "ParameterValue": "10.0.0.0/16"
   },
   {
-    "ParameterKey": "WSFCFileServerInstanceType",
+    "ParameterKey": "FileServerInstanceType",
     "ParameterValue": "t2.small"
   },
   {
-    "ParameterKey": "WSFCFileServerPrivateIP",
+    "ParameterKey": "FileServerPrivateIP",
     "ParameterValue": "10.0.0.200"
   },
   {
-    "ParameterKey": "WSFCNode1NetBIOSName",
-    "ParameterValue": "WSFCNode1"
+    "ParameterKey": "ExchangeNode1NetBIOSName",
+    "ParameterValue": "ExchangeNode1"
   },
   {
-    "ParameterKey": "WSFCNode1PrivateIP1",
+    "ParameterKey": "ExchangeNode1PrivateIP1",
     "ParameterValue": "10.0.0.100"
   },
   {
-    "ParameterKey": "WSFCNode1PrivateIP2",
+    "ParameterKey": "ExchangeNode1PrivateIP2",
     "ParameterValue": "10.0.0.101"
   },
   {
-    "ParameterKey": "WSFCNode1PrivateIP3",
+    "ParameterKey": "ExchangeNode1PrivateIP3",
     "ParameterValue": "10.0.0.102"
   },
   {
-    "ParameterKey": "WSFCNode2NetBIOSName",
-    "ParameterValue": "WSFCNode2"
+    "ParameterKey": "ExchangeNode2NetBIOSName",
+    "ParameterValue": "ExchangeNode2"
   },
   {
-    "ParameterKey": "WSFCNode2PrivateIP1",
+    "ParameterKey": "ExchangeNode2PrivateIP1",
     "ParameterValue": "10.0.32.100"
   },
   {
-    "ParameterKey": "WSFCNode2PrivateIP2",
+    "ParameterKey": "ExchangeNode2PrivateIP2",
     "ParameterValue": "10.0.32.101"
   },
   {
-    "ParameterKey": "WSFCNode2PrivateIP3",
+    "ParameterKey": "ExchangeNode2PrivateIP3",
     "ParameterValue": "10.0.32.102"
   },
   {
-    "ParameterKey": "WSFCNode3NetBIOSName",
-    "ParameterValue": "WSFCNode3"
+    "ParameterKey": "ExchangeNode3NetBIOSName",
+    "ParameterValue": "ExchangeNode3"
   },
   {
-    "ParameterKey": "WSFCNode3PrivateIP1",
+    "ParameterKey": "ExchangeNode3PrivateIP1",
     "ParameterValue": "10.0.64.100"
   },
   {
-    "ParameterKey": "WSFCNode3PrivateIP2",
+    "ParameterKey": "ExchangeNode3PrivateIP2",
     "ParameterValue": "10.0.64.101"
   },
   {
-    "ParameterKey": "WSFCNode3PrivateIP3",
+    "ParameterKey": "ExchangeNode3PrivateIP3",
     "ParameterValue": "10.0.64.102"
   },
   {
-    "ParameterKey": "WSFCNodeInstanceType",
+    "ParameterKey": "ExchangeNodeInstanceType",
     "ParameterValue": "m4.xlarge"
   }
 ]

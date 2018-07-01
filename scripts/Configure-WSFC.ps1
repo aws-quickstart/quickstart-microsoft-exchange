@@ -15,27 +15,27 @@ param(
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode1NetBIOSName,
+    $ExchangeNode1NetBIOSName,
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode2NetBIOSName,
+    $ExchangeNode2NetBIOSName,
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode3NetBIOSName=$null,
+    $ExchangeNode3NetBIOSName=$null,
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode1PrivateIP2,
+    $ExchangeNode1PrivateIP2,
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode2PrivateIP2,
+    $ExchangeNode2PrivateIP2,
 
     [Parameter(Mandatory=$false)]
     [string]
-    $WSFCNode3PrivateIP2=$null,
+    $ExchangeNode3PrivateIP2=$null,
 
     [Parameter(Mandatory=$false)]
     [string]
@@ -43,27 +43,27 @@ param(
 
 )
 try {
-    Start-Transcript -Path C:\cfn\log\Configure-WSFC.ps1.txt -Append
+    Start-Transcript -Path C:\cfn\log\Configure-Exchange.ps1.txt -Append
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
 
-    $ConfigWSFCPs={
-        $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName
-        $addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2
-        New-Cluster -Name WSFCluster1 -Node $nodes -StaticAddress $addr
+    $ConfigExchangePs={
+        $nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName
+        $addr =  $Using:ExchangeNode1PrivateIP2, $Using:ExchangeNode2PrivateIP2
+        New-Cluster -Name Exchangeluster1 -Node $nodes -StaticAddress $addr
     }
-    if ($WSFCNode3NetBIOSName) {
-        $ConfigWSFCPs={
-            $nodes = $Using:WSFCNode1NetBIOSName, $Using:WSFCNode2NetBIOSName, $Using:WSFCNode3NetBIOSName
-            $addr =  $Using:WSFCNode1PrivateIP2, $Using:WSFCNode2PrivateIP2, $Using:WSFCNode3PrivateIP2
-            New-Cluster -Name WSFCluster1 -Node $nodes -StaticAddress $addr
+    if ($ExchangeNode3NetBIOSName) {
+        $ConfigExchangePs={
+            $nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName, $Using:ExchangeNode3NetBIOSName
+            $addr =  $Using:ExchangeNode1PrivateIP2, $Using:ExchangeNode2PrivateIP2, $Using:ExchangeNode3PrivateIP2
+            New-Cluster -Name Exchangeluster1 -Node $nodes -StaticAddress $addr
         }
     }
 
-    Invoke-Command -Authentication Credssp -Scriptblock $ConfigWSFCPs -ComputerName $NetBIOSName -Credential $DomainAdminCreds
+    Invoke-Command -Authentication Credssp -Scriptblock $ConfigExchangePs -ComputerName $NetBIOSName -Credential $DomainAdminCreds
 }
 catch {
     $_ | Write-AWSQuickStartException
