@@ -658,10 +658,14 @@ Mappings:
       WS2016FULLBASE: ami-3703414f
   MediaLinksMapper:
     Exchange:
-      '2013': https://download.microsoft.com/download/3/9/B/39B25E37-2265-4FBC-AF87-7CA6CA089615/Exchange2013-x64-cu20.exe
-      '2016': https://download.microsoft.com/download/5/8/C/58CA2823-6764-4355-B9DE-EB196E43BC81/ExchangeServer2016-x64-cu9.iso
+      '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
+      '2016': https://download.microsoft.com/download/B/C/9/BC9C77DA-97D9-43D8-A3F8-50D8AF89E3FA/ExchangeServer2016-x64-cu10.iso
     UCMA:
       ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
+    NetFramework:
+      v471: https://download.microsoft.com/download/9/E/6/9E63300C-0941-4B45-A0EC-0008F96DD480/NDP471-KB4033342-x86-x64-AllOS-ENU.exe
+    VisualCRuntime:
+      2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
 Resources:
   EDGE1:
     DependsOn: ExchangeNode1WaitCondition
@@ -819,6 +823,66 @@ Resources:
                   - ''
                   - - powershell.exe -Command exit
               waitAfterCompletion: '0'
+            k-download-visualcruntime:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            l-download-netframework:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+            m-install-visualcruntime:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'EdgeNode1NetBIOSName'
+                  - ''' -DomainAdminUser ''Administrator'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            n-install-netframework:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-NetFramework.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'EdgeNode1NetBIOSName'
+                  - ''' -DomainAdminUser ''Administrator'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -NetFrameworkDownloadLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+              waitAfterCompletion: '0'
+            o-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
         setup:
           commands:
             a-set-execution-policy:
@@ -968,6 +1032,30 @@ Resources:
             c:\cfn\scripts\Configure-UAC.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Download-Prerequisites.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-VisualCRuntime.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-NetFramework.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1206,6 +1294,66 @@ Resources:
                   - ''
                   - - powershell.exe -Command exit
               waitAfterCompletion: '0'
+            k-download-visualcruntime:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            l-download-netframework:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+            m-install-visualcruntime:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'EdgeNode2NetBIOSName'
+                  - ''' -DomainAdminUser ''Administrator'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            n-install-netframework:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-NetFramework.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'EdgeNode2NetBIOSName'
+                  - ''' -DomainAdminUser ''Administrator'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -NetFrameworkDownloadLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+              waitAfterCompletion: '0'
+            o-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
         setup:
           commands:
             a-set-execution-policy:
@@ -1355,6 +1503,30 @@ Resources:
             c:\cfn\scripts\Configure-UAC.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Download-Prerequisites.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-VisualCRuntime.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-NetFramework.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1955,6 +2127,67 @@ Resources:
                     - ALL
                   - '''"'
               waitAfterCompletion: '0'
+            l-download-visualcruntime:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            m-download-netframework:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+              waitAfterCompletion: '0'
+            n-install-visualcruntime:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+            o-install-netframework:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-NetFramework.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -NetFrameworkDownloadLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+            p-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
         setup:
           commands:
             a-set-execution-policy:
@@ -2124,6 +2357,7 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
             C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
@@ -2131,6 +2365,7 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
@@ -2138,6 +2373,31 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Download-Prerequisites.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-VisualCRuntime.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-NetFramework.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
         configSets:
           config:
             - setup
@@ -2365,6 +2625,67 @@ Resources:
                     - ALL
                   - '''"'
               waitAfterCompletion: '0'
+            l-download-visualcruntime:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            m-download-netframework:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+              waitAfterCompletion: '0'
+            n-install-visualcruntime:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+            o-install-netframework:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-NetFramework.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -NetFrameworkDownloadLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+            p-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
         setup:
           commands:
             a-set-execution-policy:
@@ -2542,6 +2863,15 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
@@ -2549,6 +2879,31 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Download-Prerequisites.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-VisualCRuntime.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-NetFramework.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
         configSets:
           config:
             - setup
@@ -2770,6 +3125,67 @@ Resources:
                     - ALL
                   - '''"'
               waitAfterCompletion: '0'
+            l-download-visualcruntime:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+              waitAfterCompletion: '0'
+            m-download-netframework:
+              command: !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+              waitAfterCompletion: '0'
+            n-install-visualcruntime:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2013x64
+                  - '''"'
+            o-install-netframework:
+              command: !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-NetFramework.ps1
+                    -DomainNetBIOSName '
+                  - !Ref 'DomainNetBIOSName'
+                  - ''' -DomainAdminUser '''
+                  - !Ref 'DomainAdminUser'
+                  - ''' -DomainAdminPassword '''
+                  - !Ref 'DomainAdminPassword'
+                  - ''' -NetFrameworkDownloadLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - NetFramework
+                    - v471
+                  - '''"'
+            p-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
         setup:
           commands:
             a-set-execution-policy:
@@ -2939,6 +3355,15 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
@@ -2946,6 +3371,37 @@ Resources:
                     - GovCloudCondition
                     - s3-us-gov-west-1
                     - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Download-Prerequisites.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-VisualCRuntime.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+            C:\cfn\scripts\Install-NetFramework.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
         configSets:
           config:
             - setup
@@ -3032,15 +3488,14 @@ Resources:
     Properties:
       Scheme: internal
       SecurityGroups:
-        - !Ref 'VPCCidrBlock'
         - !Ref 'LoadBalancerSecurityGroup'
       Subnets: !If
-        - IsTwoNode
-        - - !Ref 'PrivateSubnet1ID'
-          - !Ref 'PrivateSubnet2ID'
+        - ThirdAzIsFullNode
         - - !Ref 'PrivateSubnet1ID'
           - !Ref 'PrivateSubnet2ID'
           - !Ref 'PrivateSubnet3ID'
+        - - !Ref 'PrivateSubnet1ID'
+          - !Ref 'PrivateSubnet2ID'
       Type: application
   TargetGroup:
     Condition: DeployLoadBalancer
@@ -3062,11 +3517,18 @@ Resources:
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '20'
-      Targets:
-        - Id: !Ref 'ExchangeNode1'
-          Port: '443'
-        - Id: !Ref 'ExchangeNode2'
-          Port: '443'
+      Targets: !If
+        - ThirdAzIsFullNode
+        - - Id: !Ref 'ExchangeNode1'
+            Port: '443'
+          - Id: !Ref 'ExchangeNode2'
+            Port: '443'
+          - Id: !Ref 'ExchangeNode3'
+            Port: '443'
+        - - Id: !Ref 'ExchangeNode1'
+            Port: '443'
+          - Id: !Ref 'ExchangeNode2'
+            Port: '443'
       UnhealthyThresholdCount: 5
       VpcId: !Ref 'VPCID'
   Listener:

@@ -18,7 +18,7 @@ try {
     $filename = $ExchangeDownloadLink.Substring($ExchangeDownloadLink.LastIndexOf("/") + 1)
     
     if($ExchangeServerVersion -eq "2013") {
-        Invoke-Command -ScriptBlock {Start-Process cmd.exe "/c $Path\$filename /extract:$Path /passive" -NoNewWindow -Wait} 
+        Invoke-Command -ScriptBlock {Start-Process cmd.exe "/c cd $Path && $Path\$filename -s" -NoNewWindow -Wait}
     }
     elseif ($ExchangeServerVersion -eq "2016") {
         $isoPath = $Path + "\" + $filename
