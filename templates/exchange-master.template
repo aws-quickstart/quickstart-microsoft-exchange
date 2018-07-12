@@ -416,7 +416,7 @@ Parameters:
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
       (-).
-    Default: quickstart-reference
+    Default: aws-quickstart
     Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
@@ -425,7 +425,7 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slash (/).
-    Default: microsoft/exchange/latest/
+    Default: quickstart-microsoft-exchange/
     Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
@@ -638,7 +638,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-2012r2-1.template
+        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-1.template
         - QSS3Region: !If
             - GovCloudCondition
             - s3-us-gov-west-1
@@ -659,8 +659,16 @@ Resources:
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PrivateSubnet2CIDR: !Ref 'PrivateSubnet2CIDR'
         PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PrivateSubnet3CIDR: !If
+          - IsTwoAz
+          - !Ref 'AWS::NoValue'
+          - !Ref 'PrivateSubnet3CIDR'
         PublicSubnet1CIDR: !Ref 'PublicSubnet1CIDR'
         PublicSubnet2CIDR: !Ref 'PublicSubnet2CIDR'
+        PublicSubnet3CIDR: !If
+          - IsTwoAz
+          - !Ref 'AWS::NoValue'
+          - !Ref 'PublicSubnet3CIDR'
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/'
         RestoreModePassword: !Ref 'RestoreModePassword'
