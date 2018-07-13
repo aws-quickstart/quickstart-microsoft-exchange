@@ -56,6 +56,7 @@ Metadata:
           - EdgeNode2NetBIOSName
           - EdgeNode2PrivateIP1
           - EncryptDataVolumes
+          - EncryptionKmsKey
           - VolumeIops
           - VolumeSize
           - VolumeType
@@ -150,6 +151,8 @@ Metadata:
         default: Edge Role Instance Type
       EncryptDataVolumes:
         default: Encrypt Data volumes
+      EncryptionKmsKey:
+        default: Kms key to encrypt volumes
       ThirdAZ:
         default: Third AZ
       VolumeIops:
@@ -248,10 +251,10 @@ Parameters:
       The logical order is preserved and that 2 AZ''s must be provided unless the
       Third AZ parameter is specified, in which case 3 AZ''s must me provided.'
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  CertificateArn:
-    AllowedPattern: arn:aws:acm:[^:]+:([0-9]{12}):certificate/.+
-    Default: arn:aws:acm:[REGION]:123456789012:certificate/[GUID]
-    Description: Certificate ARN to be used by ALB
+  EncryptionKmsKey:
+    AllowedPattern: arn:aws:kms:[^:]+:([0-9]{12}):key/.+
+    Default: arn:aws:kms:[REGION]:123456789012:key/[GUID]
+    Description: KMS encryption key ARN to be used by EBS volumes
     MaxLength: '90'
     MinLength: '20'
     Type: String
@@ -342,6 +345,13 @@ Parameters:
       - 'true'
     Default: 'false'
     Description: Set this parameter to true to encrypt the data and logs volumes
+    Type: String
+  CertificateArn:
+    AllowedPattern: arn:aws:acm:[^:]+:([0-9]{12}):certificate/.+
+    Default: arn:aws:acm:[REGION]:123456789012:certificate/[GUID]
+    Description: Certificate ARN to be used by ALB
+    MaxLength: '90'
+    MinLength: '20'
     Type: String
   ExchangeServerVersion:
     AllowedValues:
@@ -766,6 +776,7 @@ Resources:
         EdgeNode1PrivateIP1: !Ref 'EdgeNode1PrivateIP1'
         EdgeNode2NetBIOSName: !Ref 'EdgeNode2NetBIOSName'
         EdgeNode2PrivateIP1: !Ref 'EdgeNode2PrivateIP1'
+        EncryptionKmsKey: !Ref 'EncryptionKmsKey'
         ExchangeServerVersion: !Ref 'ExchangeServerVersion'
         EncryptDataVolumes: !Ref 'EncryptDataVolumes'
         HostType: !Ref 'HostType'

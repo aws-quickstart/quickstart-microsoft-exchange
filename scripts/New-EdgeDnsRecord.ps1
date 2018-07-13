@@ -16,11 +16,12 @@ param(
     [Parameter(Mandatory=$true, Position=3)]
     $Username,
 
-    [string]
     [Parameter(Mandatory=$true, Position=4)]
-    $Password
+    [string]
+    $SSMParamName
 )
 try {
+    $Password = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $pass = ConvertTo-SecureString $Password -AsPlainText -Force
     $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Username,$pass
 

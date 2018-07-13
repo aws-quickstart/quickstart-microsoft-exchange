@@ -7,12 +7,11 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $DomainAdminPassword,
+    $ExchangeServerVersion,
 
     [Parameter(Mandatory=$true)]
     [string]
-    $ExchangeServerVersion
-
+    $SSMParamName
 )
 
 try {
@@ -20,6 +19,7 @@ try {
     $ErrorActionPreference = "Stop"
 
     $LocalAdminFullUser = $EdgeNodeNetBIOSName + '\Administrator'
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $LocalAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $LocalAdminCreds = New-Object System.Management.Automation.PSCredential($LocalAdminFullUser, $LocalAdminSecurePassword)
 

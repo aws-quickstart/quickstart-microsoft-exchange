@@ -11,7 +11,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $DomainAdminPassword,
+    $SSMParamName,
 
     [Parameter(Mandatory=$false)]
     [string]
@@ -58,17 +58,18 @@ try {
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
 
     $ConfigDAG={
         $ErrorActionPreference = "Stop"
-        $nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName
-         #$addr =  $Using:ExchangeNode1PrivateIP2, $Using:ExchangeNode2PrivateIP2, $Using:ExchangeNode3PrivateIP2
-            
+        #$nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName
+        #$addr =  $Using:ExchangeNode1PrivateIP2, $Using:ExchangeNode2PrivateIP2, $Using:ExchangeNode3PrivateIP2
+
         Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-        New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName 
-       
+        New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName
+
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode1NetBIOSName
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode2NetBIOSName
 
@@ -82,12 +83,12 @@ try {
     if ($ExchangeNode3NetBIOSName) {
         $ConfigDAG={
             $ErrorActionPreference = "Stop"
-            $nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName, $Using:ExchangeNode3NetBIOSName
+            #$nodes = $Using:ExchangeNode1NetBIOSName, $Using:ExchangeNode2NetBIOSName, $Using:ExchangeNode3NetBIOSName
             #$addr =  $Using:ExchangeNode1PrivateIP2, $Using:ExchangeNode2PrivateIP2, $Using:ExchangeNode3PrivateIP2
-            
+
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-            New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName 
-            
+            New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName
+
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode1NetBIOSName
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode2NetBIOSName
 

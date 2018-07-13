@@ -11,7 +11,7 @@ param(
     [string]
     [Parameter(Mandatory=$true)]
     $DnsServer,
-   
+
     [Parameter(Mandatory=$true)]
     [string]
     $DomainNetBIOSName,
@@ -22,7 +22,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $DomainAdminPassword
+    $SSMParamName
 )
 pin
 
@@ -32,14 +32,15 @@ try {
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
-    
+
     $LBecordPs={
         $ErrorActionPreference = "Stop"
         Add-DnsServerResourceRecordCName -Name $Using:ExchangeEndpointDNS -HostNameAlias $Using:LoadBalancerRecord -ZoneName $Using:DomainNetBIOSName
     }
-    
+
     $Retries = 0
     $Installed = $false
     while (($Retries -lt 4) -and (!$Installed)) {

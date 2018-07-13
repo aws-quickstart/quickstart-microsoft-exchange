@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-	
+
 	[Parameter(Mandatory=$true)]
     [string]
     $DomainNetBIOSName,
@@ -11,39 +11,38 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $DomainAdminPassword,
+    $NetFrameworkDownloadLink,
 
     [Parameter(Mandatory=$true)]
     [string]
-    $NetFrameworkDownloadLink
+    $SSMParamName
 )
 
 
 try {
 	Start-Transcript -Path C:\cfn\log\Install-NetFramework.ps1.txt -Append
-    $ErrorActionPreference = "Stop"	
-	
-	$DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $ErrorActionPreference = "Stop"
+
+    $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
-	
-    
+
     $InstallNetfwPs={
         $ErrorActionPreference = "Stop"
         $temp = $Using:NetFrameworkDownloadLink
         $filename = $temp.Substring($temp.LastIndexOf("/") + 1)
         $InstallPath = "C:\Exchangeinstall" + "\" + $filename
         $Args = "/q /norestart /log C:\cfn\log\NetFramework_Installer.htm"
-		
-		Start-Process $InstallPath -args $Args -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\NetFrameworkInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\NetFrameworkInstallerErrors.txt" 
-        
+
+		Start-Process $InstallPath -args $Args -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\NetFrameworkInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\NetFrameworkInstallerErrors.txt"
     }
-	
+
     $Retries = 0
     $Installed = $false
 	while (($Retries -lt 4) -and (!$Installed)) {
         try {
-		
+
 			Invoke-Command -Authentication Credssp -Scriptblock $InstallNetfwPs -ComputerName localhost -Credential $DomainAdminCreds
             $Installed = $true
         }
@@ -58,7 +57,7 @@ try {
     if (!$Installed) {
           throw $Exception
     }
-	
+
 }
 catch {
     Write-Verbose "$($_.exception.message)@ $(Get-Date)"

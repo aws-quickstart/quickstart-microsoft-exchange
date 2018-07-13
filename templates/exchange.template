@@ -51,6 +51,7 @@ Metadata:
           - EdgeNode2NetBIOSName
           - EdgeNode2PrivateIP1
           - EncryptDataVolumes
+          - EncryptionKmsKey
           - VolumeSize
           - VolumeType
           - VolumeIops
@@ -114,6 +115,8 @@ Metadata:
         default: Instance type for Edge server
       EncryptDataVolumes:
         default: Encrypt Data volumes
+      EncryptionKmsKey:
+        default: Kms key to encrypt volumes
       IncludeEdgeTransportRole:
         default: Include Edge Server
       HostType:
@@ -336,6 +339,13 @@ Parameters:
       - 'true'
     Default: 'false'
     Description: Set this parameter to true to encrypt the data and logs volumes
+    Type: String
+  EncryptionKmsKey:
+    AllowedPattern: arn:aws:kms:[^:]+:([0-9]{12}):key/.+
+    Default: arn:aws:kms:[REGION]:123456789012:key/[GUID]
+    Description: KMS encryption key ARN to be used by EBS volumes
+    MaxLength: '90'
+    MinLength: '20'
     Type: String
   HostType:
     AllowedValues:
@@ -667,6 +677,12 @@ Mappings:
     VisualCRuntime:
       2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
 Resources:
+  ADPassword:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !Ref 'DomainAdminPassword'
+      Description: The SSM Parameter for Active Directory password.
   EDGE1:
     DependsOn: ExchangeNode1WaitCondition
     Condition: DeployEdge
@@ -713,8 +729,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Install-ExchangeEdgeServer.ps1
                     -EdgeNodeNetBIOSName '
                   - !Ref 'EdgeNode1NetBIOSName'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
                   - '''"'
@@ -733,8 +749,8 @@ Resources:
                   - !Ref 'DomainDNSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - '''"'
               waitAfterCompletion: '0'
         Prep:
@@ -787,7 +803,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-ExchangeKit.ps1 -ExchangeDownloadLink
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source
                     '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -855,8 +871,8 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref 'EdgeNode1NetBIOSName'
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -871,8 +887,8 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref 'EdgeNode1NetBIOSName'
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -968,14 +984,6 @@ Resources:
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            c:\cfn\scripts\Download-ExchangeKit.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1184,8 +1192,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Install-ExchangeEdgeServer.ps1
                     -EdgeNodeNetBIOSName '
                   - !Ref 'EdgeNode2NetBIOSName'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
                   - '''"'
@@ -1204,8 +1212,8 @@ Resources:
                   - !Ref 'DomainDNSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - '''"'
               waitAfterCompletion: '0'
         Prep:
@@ -1258,7 +1266,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-ExchangeKit.ps1 -ExchangeDownloadLink
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source
                     '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -1326,8 +1334,8 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref 'EdgeNode2NetBIOSName'
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -1342,8 +1350,8 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref 'EdgeNode2NetBIOSName'
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -1439,14 +1447,6 @@ Resources:
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            c:\cfn\scripts\Download-ExchangeKit.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1679,20 +1679,37 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       Policies:
-        - PolicyDocument:
+        - PolicyName: aws-quick-start-s3-policy 
+          PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Action:
+                    - s3:GetObject
+                  Resource: !Sub
+                    - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
+                    - Partition: !If
+                        - GovCloudCondition
+                        - aws-us-gov
+                        - aws
+                  Effect: Allow
+          
+        - PolicyName: AD-SSM-Parameters
+          PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Action:
-                  - s3:GetObject
-                Resource: !Sub
-                  - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
-                  - Partition: !If
-                      - GovCloudCondition
-                      - aws-us-gov
-                      - aws
-                Effect: Allow
-          PolicyName: aws-quick-start-s3-policy
+              - Effect: Allow
+                Action:
+                  - ssm:PutParameter
+                  - ssm:DeleteParameter
+                  - ssm:GetParameter
+                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ADPassword}'
+              - Effect: Allow
+                Action:
+                  - ssm:DescribeParameters
+                Resource: '*'
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       AssumeRolePolicyDocument:
         Statement:
           - Action:
@@ -2008,10 +2025,10 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - '''"'
               waitAfterCompletion: '0'
             c-install-exchange:
@@ -2022,8 +2039,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
                   - ''' -ServerIndex ''1'
@@ -2091,7 +2108,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-ExchangeKit.ps1 -ExchangeDownloadLink
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source
                     '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2120,7 +2137,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-UcmaRuntime.ps1 -source '''
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
                   - !FindInMap
                     - MediaLinksMapper
                     - UCMA
@@ -2161,8 +2178,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2177,8 +2194,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2262,14 +2279,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            c:\cfn\scripts\Download-ExchangeKit.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
@@ -2281,14 +2290,6 @@ Resources:
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            c:\cfn\scripts\Download-UcmaRuntime.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -2520,8 +2521,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
                   - ''' -ServerIndex ''2'
@@ -2589,7 +2590,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-ExchangeKit.ps1 -ExchangeDownloadLink
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source
                     '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2618,7 +2619,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-UcmaRuntime.ps1 -source '''
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
                   - !FindInMap
                     - MediaLinksMapper
                     - UCMA
@@ -2659,8 +2660,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2675,8 +2676,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2760,14 +2761,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            c:\cfn\scripts\Download-ExchangeKit.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
@@ -2787,14 +2780,6 @@ Resources:
             C:\cfn\scripts\Create-Share.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            c:\cfn\scripts\Download-UcmaRuntime.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -3020,8 +3005,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -ExchangeServerVersion '''
                   - !Ref 'ExchangeServerVersion'
                   - ''' -ServerIndex 3'''
@@ -3089,7 +3074,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-ExchangeKit.ps1 -ExchangeDownloadLink
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source
                     '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -3118,7 +3103,7 @@ Resources:
                 - - 'powershell.exe '
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
-                  - ' C:\cfn\scripts\Download-UcmaRuntime.ps1 -source '''
+                  - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
                   - !FindInMap
                     - MediaLinksMapper
                     - UCMA
@@ -3159,8 +3144,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -3175,8 +3160,8 @@ Resources:
                   - !Ref 'DomainNetBIOSName'
                   - ''' -DomainAdminUser '''
                   - !Ref 'DomainAdminUser'
-                  - ''' -DomainAdminPassword '''
-                  - !Ref 'DomainAdminPassword'
+                  - ''' -SSMParamName '''
+                  - !Ref 'ADPassword'
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -3260,14 +3245,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            c:\cfn\scripts\Download-ExchangeKit.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-ExchangeKit.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
@@ -3279,14 +3256,6 @@ Resources:
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            c:\cfn\scripts\Download-UcmaRuntime.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-UcmaRuntime.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -3555,6 +3524,10 @@ Resources:
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
         - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
+        - !Ref 'AWS::NoValue'
       Size: !Ref 'VolumeSize'
       VolumeType: !Ref 'VolumeType'
     Type: AWS::EC2::Volume
@@ -3564,6 +3537,10 @@ Resources:
       Encrypted: !If
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
+        - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3579,6 +3556,10 @@ Resources:
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
         - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
+        - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
         - !Ref 'VolumeIops'
@@ -3592,6 +3573,10 @@ Resources:
       Encrypted: !If
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
+        - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3608,6 +3593,10 @@ Resources:
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
         - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
+        - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
         - !Ref 'VolumeIops'
@@ -3622,6 +3611,10 @@ Resources:
       Encrypted: !If
         - UseEncryptedDataVolumes
         - !Ref 'EncryptDataVolumes'
+        - !Ref 'AWS::NoValue'
+      KmsKeyId: !If
+        - UseEncryptedDataVolumes
+        - !Ref 'EncryptionKmsKey'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1

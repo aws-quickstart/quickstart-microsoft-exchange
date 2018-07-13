@@ -9,13 +9,13 @@ param(
     [string]
     $DomainAdminUser,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    $DomainAdminPassword,
-
     [Parameter(Mandatory=$false)]
     [string]
-    $ExchangeServerVersion
+    $ExchangeServerVersion,
+
+    [Parameter(Mandatory=$true)]
+    [string]
+    $SSMParamName
 )
 
 
@@ -24,9 +24,12 @@ try {
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
 
+    # Make parameter secure string
+    Write-SSMParameter -Name $SSMParamName -Type SecureString -Value $DomainAdminPassword -Overwrite $true
 
     $InstallExchPs={
         $ErrorActionPreference = "Stop"

@@ -22,7 +22,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $DomainAdminPassword
+    $SSMParamName
 )
 
 
@@ -32,6 +32,7 @@ try {
     $ErrorActionPreference = "Stop"
 
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
+    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
     $DomainAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
     $DomainAdminCreds = New-Object System.Management.Automation.PSCredential($DomainAdminFullUser, $DomainAdminSecurePassword)
     
