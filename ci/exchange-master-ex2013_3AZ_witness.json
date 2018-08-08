@@ -164,10 +164,6 @@
     "ParameterValue": "10.0.0.101"
   },
   {
-    "ParameterKey": "ExchangeNode1PrivateIP3",
-    "ParameterValue": "10.0.0.102"
-  },
-  {
     "ParameterKey": "ExchangeNode2NetBIOSName",
     "ParameterValue": "ExchangeNode2"
   },
@@ -180,10 +176,6 @@
     "ParameterValue": "10.0.32.101"
   },
   {
-    "ParameterKey": "ExchangeNode2PrivateIP3",
-    "ParameterValue": "10.0.32.102"
-  },
-  {
     "ParameterKey": "ExchangeNode3NetBIOSName",
     "ParameterValue": "ExchangeNode3"
   },
@@ -194,10 +186,6 @@
   {
     "ParameterKey": "ExchangeNode3PrivateIP2",
     "ParameterValue": "10.0.64.101"
-  },
-  {
-    "ParameterKey": "ExchangeNode3PrivateIP3",
-    "ParameterValue": "10.0.64.102"
   },
   {
     "ParameterKey": "ExchangeNodeInstanceType",

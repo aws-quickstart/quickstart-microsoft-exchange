@@ -13,17 +13,17 @@ param(
     [string]
     $SSMParamName,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$false)]
     [string]
-    $ExchangeGroupName,
+    $ExchangeGroupName="Exchange Trusted Subsystem",
 
     [Parameter(Mandatory=$True)]
     [string]
     $ServerName,
 
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$false)]
     [string]
-    $LocalGroupName    
+    $LocalGroupName="Administrators"   
 )
 
 

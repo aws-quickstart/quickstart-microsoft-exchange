@@ -65,17 +65,14 @@ Metadata:
           - ExchangeNode1NetBIOSName
           - ExchangeNode1PrivateIP1
           - ExchangeNode1PrivateIP2
-          - ExchangeNode1PrivateIP3
           - DedicatedHostIDNode1
           - ExchangeNode2NetBIOSName
           - ExchangeNode2PrivateIP1
           - ExchangeNode2PrivateIP2
-          - ExchangeNode2PrivateIP3
           - DedicatedHostIDNode2
           - ExchangeNode3NetBIOSName
           - ExchangeNode3PrivateIP1
           - ExchangeNode3PrivateIP2
-          - ExchangeNode3PrivateIP3
           - DedicatedHostIDNode3
       - Label:
           default: AWS Quick Start Configuration
@@ -169,24 +166,18 @@ Metadata:
         default: Cluster Node 1 Private IP Address 1
       ExchangeNode1PrivateIP2:
         default: Cluster Node 1 Private IP Address 2
-      ExchangeNode1PrivateIP3:
-        default: Cluster Node 1 Private IP Address 3
       ExchangeNode2NetBIOSName:
         default: Cluster Node 2 NetBIOS Name
       ExchangeNode2PrivateIP1:
         default: Cluster Node 2 Private IP Address 1
       ExchangeNode2PrivateIP2:
         default: Cluster Node 2 Private IP Address 2
-      ExchangeNode2PrivateIP3:
-        default: Cluster Node 2 Private IP Address 3
       ExchangeNode3NetBIOSName:
         default: Cluster Node 3 NetBIOS Name
       ExchangeNode3PrivateIP1:
         default: Cluster Node 3 Private IP Address 1
       ExchangeNode3PrivateIP2:
         default: Cluster Node 3 Private IP Address 2
-      ExchangeNode3PrivateIP3:
-        default: Cluster Node 3 Private IP Address 3
       EdgeNode1NetBIOSName:
         default: Edge Node 1 NetBIOS Name
       EdgeNode1PrivateIP1:
@@ -505,11 +496,6 @@ Parameters:
     Default: 10.0.0.101
     Description: Secondary private IP for Exchange cluster on first Exchange Node
     Type: String
-  ExchangeNode1PrivateIP3:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.0.102
-    Description: Third private IP for Availability Group Listener on first Exchange Node
-    Type: String
   ExchangeNode2NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: ExchangeNode2
@@ -528,11 +514,6 @@ Parameters:
     Default: 10.0.32.101
     Description: Secondary private IP for Exchange cluster on second Exchange Node
     Type: String
-  ExchangeNode2PrivateIP3:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.32.102
-    Description: Third private IP for Availability Group Listener on second Exchange Node
-    Type: String
   ExchangeNode3NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: ExchangeNode3
@@ -550,12 +531,6 @@ Parameters:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
     Default: 10.0.64.101
     Description: Secondary private IP for Exchange cluster on optional third Exchange Node
-    Type: String
-  ExchangeNode3PrivateIP3:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.64.102
-    Description: Third private IP for Availability Group Listener on optional third
-      Exchange Node
     Type: String
 Conditions:
   ByolAmi: !Not
@@ -766,7 +741,7 @@ Resources:
             b-set-DnsSuffix:
               command: !Join
                 - ''
-                - - powershell.exe -command "c:\cfn\scripts\Set-PrimaryDnsSuffix.ps1
+                - - powershell.exe -command "c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1
                     -Suffix '
                   - !Ref 'DomainDNSName'
                   - '''"'
@@ -788,7 +763,7 @@ Resources:
                   - ''''
               waitAfterCompletion: '0'
             e-enable-credssp:
-              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1
+              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1"
               waitAfterCompletion: '0'
             f-disable-uac:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
@@ -933,14 +908,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Invoke-ADReplication.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
@@ -960,14 +927,6 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1013,9 +972,9 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            c:\cfn\scripts\Set-PrimaryDnsSuffix.ps1:
+            c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1031,7 +990,7 @@ Resources:
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1229,7 +1188,7 @@ Resources:
             b-set-DnsSuffix:
               command: !Join
                 - ''
-                - - powershell.exe -command "c:\cfn\scripts\Set-PrimaryDnsSuffix.ps1
+                - - powershell.exe -command "c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1
                     -Suffix '
                   - !Ref 'DomainDNSName'
                   - '''"'
@@ -1251,7 +1210,7 @@ Resources:
                   - ''''
               waitAfterCompletion: '0'
             e-enable-credssp:
-              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1
+              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1"
               waitAfterCompletion: '0'
             f-disable-uac:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
@@ -1396,14 +1355,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Invoke-ADReplication.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
@@ -1423,14 +1374,6 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1476,9 +1419,9 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            c:\cfn\scripts\Set-PrimaryDnsSuffix.ps1:
+            c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-PrimaryDnsSuffix.ps1
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1494,7 +1437,7 @@ Resources:
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -1905,14 +1848,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Create-Share.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Invoke-ADReplication.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
@@ -1924,14 +1859,6 @@ Resources:
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -2082,7 +2009,7 @@ Resources:
                   - '''"'
               waitAfterCompletion: forever
             e-enable-credssp:
-              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1
+              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1"
               waitAfterCompletion: '0'
             f-disable-uac:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
@@ -2239,14 +2166,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Invoke-ADReplication.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
@@ -2266,14 +2185,6 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -2346,30 +2257,6 @@ Resources:
             c:\cfn\scripts\Configure-UAC.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-ExchangeDAG.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Add-ExchangeGroup.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -2451,8 +2338,6 @@ Resources:
               PrivateIpAddress: !Ref 'ExchangeNode1PrivateIP1'
             - Primary: 'false'
               PrivateIpAddress: !Ref 'ExchangeNode1PrivateIP2'
-            - Primary: 'false'
-              PrivateIpAddress: !Ref 'ExchangeNode1PrivateIP3'
           SubnetId: !Ref 'PrivateSubnet1ID'
       Tags:
         - Key: Name
@@ -2501,6 +2386,68 @@ Resources:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
                 -status Enable"
               waitAfterCompletion: '0'
+        ConfigureDAG:
+          commands:
+            a-configure-fileserver:
+              command: !If
+                - IsTwoNode
+                - !Join
+                  - ''
+                  - - powershell.exe -Command "C:\cfn\scripts\Add-ExchangeGroup.ps1 -DomainNetBIOSName '
+                    - !Ref 'DomainNetBIOSName'
+                    - ''' -DomainAdminUser '''
+                    - !Ref 'DomainAdminUser'
+                    - ''' -SSMParamName '''
+                    - !Ref 'ADPassword'
+                    - ''' -ServerName '''
+                    - !Ref 'FileServerNetBIOSName'
+                    - '''"'
+                - !Join
+                  - ''
+                  - - powershell.exe -Command exit 
+            b-configure-dag:
+              command: !If
+                - IsTwoNode
+                - !Join
+                  - ''
+                  - - powershell.exe -Command "C:\cfn\scripts\Configure-ExchangeDAG.ps1 -DomainNetBIOSName '
+                    - !Ref 'DomainNetBIOSName'
+                    - ''' -DomainAdminUser '''
+                    - !Ref 'DomainAdminUser'
+                    - ''' -SSMParamName '''
+                    - !Ref 'ADPassword'
+                    - ''' -ExchangeNode1NetBIOSName '''
+                    - !Ref 'ExchangeNode1NetBIOSName'
+                    - ''' -ExchangeNode2NetBIOSName '''
+                    - !Ref 'ExchangeNode2NetBIOSName'
+                    - ''' -ExchangeNode1PrivateIP2 '''
+                    - !Ref 'ExchangeNode1PrivateIP2'
+                    - ''' -ExchangeNode2PrivateIP2 '''
+                    - !Ref 'ExchangeNode2PrivateIP2'
+                    - ''' -FileServerNetBIOSName '''
+                    - !Ref 'FileServerNetBIOSName'
+                    - '''"'
+                - !Join
+                  - ''
+                  - - powershell.exe -Command "C:\cfn\scripts\Configure-ExchangeDAG.ps1 -DomainNetBIOSName '
+                    - !Ref 'DomainNetBIOSName'
+                    - ''' -DomainAdminUser '''
+                    - !Ref 'DomainAdminUser'
+                    - ''' -SSMParamName '''
+                    - !Ref 'ADPassword'
+                    - ''' -ExchangeNode1NetBIOSName '''
+                    - !Ref 'ExchangeNode1NetBIOSName'
+                    - ''' -ExchangeNode2NetBIOSName '''
+                    - !Ref 'ExchangeNode2NetBIOSName'
+                    - ''' -ExchangeNode3NetBIOSName '''
+                    - !Ref 'ExchangeNode3NetBIOSName'
+                    - ''' -ExchangeNode1PrivateIP2 '''
+                    - !Ref 'ExchangeNode1PrivateIP2'
+                    - ''' -ExchangeNode2PrivateIP2 '''
+                    - !Ref 'ExchangeNode2PrivateIP2'
+                    - ''' -ExchangeNode3PrivateIP2 '''
+                    - !Ref 'ExchangeNode3PrivateIP2'
+                    - '''"'
         Finalize:
           commands:
             a-reboot:
@@ -2564,7 +2511,7 @@ Resources:
                   - '''"'
               waitAfterCompletion: forever
             e-enable-credssp:
-              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1
+              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1"
               waitAfterCompletion: '0'
             f-disable-uac:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
@@ -2721,14 +2668,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Invoke-ADReplication.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
@@ -2753,14 +2692,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
@@ -2772,14 +2703,6 @@ Resources:
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Create-Share.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Create-Share.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -2841,30 +2764,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-ExchangeDAG.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Add-ExchangeGroup.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
@@ -2889,11 +2788,28 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
+            C:\cfn\scripts\Add-ExchangeGroup.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Configure-ExchangeDAG.ps1:
+              source: !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
+                - QSS3Region: !If
+                    - GovCloudCondition
+                    - s3-us-gov-west-1
+                    - s3
+              authentication: S3AccessCreds
         configSets:
           config:
             - setup
             - Prep
             - Install
+            - ConfigureDAG
             - Cleanup
             - Finalize
     Properties:
@@ -2941,8 +2857,6 @@ Resources:
               PrivateIpAddress: !Ref 'ExchangeNode2PrivateIP1'
             - Primary: 'false'
               PrivateIpAddress: !Ref 'ExchangeNode2PrivateIP2'
-            - Primary: 'false'
-              PrivateIpAddress: !Ref 'ExchangeNode2PrivateIP3'
           SubnetId: !Ref 'PrivateSubnet2ID'
       Tags:
         - Key: Name
@@ -3048,7 +2962,7 @@ Resources:
                   - '''"'
               waitAfterCompletion: forever
             e-enable-credssp:
-              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1
+              command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Enable-CredSSP.ps1"
               waitAfterCompletion: '0'
             f-disable-uac:
               command: powershell.exe -ExecutionPolicy RemoteSigned -Command "C:\cfn\scripts\Configure-UAC.ps1
@@ -3205,14 +3119,6 @@ Resources:
                     - s3-us-gov-west-1
                     - s3
               authentication: S3AccessCreds
-            C:\cfn\scripts\Invoke-ADReplication.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
@@ -3232,14 +3138,6 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Set-Dns.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-Dns.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -3312,30 +3210,6 @@ Resources:
             c:\cfn\scripts\Configure-UAC.ps1:
               source: !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-ExchangeDAG.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Configure-LoadbalancerDnsRecord.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-LoadbalancerDnsRecord.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
-              authentication: S3AccessCreds
-            C:\cfn\scripts\Add-ExchangeGroup.ps1:
-              source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
                 - QSS3Region: !If
                     - GovCloudCondition
                     - s3-us-gov-west-1
@@ -3423,8 +3297,6 @@ Resources:
               PrivateIpAddress: !Ref 'ExchangeNode3PrivateIP1'
             - Primary: 'false'
               PrivateIpAddress: !Ref 'ExchangeNode3PrivateIP2'
-            - Primary: 'false'
-              PrivateIpAddress: !Ref 'ExchangeNode3PrivateIP3'
           SubnetId: !Ref 'PrivateSubnet3ID'
       Tags:
         - Key: Name
