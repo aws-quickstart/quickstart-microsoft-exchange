@@ -76,8 +76,7 @@ try {
             $ErrorActionPreference = "Stop"
             
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-            ## Need to change this line
-            New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName
+            New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:ExchangeNode3NetBIOSName -WitnessDirectory C:\$Using:DAGName
 
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode1NetBIOSName
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode2NetBIOSName

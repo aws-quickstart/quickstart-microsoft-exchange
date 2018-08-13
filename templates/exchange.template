@@ -56,6 +56,11 @@ Metadata:
           - VolumeType
           - VolumeIops
       - Label:
+          default: Load Balancer Configuration
+        Parameters:
+          - DeployLoadBalancer
+          - CertificateArn
+      - Label:
           default: Failover Cluster Configuration
         Parameters:
           - FileServerInstanceType
@@ -113,7 +118,7 @@ Metadata:
       EncryptDataVolumes:
         default: Encrypt Data volumes
       EncryptionKmsKey:
-        default: Kms key to encrypt volumes
+        default: KMS key to encrypt volumes (Optional)
       IncludeEdgeTransportRole:
         default: Include Edge Server
       HostType:
@@ -332,11 +337,9 @@ Parameters:
     Description: Set this parameter to true to encrypt the data and logs volumes
     Type: String
   EncryptionKmsKey:
-    AllowedPattern: arn:aws:kms:[^:]+:([0-9]{12}):key/.+
-    Default: arn:aws:kms:[REGION]:123456789012:key/[GUID]
-    Description: KMS encryption key ARN to be used by EBS volumes
+    Default: ''
+    Description: KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]
     MaxLength: '90'
-    MinLength: '20'
     Type: String
   HostType:
     AllowedValues:
@@ -559,6 +562,10 @@ Conditions:
     - !Equals
       - !Ref 'ThirdAZ'
       - 'no'
+  EncryptionKmsKeySelected: !Not
+    - !Equals
+      - !Ref 'EncryptionKmsKey'
+      - ''
   IsTwoNode: !Not
     - !Equals
       - !Ref 'ThirdAZ'
@@ -591,56 +598,56 @@ Mappings:
       '2016': WS2016FULLBASE
   AWSAMIRegionMap:
     AMI:
-      WS2012R2: Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.06.22
-      WS2016FULLBASE: Windows_Server-2016-English-Full-Base-2018.06.13
+      WS2012R2: Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.07.11
+      WS2016FULLBASE: Windows_Server-2016-English-Full-Base-2018.07.11
     ap-northeast-1:
-      WS2012R2: ami-4e0cc331
-      WS2016FULLBASE: ami-120cc36d
+      WS2012R2: ami-a73c5e4a
+      WS2016FULLBASE: ami-49096ba4
     ap-northeast-2:
-      WS2012R2: ami-2968c247
-      WS2016FULLBASE: ami-7969c317
+      WS2012R2: ami-28398d46
+      WS2016FULLBASE: ami-07219569
     ap-northeast-3:
-      WS2012R2: ami-48aca235
-      WS2016FULLBASE: ami-b4aaa4c9
+      WS2012R2: ami-04474e79
+      WS2016FULLBASE: ami-88424bf5
     ap-south-1:
-      WS2012R2: ami-e795bd88
-      WS2016FULLBASE: ami-5f95bd30
+      WS2012R2: ami-e013228f
+      WS2016FULLBASE: ami-ae1627c1
     ap-southeast-1:
-      WS2012R2: ami-de2a2da2
-      WS2016FULLBASE: ami-053d3a79
+      WS2012R2: ami-43e49da9
+      WS2016FULLBASE: ami-84e79e6e
     ap-southeast-2:
-      WS2012R2: ami-75f32c17
-      WS2016FULLBASE: ami-42f02f20
+      WS2012R2: ami-e3862381
+      WS2016FULLBASE: ami-d48623b6
     ca-central-1:
-      WS2012R2: ami-800685e4
-      WS2016FULLBASE: ami-140b8870
+      WS2012R2: ami-f334b697
+      WS2016FULLBASE: ami-303ebc54
     eu-central-1:
-      WS2012R2: ami-e8093a03
-      WS2016FULLBASE: ami-63f5c688
+      WS2012R2: ami-f7ece81c
+      WS2016FULLBASE: ami-6af7f381
     eu-west-1:
-      WS2012R2: ami-3e7a7647
-      WS2016FULLBASE: ami-987a76e1
+      WS2012R2: ami-5ef8ebb4
+      WS2016FULLBASE: ami-96e1f27c
     eu-west-2:
-      WS2012R2: ami-629a7405
-      WS2016FULLBASE: ami-479b7520
+      WS2012R2: ami-a3b259c4
+      WS2016FULLBASE: ami-9bb358fc
     eu-west-3:
-      WS2012R2: ami-c911a0b4
-      WS2016FULLBASE: ami-1511a068
+      WS2012R2: ami-e0b1019d
+      WS2016FULLBASE: ami-23b6065e
     sa-east-1:
-      WS2012R2: ami-5c6e3530
-      WS2016FULLBASE: ami-ff6e3593
+      WS2012R2: ami-fac4e396
+      WS2016FULLBASE: ami-36caed5a
     us-east-1:
-      WS2012R2: ami-b8f3b5c7
-      WS2016FULLBASE: ami-0327667c
+      WS2012R2: ami-60093e1f
+      WS2016FULLBASE: ami-2d360152
     us-east-2:
-      WS2012R2: ami-da003ebf
-      WS2016FULLBASE: ami-3bfac45e
+      WS2012R2: ami-ca2318af
+      WS2016FULLBASE: ami-36241f53
     us-west-1:
-      WS2012R2: ami-832acee0
-      WS2016FULLBASE: ami-b236d2d1
+      WS2012R2: ami-132ac970
+      WS2016FULLBASE: ami-d12ecdb2
     us-west-2:
-      WS2012R2: ami-aeffbcd6
-      WS2016FULLBASE: ami-3703414f
+      WS2012R2: ami-490b5831
+      WS2016FULLBASE: ami-6d336015
   MediaLinksMapper:
     Exchange:
       '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
@@ -3398,7 +3405,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Size: !Ref 'VolumeSize'
       VolumeType: !Ref 'VolumeType'
@@ -3412,7 +3422,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3430,7 +3443,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3448,7 +3464,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3467,7 +3486,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1
@@ -3486,7 +3508,10 @@ Resources:
         - !Ref 'AWS::NoValue'
       KmsKeyId: !If
         - UseEncryptedDataVolumes
-        - !Ref 'EncryptionKmsKey'
+        - !If 
+          - EncryptionKmsKeySelected
+          - !Ref 'EncryptionKmsKey'
+          - !Ref 'AWS::NoValue'
         - !Ref 'AWS::NoValue'
       Iops: !If
         - VolIsIo1

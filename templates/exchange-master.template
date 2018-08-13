@@ -149,7 +149,7 @@ Metadata:
       EncryptDataVolumes:
         default: Encrypt Data volumes
       EncryptionKmsKey:
-        default: Kms key to encrypt volumes
+        default: KMS key to encrypt volumes (Optional)
       ThirdAZ:
         default: Third AZ
       VolumeIops:
@@ -243,11 +243,9 @@ Parameters:
       Third AZ parameter is specified, in which case 3 AZ''s must me provided.'
     Type: List<AWS::EC2::AvailabilityZone::Name>
   EncryptionKmsKey:
-    AllowedPattern: arn:aws:kms:[^:]+:([0-9]{12}):key/.+
-    Default: arn:aws:kms:[REGION]:123456789012:key/[GUID]
-    Description: KMS encryption key ARN to be used by EBS volumes | arn:aws:kms:[REGION]:123456789012:key/[GUID]
+    Default: ''
+    Description: KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]
     MaxLength: '90'
-    MinLength: '20'
     Type: String
   DedicatedHostAMI:
     Default: ''
