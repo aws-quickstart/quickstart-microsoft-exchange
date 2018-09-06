@@ -472,13 +472,14 @@ Parameters:
   ExchangeNodeInstanceType:
     AllowedValues:
       - m4.xlarge
-      - r3.xlarge
-      - r3.2xlarge
-      - r3.4xlarge
-      - r3.8xlarge
-    ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
-      r3.4xlarge, r3.8xlarge allowed
-    Default: r3.2xlarge
+      - m5.xlarge
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+    ConstraintDescription: Only EBS Optimized instance types r4.xlarge, r4.2xlarge,
+      r4.4xlarge, r4.8xlarge allowed
+    Default: r4.2xlarge
     Description: Amazon EC2 instance type for the second Exchange Node
     Type: String
   ExchangeNode1NetBIOSName:
