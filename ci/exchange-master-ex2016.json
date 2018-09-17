@@ -24,6 +24,10 @@
     "ParameterValue": "10.0.32.10"
   },
   {
+    "ParameterKey": "EncryptionKmsKey",
+    "ParameterValue": ""
+  },
+  {
     "ParameterKey": "AvailabilityZones",
     "ParameterValue": "$[alfred_getaz_2]"
   },
@@ -46,6 +50,10 @@
   {
     "ParameterKey": "DomainNetBIOSName",
     "ParameterValue": "example"
+  },
+  {
+    "ParameterKey": "DeployLoadBalancer",
+    "ParameterValue": "false"
   },
   {
     "ParameterKey": "EdgeInstanceType",
@@ -72,6 +80,10 @@
     "ParameterValue": "true"
   },
   {
+    "ParameterKey": "CertificateArn",
+    "ParameterValue": "arn:aws:acm:[REGION]:123456789012:certificate/[GUID]"
+  },
+  {
     "ParameterKey": "ExchangeServerVersion",
     "ParameterValue": "2016"
   },
@@ -85,7 +97,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "$[alfred_getkeypair]"
+    "ParameterValue": "limakey"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
@@ -116,6 +128,18 @@
     "ParameterValue": "10.0.160.0/20"
   },
   {
+    "ParameterKey": "QSS3BucketName",
+    "ParameterValue": "aws-quickstart"
+  },
+  {
+    "ParameterKey": "QSS3KeyPrefix",
+    "ParameterValue": "quickstart-microsoft-exchange/"
+  },
+  {
+    "ParameterKey": "RestoreModePassword",
+    "ParameterValue": "$[alfred_genpass_30]"
+  },
+  {
     "ParameterKey": "RDGWCIDR",
     "ParameterValue": "10.0.0.0/16"
   },
@@ -124,12 +148,12 @@
     "ParameterValue": "t2.large"
   },
   {
-    "ParameterKey": "RestoreModePassword",
-    "ParameterValue": "$[alfred_genpass_30]"
-  },
-  {
     "ParameterKey": "ThirdAZ",
     "ParameterValue": "no"
+  },
+  {
+    "ParameterKey": "VPCCIDR",
+    "ParameterValue": "10.0.0.0/16"
   },
   {
     "ParameterKey": "VolumeIops",
@@ -142,10 +166,6 @@
   {
     "ParameterKey": "VolumeType",
     "ParameterValue": "gp2"
-  },
-  {
-    "ParameterKey": "VPCCIDR",
-    "ParameterValue": "10.0.0.0/16"
   },
   {
     "ParameterKey": "FileServerInstanceType",
@@ -193,6 +213,6 @@
   },
   {
     "ParameterKey": "ExchangeNodeInstanceType",
-    "ParameterValue": "m4.xlarge"
+    "ParameterValue": "r4.2xlarge"
   }
 ]
