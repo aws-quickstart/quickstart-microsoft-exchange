@@ -452,7 +452,7 @@ Parameters:
     Description: Volume type for the Exchange Data drive
     Type: String
   FileServerInstanceType:
-    Default: t2.small	
+    Default: t2.small
     Description: Amazon EC2 instance type for a fileserver used to share install media,
       witness and replication folders
     Type: String

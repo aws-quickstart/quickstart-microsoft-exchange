@@ -97,7 +97,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "$[alfred_getkeypair]"
+    "ParameterValue": "limakey"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
@@ -213,6 +213,6 @@
   },
   {
     "ParameterKey": "ExchangeNodeInstanceType",
-    "ParameterValue": "m4.xlarge"
+    "ParameterValue": "r4.2xlarge"
   }
 ]
