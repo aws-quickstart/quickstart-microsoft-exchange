@@ -97,7 +97,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "limakey"
+    "ParameterValue": "$[alfred_getkeypair]"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
