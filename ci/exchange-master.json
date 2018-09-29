@@ -29,7 +29,7 @@
     },
     {
         "ParameterKey": "DomainAdminPassword",
-        "ParameterValue": "$[alfred_genpass_32]"
+        "ParameterValue": "$[alfred_genpass_16]"
     },
     {
         "ParameterKey": "DomainAdminUser",
@@ -101,7 +101,7 @@
     },
     {
         "ParameterKey": "RestoreModePassword",
-        "ParameterValue": "$[alfred_genpass_32]"
+        "ParameterValue": "$[alfred_genpass_16]"
     },
     {
         "ParameterKey": "VPCCIDR",
