@@ -44,23 +44,23 @@
         "ParameterValue": "example"
     },
     {
-        "ParameterKey": "EXCH1PrivateIP1",
+        "ParameterKey": "ExchangeNode1PrivateIP1",
         "ParameterValue": "10.0.0.150"
     },
     {
-        "ParameterKey": "EXCH1PrivateIP2",
+        "ParameterKey": "ExchangeNode1PrivateIP2",
         "ParameterValue": "10.0.0.151"
     },
     {
-        "ParameterKey": "EXCH2PrivateIP1",
+        "ParameterKey": "ExchangeNode2PrivateIP1",
         "ParameterValue": "10.0.32.150"
     },
     {
-        "ParameterKey": "EXCH2PrivateIP2",
+        "ParameterKey": "ExchangeNode2PrivateIP2",
         "ParameterValue": "10.0.32.151"
     },
     {
-        "ParameterKey": "EXCHInstanceType",
+        "ParameterKey": "ExchangeNodeInstanceType",
         "ParameterValue": "r4.xlarge"
     },
     {
@@ -68,7 +68,7 @@
         "ParameterValue": "m4.large"
     },
     {
-        "ParameterKey": "IncludeEdge",
+        "ParameterKey": "IncludeEdgeTransportRole",
         "ParameterValue": "false"
     },
     {
