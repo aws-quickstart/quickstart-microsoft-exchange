@@ -29,7 +29,7 @@
   },
   {
     "ParameterKey": "AvailabilityZones",
-    "ParameterValue": "$[taskcat_getaz_2]"
+    "ParameterValue": "$[taskcat_getaz_3]"
   },
   {
     "ParameterKey": "DedicatedHostAMI",
