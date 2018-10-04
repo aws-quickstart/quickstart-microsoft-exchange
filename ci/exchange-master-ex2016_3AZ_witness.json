@@ -173,7 +173,7 @@
   },
   {
     "ParameterKey": "FileServerPrivateIP",
-    "ParameterValue": "10.0.0.200"
+    "ParameterValue": "10.0.64.200"
   },
   {
     "ParameterKey": "ExchangeNode1NetBIOSName",
