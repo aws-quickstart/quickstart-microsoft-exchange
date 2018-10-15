@@ -11,6 +11,7 @@ Metadata:
           default: Network Configuration
         Parameters:
           - AvailabilityZones
+          - NumberOfAZs
           - ThirdAZ
           - VPCCIDR
           - PublicSubnet1CIDR
@@ -163,6 +164,8 @@ Metadata:
         default: KMS key to encrypt volumes 
       ThirdAZ:
         default: Third Availability Zone
+      NumberOfAZs:
+        default: Number of Availability Zones
       VolumeIops:
         default: Exchange Server volume IOPS
       VolumeSize:
@@ -369,6 +372,13 @@ Parameters:
     Default: 'no'
     Description: Choose yes to deploy Exchange Edge Transport servers
       in the public subnets.
+    Type: String
+  NumberOfAZs:
+    AllowedValues:
+      - "2"
+      - "3"
+    Default: "2"
+    Description: Number of Availability Zones to use in the VPC. This must match your selections in the list of Availability Zones parameter.
     Type: String
   KeyPairName:
     Description: Public/private key pairs allow you to securely connect to your instance
@@ -601,10 +611,7 @@ Resources:
           - ','
           - !Ref 'AvailabilityZones'
         KeyPairName: !Ref 'KeyPairName'
-        NumberOfAZs: !If
-          - IsTwoAz
-          - '2'
-          - '3'
+        NumberOfAZs: !Ref NumberOfAZs
         PrivateSubnet1ACIDR: !Ref 'PrivateSubnet1CIDR'
         PrivateSubnet2ACIDR: !Ref 'PrivateSubnet2CIDR'
         PrivateSubnet3ACIDR: !If
@@ -640,10 +647,7 @@ Resources:
         DomainDNSName: !Ref 'DomainDNSName'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
         KeyPairName: !Ref 'KeyPairName'
-        NumberOfAZs: !If
-          - IsTwoAz
-          - '2'
-          - '3'
+        NumberOfAZs: !Ref NumberOfAZs
         PrivateSubnet1CIDR: !Ref 'PrivateSubnet1CIDR'
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PrivateSubnet2CIDR: !Ref 'PrivateSubnet2CIDR'

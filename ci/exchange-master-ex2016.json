@@ -214,5 +214,13 @@
   {
     "ParameterKey": "ExchangeNodeInstanceType",
     "ParameterValue": "r4.2xlarge"
+  },
+  {
+    "ParameterKey": "NumberOfAZs",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "QSS3BucketName",
+    "ParameterValue": "aws-quickstart"
   }
 ]
