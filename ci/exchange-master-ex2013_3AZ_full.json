@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "AvailabilityZones",
-    "ParameterValue": "$[alfred_getaz_3]"
+    "ParameterValue": "$[taskcat_getaz_3]"
   },
   {
     "ParameterKey": "DedicatedHostAMI",
@@ -33,7 +33,7 @@
   },
   {
     "ParameterKey": "DomainAdminPassword",
-    "ParameterValue": "$[alfred_genpass_30]"
+    "ParameterValue": "$[taskcat_genpass_16]"
   },
   {
     "ParameterKey": "DomainAdminUser",
@@ -81,7 +81,7 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "$[alfred_getkeypair]"
+    "ParameterValue": "$[taskcat_getkeypair]"
   },
   {
     "ParameterKey": "NumberOfRDGWHosts",
@@ -121,7 +121,7 @@
   },
   {
     "ParameterKey": "RestoreModePassword",
-    "ParameterValue": "$[alfred_genpass_30]"
+    "ParameterValue": "$[taskcat_genpass_16]"
   },
   {
     "ParameterKey": "ThirdAZ",
@@ -190,5 +190,9 @@
   {
     "ParameterKey": "ExchangeNodeInstanceType",
     "ParameterValue": "m4.xlarge"
+  },
+  {
+    "ParameterKey": "EncryptDataVolumes",
+    "ParameterValue": "true"
   }
 ]

@@ -640,11 +640,15 @@ Resources:
         DomainDNSName: !Ref 'DomainDNSName'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
         KeyPairName: !Ref 'KeyPairName'
+        NumberOfAZs: !If
+          - IsTwoAz
+          - '2'
+          - '3'
         PrivateSubnet1CIDR: !Ref 'PrivateSubnet1CIDR'
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PrivateSubnet2CIDR: !Ref 'PrivateSubnet2CIDR'
         PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        PrivateSubnet3CIDR: !If
+        PrivateSubnet3ACIDR: !If
           - IsTwoAz
           - !Ref 'AWS::NoValue'
           - !Ref 'PrivateSubnet3CIDR'

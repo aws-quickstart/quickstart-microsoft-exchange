@@ -3,20 +3,65 @@ global:
   owner: quickstart-eng@amazon.com
   qsname: quickstart-microsoft-exchange
   regions:
-  - ap-northeast-1
-  - ap-northeast-2
-  - ap-south-1
-  - ap-southeast-1
-  - ap-southeast-2
-  - eu-central-1
-  - eu-west-1
-  - sa-east-1
-  - us-east-1
-  - us-east-2
-  - us-west-1
-  - us-west-2
+    - ap-northeast-1
+    - ap-northeast-2
+    - ap-south-1
+    - ap-southeast-1
+    - ap-southeast-2
+    - eu-central-1
+    - eu-west-1
+    - sa-east-1
+    - us-east-1
+    - us-east-2
+    - us-west-1
+    - us-west-2
   reporting: true
 tests:
-  master:
-    parameter_input: exchange-master.json
+#  exchange2013:
+#    parameter_input: exchange-master-ex2013.json
+#    regions:
+#      - ap-northeast-1
+#      - ap-northeast-2
+#      - ap-south-1
+#      - eu-central-1
+#      - us-west-1
+#      - us-west-2
+#    template_file: exchange-master.template
+  exchange2016:
+    parameter_input: exchange-master-ex2016.json
+    regions:
+      - ap-northeast-1
+      - ap-northeast-2
+      - ap-south-1
+      - eu-central-1
+      - us-west-1
+      - us-west-2
     template_file: exchange-master.template
+  exchange2016-3az-full:
+    parameter_input: exchange-master-ex2016_3AZ_full.json
+    regions:
+      - ap-southeast-1
+      - eu-west-1
+      - us-east-1
+    template_file: exchange-master.template
+#  exchange2013-3az-full:
+#    parameter_input: exchange-master-ex2016_3AZ_full.json
+#    regions:
+#      - ap-southeast-1
+#      - eu-west-1
+#      - us-east-1
+#    template_file: exchange-master.template
+  exchange2016-3az-witness:
+    parameter_input: exchange-master-ex2016_3AZ_witness.json
+    regions:
+      - ap-southeast-2
+      - eu-west-2
+      - us-east-2
+    template_file: exchange-master.template
+#  exchange2013-3az-witness:
+#    parameter_input: exchange-master-ex2013_3AZ_witness.json
+#    regions:
+#      - ap-southeast-2
+#      - eu-west-2
+#      - us-east-2
+#    template_file: exchange-master.template
