@@ -194,5 +194,13 @@
   {
     "ParameterKey": "EncryptDataVolumes",
     "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "NumberOfAZs",
+    "ParameterValue": "3"
+  },
+  {
+    "ParameterKey": "QSS3BucketName",
+    "ParameterValue": "aws-quickstart"
   }
 ]
