@@ -652,7 +652,7 @@ Resources:
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PrivateSubnet2CIDR: !Ref 'PrivateSubnet2CIDR'
         PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        PrivateSubnet3ACIDR: !If
+        PrivateSubnet3CIDR: !If
           - IsTwoAz
           - !Ref 'AWS::NoValue'
           - !Ref 'PrivateSubnet3CIDR'
