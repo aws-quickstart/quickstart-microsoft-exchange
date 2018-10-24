@@ -59,6 +59,8 @@ try {
 
         Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
         New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:FileServerNetBIOSName -WitnessDirectory C:\$Using:DAGName -DatabaseAvailabilityGroupIpAddresses '255.255.255.255'
+        
+        Start-Sleep -s 60
 
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode1NetBIOSName
         Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode2NetBIOSName
@@ -77,6 +79,8 @@ try {
             
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
             New-DatabaseAvailabilityGroup -Name $Using:DAGName -WitnessServer $Using:ExchangeNode3NetBIOSName -WitnessDirectory C:\$Using:DAGName
+            
+            Start-Sleep -s 60
 
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode1NetBIOSName
             Add-DatabaseAvailabilityGroupServer -Identity $Using:DAGName -MailboxServer $Using:ExchangeNode2NetBIOSName

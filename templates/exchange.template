@@ -2633,6 +2633,7 @@ Resources:
                 - !Join
                   - ''
                   - - powershell.exe -Command exit
+              waitAfterCompletion: '10'
             b-configure-dag:
               command:
                 !If
@@ -2679,6 +2680,7 @@ Resources:
                     - ''' -ExchangeNode3PrivateIP2 '''
                     - !Ref ExchangeNode3PrivateIP2
                     - '''"'
+              waitAfterCompletion: '0'
         Finalize:
           commands:
             a-reboot:
