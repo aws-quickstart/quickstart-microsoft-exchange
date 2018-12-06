@@ -623,56 +623,56 @@ Mappings:
       '2016': WS2016FULLBASE
   AWSAMIRegionMap:
     AMI:
-      WS2012R2: Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.11.19
-      WS2016FULLBASE: Windows_Server-2016-English-Full-Base-2018.11.19
+      WS2012R2: Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.11.28
+      WS2016FULLBASE: Windows_Server-2016-English-Full-Base-2018.11.28
     ap-northeast-1:
-      WS2012R2: ami-0f85dbebb332bfe92
-      WS2016FULLBASE: ami-02357ec5ffc0d6ca1
+      WS2012R2: ami-0eb29d671f40ab560
+      WS2016FULLBASE: ami-0aba2bcd75130d5f8
     ap-northeast-2:
-      WS2012R2: ami-0a38649dfe79e9c37
-      WS2016FULLBASE: ami-0013b65fe52c1259d
+      WS2012R2: ami-0c257a60de9283dc3
+      WS2016FULLBASE: ami-0792fc201b96b8298
     ap-northeast-3:
-      WS2012R2: ami-09b26fa8e1f1a3ef4
-      WS2016FULLBASE: ami-09974e9f9021b52b7
+      WS2012R2: ami-01a9c657c78aea0cd
+      WS2016FULLBASE: ami-02592dc2a7dcafd06
     ap-south-1:
-      WS2012R2: ami-0fa931e70104cf960
-      WS2016FULLBASE: ami-0711d827876cdd81a
+      WS2012R2: ami-004195f253ee1a540
+      WS2016FULLBASE: ami-0b839332cdd586918
     ap-southeast-1:
-      WS2012R2: ami-0845140e3742219fd
-      WS2016FULLBASE: ami-0eecf90b928dbd0a7
+      WS2012R2: ami-0412a0dceaa0e29ee
+      WS2016FULLBASE: ami-0445ed131e600ee03
     ap-southeast-2:
-      WS2012R2: ami-0ab7f92d82234c436
-      WS2016FULLBASE: ami-03b3182648d0d0bfb
+      WS2012R2: ami-01b69555a9dad5859
+      WS2016FULLBASE: ami-0be2c101455544e7a
     ca-central-1:
-      WS2012R2: ami-0678d1d3beb8edf0e
-      WS2016FULLBASE: ami-0dd1b406d1dbb0508
+      WS2012R2: ami-03e8cbcc96f81ee5a
+      WS2016FULLBASE: ami-0f5ceeca5538015df
     eu-central-1:
-      WS2012R2: ami-0c719be417bc6a3f6
-      WS2016FULLBASE: ami-06d6f7804eaa0825d
+      WS2012R2: ami-094750c16bea712ba
+      WS2016FULLBASE: ami-057c1c76d470b7483
     eu-west-1:
-      WS2012R2: ami-0a5e0d1ffedf82238
-      WS2016FULLBASE: ami-0d138b26f46625e2f
+      WS2012R2: ami-02c3dab145dc0699e
+      WS2016FULLBASE: ami-01776b82784323238
     eu-west-2:
-      WS2012R2: ami-0ca1b0ae0ac576ff9
-      WS2016FULLBASE: ami-078abcecb11e8eb82
+      WS2012R2: ami-007848ff6db3ac2c7
+      WS2016FULLBASE: ami-077b73dd304d0fd05
     eu-west-3:
-      WS2012R2: ami-0ddec2a39006ff201
-      WS2016FULLBASE: ami-00579b9eb9b5353dc
+      WS2012R2: ami-0c32c1ef5bc9a19da
+      WS2016FULLBASE: ami-041c2ed9f395ea43f
     sa-east-1:
-      WS2012R2: ami-0b3ca659f290c9004
-      WS2016FULLBASE: ami-085c3c4e72a5de4d3
+      WS2012R2: ami-0fad47035d4f863cb
+      WS2016FULLBASE: ami-05d7f3c37a6b28c0f
     us-east-1:
-      WS2012R2: ami-0f7af6e605e2d2db5
-      WS2016FULLBASE: ami-05f5c28bb6992ab4b
+      WS2012R2: ami-015e4abfa8bb28eae
+      WS2016FULLBASE: ami-0da19d4527d55af09
     us-east-2:
-      WS2012R2: ami-032a2c09fc31731e9
-      WS2016FULLBASE: ami-01d1dfbacf429abed
+      WS2012R2: ami-033df17da30f7ea72
+      WS2016FULLBASE: ami-09d7f402df5fd27aa
     us-west-1:
-      WS2012R2: ami-035292aa3f696bc09
-      WS2016FULLBASE: ami-02d273719aba0b0a8
+      WS2012R2: ami-0438f4489899d45bb
+      WS2016FULLBASE: ami-0261fc597bed67b34
     us-west-2:
-      WS2012R2: ami-0eade913a026daf38
-      WS2016FULLBASE: ami-05b83598992924b63
+      WS2012R2: ami-060007c57415dab3f
+      WS2016FULLBASE: ami-0be9369ce05f0a8ff
   MediaLinksMapper:
     Exchange:
       '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
