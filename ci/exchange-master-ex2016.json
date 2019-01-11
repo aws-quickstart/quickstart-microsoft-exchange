@@ -136,10 +136,6 @@
     "ParameterValue": "quickstart-microsoft-exchange/"
   },
   {
-    "ParameterKey": "RestoreModePassword",
-    "ParameterValue": "$[taskcat_genpass_16]"
-  },
-  {
     "ParameterKey": "RDGWCIDR",
     "ParameterValue": "10.0.0.0/16"
   },

@@ -31,7 +31,6 @@ Metadata:
         Parameters:
           - DomainDNSName
           - DomainNetBIOSName
-          - RestoreModePassword
           - DomainAdminUser
           - DomainAdminPassword
           - ADServer1InstanceType
@@ -142,8 +141,6 @@ Metadata:
         default: Number of RDGW Hosts
       RDGWCIDR:
         default: Allowed Remote Desktop Gateway external access CIDR
-      RestoreModePassword:
-        default: Restore Mode password
       ExchangeServerVersion:
         default: Exchange Server version
       IncludeEdgeTransportRole:
@@ -438,14 +435,6 @@ Parameters:
     Description: The S3 key name prefix used to simulate a folder for your copy of Quick Start assets, if you decide to customize or extend the Quick Start for your own use.
       This prefix can include numbers, lowercase letters, uppercase letters, hyphens, and forward slashes, but should not start or end with a forward slash (which is automatically added).
     Type: String
-  RestoreModePassword:
-    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: The password for a separate Administrator account when the domain controller 
-      is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols.
-    MaxLength: '32'
-    MinLength: '8'
-    NoEcho: 'True'
-    Type: String
   RDGWCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
@@ -664,7 +653,6 @@ Resources:
           - !Ref 'PublicSubnet3CIDR'
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/'
-        RestoreModePassword: !Ref 'RestoreModePassword'
         VPCCIDR: !Ref 'VPCCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
   RDGWStack:
