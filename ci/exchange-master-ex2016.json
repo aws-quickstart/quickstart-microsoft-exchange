@@ -5,7 +5,7 @@
   },
   {
     "ParameterKey": "ADServer1NetBIOSName",
-    "ParameterValue": "DC-EXCH-1"
+    "ParameterValue": "DCEXCH1"
   },
   {
     "ParameterKey": "ADServer1PrivateIP",
@@ -17,7 +17,7 @@
   },
   {
     "ParameterKey": "ADServer2NetBIOSName",
-    "ParameterValue": "DC-EXCH-2"
+    "ParameterValue": "DCEXCH2"
   },
   {
     "ParameterKey": "ADServer2PrivateIP",
