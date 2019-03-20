@@ -297,7 +297,7 @@ Parameters:
     AllowedValues:
     - '2016'
     - '2013'
-    Default: '2013'
+    Default: '2016'
     Description: Version of Exchange Server to install. Options include either "2013"
       or "2016"
     Type: String
@@ -550,6 +550,12 @@ Parameters:
     Default: 10.0.64.101
     Description: (Optional) The secondary private IP for the Exchange node 3.
     Type: String
+  WS2016FULLBASE:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+  WS2012R2:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base'
 Conditions:
   ByolAmi:
     !Not
@@ -617,62 +623,6 @@ Rules:
         - !RefAll AWS::EC2::VPC::Id
       AssertDescription: All subnets must in the VPC
 Mappings:
-  ExchangeAMINameMap:
-    AMI:
-      '2013': WS2012R2
-      '2016': WS2016FULLBASE
-  AWSAMIRegionMap:
-    AMI:
-      WS2012R2: Windows_Server-2012-R2_RTM-English-64Bit-Base-2019.02.13
-      WS2016FULLBASE: Windows_Server-2016-English-Full-Base-2019.02.13
-    ap-northeast-1:
-      WS2012R2: ami-0d99aa7f0403a9ba4
-      WS2016FULLBASE: ami-0644ce62fdce33d7a
-    ap-northeast-2:
-      WS2012R2: ami-0163c75ba997507aa
-      WS2016FULLBASE: ami-0b06750f7ff166ef5
-    ap-northeast-3:
-      WS2012R2: ami-0646ac68d679b1b73
-      WS2016FULLBASE: ami-096584dd5e80cbd22
-    ap-south-1:
-      WS2012R2: ami-0437fea2a5ba5aacd
-      WS2016FULLBASE: ami-0be56865bcf08da0d
-    ap-southeast-1:
-      WS2012R2: ami-00230cfcbc0180362
-      WS2016FULLBASE: ami-0611ad6dad5ec3418
-    ap-southeast-2:
-      WS2012R2: ami-0f66d840816e8a35f
-      WS2016FULLBASE: ami-0148c6490018d612f
-    ca-central-1:
-      WS2012R2: ami-051f75c651d856381
-      WS2016FULLBASE: ami-09b27c4b76404544f
-    eu-central-1:
-      WS2012R2: ami-0ece2db131cd3c16a
-      WS2016FULLBASE: ami-083c458e2cc1adc40
-    eu-west-1:
-      WS2012R2: ami-009af7c43be38087d
-      WS2016FULLBASE: ami-0e60ba06451c1b981
-    eu-west-2:
-      WS2012R2: ami-025fc1fa28fdf1a87
-      WS2016FULLBASE: ami-0186531b707ced2ef
-    eu-west-3:
-      WS2012R2: ami-0cbc109ce3fe6584e
-      WS2016FULLBASE: ami-04f6c3a108e0d348b
-    sa-east-1:
-      WS2012R2: ami-0f7eee4d47377680e
-      WS2016FULLBASE: ami-05c6c992668058be2
-    us-east-1:
-      WS2012R2: ami-066663db63b3aa675
-      WS2016FULLBASE: ami-0bf148826ef491d16
-    us-east-2:
-      WS2012R2: ami-00890851afd74dda3
-      WS2016FULLBASE: ami-08b4a0f6e106c1dba
-    us-west-1:
-      WS2012R2: ami-08462bc4d6a8eb5c1
-      WS2016FULLBASE: ami-0f825806081c4725c
-    us-west-2:
-      WS2012R2: ami-07c77fe35092981e9
-      WS2016FULLBASE: ami-0af80d239cc063c12
   MediaLinksMapper:
     Exchange:
       '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
@@ -1140,13 +1090,10 @@ Resources:
         !If
         - ByolAmi
         - !Ref DedicatedHostAMI
-        - !FindInMap
-          - AWSAMIRegionMap
-          - !Ref AWS::Region
-          - !FindInMap
-            - ExchangeAMINameMap
-            - AMI
-            - !Ref ExchangeServerVersion
+        - !If
+            - Exchange2016Selected
+            - !Ref WS2016FULLBASE
+            - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
@@ -1645,13 +1592,10 @@ Resources:
         !If
         - ByolAmi
         - !Ref DedicatedHostAMI
-        - !FindInMap
-          - AWSAMIRegionMap
-          - !Ref AWS::Region
-          - !FindInMap
-            - ExchangeAMINameMap
-            - AMI
-            - !Ref ExchangeServerVersion
+        - !If
+            - Exchange2016Selected
+            - !Ref WS2016FULLBASE
+            - !Ref WS2012R2
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
@@ -2040,11 +1984,7 @@ Resources:
         Ebs:
           VolumeSize: 100
           VolumeType: gp2
-      ImageId:
-        !FindInMap
-        - AWSAMIRegionMap
-        - !Ref AWS::Region
-        - WS2012R2
+      ImageId: !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref FileServerInstanceType
       KeyName: !Ref KeyPairName
@@ -2535,13 +2475,10 @@ Resources:
         !If
         - ByolAmi
         - !Ref DedicatedHostAMI
-        - !FindInMap
-          - AWSAMIRegionMap
-          - !Ref AWS::Region
-          - !FindInMap
-            - ExchangeAMINameMap
-            - AMI
-            - !Ref ExchangeServerVersion
+        - !If
+            - Exchange2016Selected
+            - !Ref WS2016FULLBASE
+            - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3121,13 +3058,10 @@ Resources:
         !If
         - ByolAmi
         - !Ref DedicatedHostAMI
-        - !FindInMap
-          - AWSAMIRegionMap
-          - !Ref AWS::Region
-          - !FindInMap
-            - ExchangeAMINameMap
-            - AMI
-            - !Ref ExchangeServerVersion
+        - !If
+            - Exchange2016Selected
+            - !Ref WS2016FULLBASE
+            - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3610,13 +3544,10 @@ Resources:
         !If
         - ByolAmi
         - !Ref DedicatedHostAMI
-        - !FindInMap
-          - AWSAMIRegionMap
-          - !Ref AWS::Region
-          - !FindInMap
-            - ExchangeAMINameMap
-            - AMI
-            - !Ref ExchangeServerVersion
+        - !If
+            - Exchange2016Selected
+            - !Ref WS2016FULLBASE
+            - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
