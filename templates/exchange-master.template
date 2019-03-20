@@ -349,7 +349,7 @@ Parameters:
     AllowedValues:
       - '2013'
       - '2016'
-    Default: '2013'
+    Default: '2016'
     Description: Version of Exchange Server to install. Options include
       either "2013" or "2016".
     Type: String
