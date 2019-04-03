@@ -11,7 +11,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [string]
-    $SSMParamName
+    $ExUserSecParam
 )
 
 try {
@@ -19,9 +19,8 @@ try {
     $ErrorActionPreference = "Stop"
 
     $LocalAdminFullUser = $EdgeNodeNetBIOSName + '\Administrator'
-    $DomainAdminPassword = (Get-SSMParameterValue -Names $SSMParamName -WithDecryption $True).Parameters[0].Value
-    $LocalAdminSecurePassword = ConvertTo-SecureString $DomainAdminPassword -AsPlainText -Force
-    $LocalAdminCreds = New-Object System.Management.Automation.PSCredential($LocalAdminFullUser, $LocalAdminSecurePassword)
+    $DomainAdminPassword = ConvertFrom-Json -InputObject (Get-SECSecretValue -SecretId $ExUserSecParam).SecretString
+    $LocalAdminCreds = (New-Object PSCredential($LocalAdminFullUser,(ConvertTo-SecureString $DomainAdminPassword.Password -AsPlainText -Force)))
 
     $InstallExchPs={
         $ErrorActionPreference = "Stop"

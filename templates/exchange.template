@@ -552,7 +552,7 @@ Parameters:
     Type: String
   WS2016FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
   WS2012R2:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base'
@@ -626,20 +626,22 @@ Mappings:
   MediaLinksMapper:
     Exchange:
       '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
-      '2016': https://download.microsoft.com/download/B/C/9/BC9C77DA-97D9-43D8-A3F8-50D8AF89E3FA/ExchangeServer2016-x64-cu10.iso
+      '2016': https://download.microsoft.com/download/6/6/F/66F70200-E2E8-4E73-88F9-A1F6E3E04650/ExchangeServer2016-x64-cu11.iso
     UCMA:
       ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
     NetFramework:
       v471: https://download.microsoft.com/download/9/E/6/9E63300C-0941-4B45-A0EC-0008F96DD480/NDP471-KB4033342-x86-x64-AllOS-ENU.exe
+      v472: https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe
     VisualCRuntime:
+      2012x64: https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe
       2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
 Resources:
-  ADPassword:
-    Type: AWS::SSM::Parameter
+  ExchangeAdminSecrets:
+    Type: AWS::SecretsManager::Secret
     Properties:
-      Type: String
-      Value: !Ref DomainAdminPassword
-      Description: The SSM Parameter for Active Directory password.
+      Name: !Sub 'ExAltUserSecrets-${AWS::StackName}'
+      Description: Exchange Admin User from AD Quick Start
+      SecretString: !Sub '{"username":"${DomainAdminUser}","password":"${DomainAdminPassword}"}'
   EDGE1:
     DependsOn: ExchangeNode1WaitCondition
     Condition: DeployEdge
@@ -688,8 +690,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Install-ExchangeEdgeServer.ps1
                     -EdgeNodeNetBIOSName '
                   - !Ref EdgeNode1NetBIOSName
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - '''"'
@@ -709,8 +711,8 @@ Resources:
                   - !Ref DomainDNSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: '0'
         Prep:
@@ -816,7 +818,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - VisualCRuntime
-                    - 2013x64
+                    - 2012x64
                   - '''"'
               waitAfterCompletion: '0'
             l-download-netframework:
@@ -830,7 +832,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
             m-install-visualcruntime:
               command:
@@ -840,13 +842,13 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref EdgeNode1NetBIOSName
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - VisualCRuntime
-                    - 2013x64
+                    - 2012x64
                   - '''"'
               waitAfterCompletion: '0'
             n-install-netframework:
@@ -857,13 +859,13 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref EdgeNode1NetBIOSName
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
               waitAfterCompletion: '0'
             o-reboot:
@@ -1189,8 +1191,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Install-ExchangeEdgeServer.ps1
                     -EdgeNodeNetBIOSName '
                   - !Ref EdgeNode2NetBIOSName
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - '''"'
@@ -1210,8 +1212,8 @@ Resources:
                   - !Ref DomainDNSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: '0'
         Prep:
@@ -1317,7 +1319,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - VisualCRuntime
-                    - 2013x64
+                    - 2012x64
                   - '''"'
               waitAfterCompletion: '0'
             l-download-netframework:
@@ -1331,7 +1333,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
             m-install-visualcruntime:
               command:
@@ -1341,13 +1343,13 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref EdgeNode2NetBIOSName
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - VisualCRuntime
-                    - 2013x64
+                    - 2012x64
                   - '''"'
               waitAfterCompletion: '0'
             n-install-netframework:
@@ -1358,13 +1360,13 @@ Resources:
                     -DomainNetBIOSName '
                   - !Ref EdgeNode2NetBIOSName
                   - ''' -DomainAdminUser ''Administrator'
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
               waitAfterCompletion: '0'
             o-reboot:
@@ -1727,20 +1729,15 @@ Resources:
                   - aws-us-gov
                   - aws
             Effect: Allow
-      - PolicyName: AD-SSM-Parameters
+      - PolicyName: AD-SSM-Secrets
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
           - Effect: Allow
             Action:
-            - ssm:PutParameter
-            - ssm:DeleteParameter
-            - ssm:GetParameter
-            Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ADPassword}
-          - Effect: Allow
-            Action:
-            - ssm:DescribeParameters
-            Resource: '*'
+            - secretsmanager:GetSecretValue
+            - secretsmanager:DescribeSecret
+            Resource: !Ref ExchangeAdminSecrets
       Path: /
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
@@ -2064,8 +2061,8 @@ Resources:
                   - !Ref DomainAdminUser
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: '0'
             c-install-exchange:
@@ -2077,8 +2074,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ServerIndex ''1'
@@ -2213,7 +2210,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -2225,8 +2222,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2242,13 +2239,13 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
@@ -2562,8 +2559,8 @@ Resources:
                     - !Ref DomainNetBIOSName
                     - ''' -DomainAdminUser '''
                     - !Ref DomainAdminUser
-                    - ''' -SSMParamName '''
-                    - !Ref ADPassword
+                    - ''' -ExUserSecParam '''
+                    - !Ref ExchangeAdminSecrets
                     - ''' -ServerName '''
                     - !Ref FileServerNetBIOSName
                     - '''"'
@@ -2582,8 +2579,8 @@ Resources:
                     - !Ref DomainNetBIOSName
                     - ''' -DomainAdminUser '''
                     - !Ref DomainAdminUser
-                    - ''' -SSMParamName '''
-                    - !Ref ADPassword
+                    - ''' -ExUserSecParam '''
+                    - !Ref ExchangeAdminSecrets
                     - ''' -ExchangeNode1NetBIOSName '''
                     - !Ref ExchangeNode1NetBIOSName
                     - ''' -ExchangeNode2NetBIOSName '''
@@ -2602,8 +2599,8 @@ Resources:
                     - !Ref DomainNetBIOSName
                     - ''' -DomainAdminUser '''
                     - !Ref DomainAdminUser
-                    - ''' -SSMParamName '''
-                    - !Ref ADPassword
+                    - ''' -ExUserSecParam '''
+                    - !Ref ExchangeAdminSecrets
                     - ''' -ExchangeNode1NetBIOSName '''
                     - !Ref ExchangeNode1NetBIOSName
                     - ''' -ExchangeNode2NetBIOSName '''
@@ -2639,8 +2636,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ServerIndex ''2'
@@ -2775,7 +2772,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -2787,8 +2784,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -2804,13 +2801,13 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
@@ -3146,8 +3143,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ServerIndex 3'''
@@ -3282,7 +3279,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -3294,8 +3291,8 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
@@ -3311,13 +3308,13 @@ Resources:
                   - !Ref DomainNetBIOSName
                   - ''' -DomainAdminUser '''
                   - !Ref DomainAdminUser
-                  - ''' -SSMParamName '''
-                  - !Ref ADPassword
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -NetFrameworkDownloadLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v471
+                    - v472
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
