@@ -625,13 +625,13 @@ Rules:
 Mappings:
   MediaLinksMapper:
     Exchange:
-      '2013': https://download.microsoft.com/download/9/4/1/94166586-5D17-414A-97DA-CCD069BC11A2/Exchange2013-x64-cu21.exe
-      '2016': https://download.microsoft.com/download/6/6/F/66F70200-E2E8-4E73-88F9-A1F6E3E04650/ExchangeServer2016-x64-cu11.iso
+      '2013': https://download.microsoft.com/download/7/F/D/7FDCC96C-26C0-4D49-B5DB-5A8B36935903/Exchange2013-x64-cu23.exe
+      '2016': https://download.microsoft.com/download/5/9/6/59681DAE-AB62-4854-8DEC-CA25FFEFE3B3/ExchangeServer2016-x64-cu13.iso
     UCMA:
       ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
     NetFramework:
-      v471: https://download.microsoft.com/download/9/E/6/9E63300C-0941-4B45-A0EC-0008F96DD480/NDP471-KB4033342-x86-x64-AllOS-ENU.exe
       v472: https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe
+      v48: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
     VisualCRuntime:
       2012x64: https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe
       2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
@@ -832,7 +832,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
             m-install-visualcruntime:
               command:
@@ -865,7 +865,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
               waitAfterCompletion: '0'
             o-reboot:
@@ -1333,7 +1333,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
             m-install-visualcruntime:
               command:
@@ -1366,7 +1366,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
               waitAfterCompletion: '0'
             o-reboot:
@@ -2210,7 +2210,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -2245,7 +2245,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
@@ -2772,7 +2772,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -2807,7 +2807,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
@@ -3279,7 +3279,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
               waitAfterCompletion: '0'
             n-install-visualcruntime:
@@ -3314,7 +3314,7 @@ Resources:
                   - !FindInMap
                     - MediaLinksMapper
                     - NetFramework
-                    - v472
+                    - v48
                   - '''"'
             p-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
