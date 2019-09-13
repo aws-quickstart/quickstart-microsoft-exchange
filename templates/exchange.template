@@ -310,6 +310,8 @@ Parameters:
     - m4.large
     - m4.xlarge
     - m4.2xlarge
+    - m5.large
+    - m5.xlarge
     ConstraintDescription: Select a general purpose instance type
   EdgeNode1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'

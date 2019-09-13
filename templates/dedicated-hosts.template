@@ -8,6 +8,8 @@ Parameters:
       - r3.2xlarge
       - r3.4xlarge
       - r3.4xlarge
+      - m5.large
+      - m5.xlarge
     ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
       r3.4xlarge allowed
     Default: r3.2xlarge

@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ADServer1InstanceType",
-    "ParameterValue": "m4.xlarge"
+    "ParameterValue": "m5.xlarge"
   },
   {
     "ParameterKey": "ADServer1NetBIOSName",
@@ -13,7 +13,7 @@
   },
   {
     "ParameterKey": "ADServer2InstanceType",
-    "ParameterValue": "m4.xlarge"
+    "ParameterValue": "m5.xlarge"
   },
   {
     "ParameterKey": "ADServer2NetBIOSName",
@@ -57,7 +57,7 @@
   },
   {
     "ParameterKey": "EdgeInstanceType",
-    "ParameterValue": "m4.large"
+    "ParameterValue": "m5.large"
   },
   {
     "ParameterKey": "EdgeNode1NetBIOSName",
@@ -209,7 +209,7 @@
   },
   {
     "ParameterKey": "ExchangeNodeInstanceType",
-    "ParameterValue": "m4.xlarge"
+    "ParameterValue": "m5.xlarge"
   },
   {
     "ParameterKey": "NumberOfAZs",
