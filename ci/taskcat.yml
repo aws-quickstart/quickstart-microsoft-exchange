@@ -24,7 +24,7 @@ tests:
       - ap-northeast-2
       - ap-south-1
       - eu-central-1
-      - us-west-1
+      - us-east-1
       - us-west-2
     template_file: exchange-master.template
   exchange2016-3az-full:
@@ -32,7 +32,7 @@ tests:
     regions:
       - ap-southeast-1
       - eu-west-1
-      - us-east-1
+#      - us-east-1
     template_file: exchange-master.template
   exchange2016-3az-witness:
     parameter_input: exchange-master-ex2016_3AZ_witness.json
