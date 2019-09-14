@@ -371,7 +371,7 @@
                 "WS2012R2": "ami-0eebf7c7d88afa081"
             },
             "us-west-1": {
-                "WS2012R2": "ami-09c56d1cc9b6f0615"
+                "WS2012R2": "ami-05c71b3ca4af2fbee"
             },
             "us-west-2": {
                 "WS2012R2": "ami-0196cda9251876643"
