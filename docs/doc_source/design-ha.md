@@ -10,7 +10,7 @@ Provisioned IOPS EBS volumes offer storage with consistent and low\-latency perf
 
 Amazon EBS\-optimized instances, such as the R4 instance type, deliver dedicated throughput between Amazon EC2 and Amazon EBS\. The dedicated throughput minimizes contention between Amazon EBS I/O and other traffic from your Amazon EC2 instance, and provides the best performance for your EBS volumes\. 
 
-By default, on each Exchange node, the Quick Start deploys three 500\-GiB General Purpose \(GP2\) SSD volumes to store mailbox databases and transaction logs\. This is in addition to the root General Purpose SSD volume used by the operating system\. This volume type delivers a consistent baseline of 3 IOPS/GiB, which provides a total of 1,500 IOPS per volume for SQL Exchange database and transaction log volumes\. You can customize the volume size, and you can switch to using dedicated IOPS volumes\. 
+By default, on each Exchange node, the Quick Start deploys three 500\-GiB General Purpose \(GP2\) SSD volumes to store mailbox databases and transaction logs\. This is in addition to the root General Purpose SSD volume used by the operating system\. This volume type delivers a consistent baseline of 3 IOPS/GiB, which provides a total of 1,500 IOPS per volume for Exchange database and transaction log volumes\. You can customize the volume size, and you can switch to using dedicated IOPS volumes\. 
 
 If you need more IOPS per volume, consider using Provisioned IOPS SSD volumes by changing the **Exchange Server Volume Type **and **Exchange Server Volume IOPS **parameters, or use disk striping within Windows\.
 
@@ -30,7 +30,7 @@ Figure 3 shows the disk layout on each Exchange Server node\.
 
 ## IP Addresses on the Exchange Nodes<a name="ad-ds"></a>
 
-In order to support Exchange, each Exchange node instance in the cluster needs two IP addresses assigned:
+In this configuration, each Exchange node instance in the cluster needs two IP addresses assigned:
 + One IP address is used as the primary IP address for the instance\.
 + A second IP address acts as the Failover Cluster IP resource\.
 
