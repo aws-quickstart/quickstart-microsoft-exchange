@@ -628,9 +628,9 @@ Mappings:
   MediaLinksMapper:
     Exchange:
       '2013': https://download.microsoft.com/download/7/F/D/7FDCC96C-26C0-4D49-B5DB-5A8B36935903/Exchange2013-x64-cu23.exe
-      '2016': https://download.microsoft.com/download/5/9/6/59681DAE-AB62-4854-8DEC-CA25FFEFE3B3/ExchangeServer2016-x64-cu13.iso
+      '2016': https://download.microsoft.com/download/f/4/e/f4e4b3a0-925b-4eff-8cc7-8b5932d75b49/ExchangeServer2016-x64-cu14.iso
     UCMA:
-      ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
+      ALL: https://download.microsoft.com/download/3/B/D/3BD4BFE3-244C-4CF0-B174-3BA0F1953709/UcmaRuntimeSetup.exe
     NetFramework:
       v472: https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe
       v48: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
@@ -670,8 +670,7 @@ Resources:
                 - Exchange2016Selected
                 - !Join
                   - ''
-                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts
-                      -value '' -Force"
+                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '' -Force"
                 - !Join
                   - ''
                   - - powershell.exe -Command exit
