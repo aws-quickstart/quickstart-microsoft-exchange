@@ -5,6 +5,7 @@
 
 | Date | Change | Location | 
 | --- | --- | --- | 
+| September 2019 | Removed support for BYOL due to Microsoft licensing changes \([Updated Microsoft licensing terms for dedicated hosted cloud services] (https://www\.microsoft\.com/en-us/licensing/news/updated-licensing-rights-for-dedicated-cloud)\)\. | Tpdates | 
 | October 2018 | Added support for Exchange Server 2016; added Exchange Edge Transport nodes\. | Throughout doc; architecture diagram and template updates | 
 | March 2018 | Updated Active Directory to use the Windows Server 2016 AMI; updated template parameters\. | Template updates | 
 | September 2015 | In the sample templates, changed the default type for Active Directory and RD Gateway instances from m3\.xlarge to m4\.xlarge for better performance and price\. | Template updates | 

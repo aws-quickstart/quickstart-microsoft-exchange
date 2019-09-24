@@ -4,7 +4,7 @@
 
 *AWS Quick Start team*
 
-*January 2015  \([last update](revisions.md): October 2018\)*
+*January 2015  \([last update](revisions.md): September 2019\)*
 
 This Quick Start reference deployment guide includes infrastructure information, architectural considerations, and configuration steps for planning and deploying a Microsoft Exchange Server environment on the Amazon Web Services \(AWS\) Cloud\. It uses [AWS CloudFormation](https://aws.amazon.com/cloudformation/) templates to automate the deployment\.
 

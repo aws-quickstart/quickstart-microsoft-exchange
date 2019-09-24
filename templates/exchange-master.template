@@ -24,8 +24,6 @@ Metadata:
           default: Amazon EC2 Configuration
         Parameters:
           - KeyPairName
-          - HostType
-          - DedicatedHostAMI
       - Label:
           default: Microsoft Active Directory Configuration
         Parameters:
@@ -103,8 +101,6 @@ Metadata:
         default: Availability Zones
       CertificateArn:
         default: Application Load Balancer Certificate
-      DedicatedHostAMI:
-        default: BYOL AMI to use on dedicated host
       DeployLoadBalancer:
         default: Deploy Application Load Balancer
       DomainAdminPassword:
@@ -115,8 +111,6 @@ Metadata:
         default: Domain DNS name
       DomainNetBIOSName:
         default: Domain NetBIOS name
-      HostType:
-        default: Tenancy
       KeyPairName:
         default: Key pair name
       PrivateSubnet1CIDR:
@@ -258,11 +252,6 @@ Parameters:
     Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.
     MaxLength: '90'
     Type: String
-  DedicatedHostAMI:
-    Default: ''
-    Description: (Conditional) If the host type is set to "Dedicated" or "Dedicated Host", you 
-      need to specify your imported BYOL AMI ID.
-    Type: String
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     Description: The password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols. 
@@ -352,15 +341,6 @@ Parameters:
     Default: '2016'
     Description: Version of Exchange Server to install. Options include
       either "2013" or "2016".
-    Type: String
-  HostType:
-    AllowedValues:
-      - Shared
-      - Dedicated
-      - Dedicated Host
-    Default: Shared
-    Description: 'The host type. If you select Dedicated or Dedicated Host, hosts will be created in each Availability Zone.
-      Note:   For Dedicated host type, you must already have suitable dedicated hosts in your account.' 
     Type: String
   IncludeEdgeTransportRole:
     AllowedValues:
@@ -575,13 +555,6 @@ Conditions:
   IsTwoAz: !Equals
     - !Ref 'ThirdAZ'
     - 'no'
-  CreateDediHosts: !Not
-    - !Equals
-      - !Ref 'HostType'
-      - Shared
-  HostTypeIsDediHost: !Equals
-    - !Ref 'HostType'
-    - Dedicated Host
   GovCloudCondition: !Equals
     - !Ref 'AWS::Region'
     - us-gov-west-1
@@ -667,30 +640,6 @@ Resources:
         RDGWInstanceType: !Ref 'RDGWInstanceType'
         RDGWCIDR: !Ref 'RDGWCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-  DediHostStack:
-    DependsOn: VPCStack
-    Condition: CreateDediHosts
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/dedicated-hosts.template
-        - QSS3Region: !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
-      Parameters:
-        AvailabilityZones: !Join
-          - ','
-          - !Ref 'AvailabilityZones'
-        ExchangeNodeInstanceType: !Ref 'ExchangeNodeInstanceType'
-        AutoPlacement: !If
-          - HostTypeIsDediHost
-          - 'off'
-          - 'on'
-        3rdAZ: !If
-          - IsTwoAz
-          - 'no'
-          - 'yes'
   ExchangeStack:
     DependsOn: ADStack
     Type: AWS::CloudFormation::Stack
@@ -707,22 +656,6 @@ Resources:
         ADServer2NetBIOSName: !Ref 'ADServer2NetBIOSName'
         ADServer2PrivateIP: !Ref 'ADServer2PrivateIP'
         CertificateArn: !Ref 'CertificateArn'
-        DedicatedHostAMI: !Ref 'DedicatedHostAMI'
-        DedicatedHostIDNode1: !If
-          - CreateDediHosts
-          - !GetAtt 'DediHostStack.Outputs.DedicatedHost1'
-          - !Ref 'AWS::NoValue'
-        DedicatedHostIDNode2: !If
-          - CreateDediHosts
-          - !GetAtt 'DediHostStack.Outputs.DedicatedHost2'
-          - !Ref 'AWS::NoValue'
-        DedicatedHostIDNode3: !If
-          - IsTwoAz
-          - !Ref 'AWS::NoValue'
-          - !If
-            - CreateDediHosts
-            - !GetAtt 'DediHostStack.Outputs.DedicatedHost1'
-            - !Ref 'AWS::NoValue'
         DeployLoadBalancer: !Ref 'DeployLoadBalancer'
         DomainAdminPassword: !Ref 'DomainAdminPassword'
         DomainAdminUser: !Ref 'DomainAdminUser'
@@ -740,7 +673,6 @@ Resources:
         FileServerInstanceType: !Ref 'FileServerInstanceType'
         FileServerPrivateIP: !Ref 'FileServerPrivateIP'
         FileServerNetBIOSName: !Ref 'FileServerNetBIOSName'
-        HostType: !Ref 'HostType'
         IncludeEdgeTransportRole: !Ref 'IncludeEdgeTransportRole'
         KeyPairName: !Ref 'KeyPairName'
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'

@@ -27,8 +27,6 @@ Metadata:
         default: Amazon EC2 Configuration
       Parameters:
       - KeyPairName
-      - HostType
-      - DedicatedHostAMI
     - Label:
         default: Microsoft Active Directory Configuration
       Parameters:
@@ -71,15 +69,12 @@ Metadata:
       - ExchangeNode1NetBIOSName
       - ExchangeNode1PrivateIP1
       - ExchangeNode1PrivateIP2
-      - DedicatedHostIDNode1
       - ExchangeNode2NetBIOSName
       - ExchangeNode2PrivateIP1
       - ExchangeNode2PrivateIP2
-      - DedicatedHostIDNode2
       - ExchangeNode3NetBIOSName
       - ExchangeNode3PrivateIP1
       - ExchangeNode3PrivateIP2
-      - DedicatedHostIDNode3
     - Label:
         default: AWS Quick Start Configuration
       Parameters:
@@ -96,14 +91,6 @@ Metadata:
         default: Domain Controller 2 private IP address
       CertificateArn:
         default: Application Load Balancer Certificate
-      DedicatedHostAMI:
-        default: BYOL AMI to use on dedicated host
-      DedicatedHostIDNode1:
-        default: Dedicated HostID for Node 1
-      DedicatedHostIDNode2:
-        default: Dedicated HostID for Node 2
-      DedicatedHostIDNode3:
-        default: Dedicated HostID for Node 3
       DeployLoadBalancer:
         default: Deploy Application Load Balancer
       DomainAdminPassword:
@@ -126,8 +113,6 @@ Metadata:
         default: KMS key to encrypt volumes
       IncludeEdgeTransportRole:
         default: Deploy Edge servers
-      HostType:
-        default: Tenancy
       KeyPairName:
         default: Key Pair Name
       PrivateSubnet1ID:
@@ -231,26 +216,6 @@ Parameters:
       format.
     MaxLength: '90'
     Type: String
-  DedicatedHostAMI:
-    Default: ''
-    Description: (Conditional) If the host type is set to "Dedicated" or "Dedicated
-      Host", you need to specify your imported BYOL AMI ID.
-    Type: String
-  DedicatedHostIDNode1:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for Node1, Only used if HostType is
-      set to "host".
-    Type: String
-  DedicatedHostIDNode2:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for Node2, Only used if HostType is
-      set to "host".
-    Type: String
-  DedicatedHostIDNode3:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for the Node3, Only used if HostType
-      is set to "host".
-    Type: String
   DeployLoadBalancer:
     AllowedValues:
     - 'false'
@@ -349,16 +314,6 @@ Parameters:
     Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID].
       Leave blank to use default EBS encryption key.
     MaxLength: '90'
-    Type: String
-  HostType:
-    AllowedValues:
-    - Shared
-    - Dedicated
-    - Dedicated Host
-    Default: Shared
-    Description: 'The host type. If you select Dedicated or Dedicated Host, hosts
-      will be created in each Availability Zone. Note:   For Dedicated host type,
-      you must already have suitable dedicated hosts in your account.'
     Type: String
   IncludeEdgeTransportRole:
     AllowedValues:
@@ -557,11 +512,6 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base'
 Conditions:
-  ByolAmi:
-    !Not
-    - !Equals
-      - !Ref HostType
-      - Shared
   DeployEdge:
     !Equals
     - !Ref IncludeEdgeTransportRole
@@ -578,14 +528,6 @@ Conditions:
     !Equals
     - !Ref AWS::Region
     - us-gov-west-1
-  HostTypeIsDediHost:
-    !Equals
-    - !Ref HostType
-    - Dedicated Host
-  HostTypeIsDefault:
-    !Equals
-    - !Ref HostType
-    - Shared
   EncryptionKmsKeySelected:
     !Not
     - !Equals
@@ -1068,14 +1010,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -1083,19 +1017,11 @@ Resources:
           VolumeType: gp2
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
@@ -1112,14 +1038,6 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref EdgeNode1NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
       UserData:
         !Base64
           Fn::Join:
@@ -1569,14 +1487,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -1584,20 +1494,12 @@ Resources:
           VolumeType: gp2
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       IamInstanceProfile: !Ref ExchangeProfile
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2012R2
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
@@ -1613,14 +1515,6 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref EdgeNode2NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
       UserData:
         !Base64
           Fn::Join:
@@ -2447,14 +2341,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -2463,19 +2349,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -2495,14 +2373,6 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode1NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
       UserData:
         !Base64
           Fn::Join:
@@ -3030,14 +2900,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -3046,19 +2908,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode2
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3078,14 +2932,6 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode2NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
       UserData:
         !Base64
           Fn::Join:
@@ -3516,14 +3362,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -3532,19 +3370,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode3
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2012R2
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3564,14 +3394,6 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode3NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
       UserData:
         !Base64
           Fn::Join:
