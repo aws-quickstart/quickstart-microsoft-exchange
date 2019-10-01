@@ -2248,7 +2248,37 @@ Resources:
                     - NetFramework
                     - v48
                   - '''"'
-            p-reboot:
+            p-download-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            q-install-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            r-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
         setup:
@@ -2810,7 +2840,37 @@ Resources:
                     - NetFramework
                     - v48
                   - '''"'
-            p-reboot:
+            p-download-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            q-install-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -VisualCRuntimeLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            r-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
         setup:
