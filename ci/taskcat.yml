@@ -20,7 +20,7 @@ tests:
   exchange2016:
     parameter_input: exchange-master.json
     regions:
-      - ap-northeast-1
+#      - ap-northeast-1
 #      - ap-southeast-2
 #      - ap-northeast-2
       - ap-south-1
