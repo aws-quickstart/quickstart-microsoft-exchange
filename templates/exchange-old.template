@@ -2979,7 +2979,7 @@
                         }
                     },
                     {
-                        "IpProtocol": "udp",
+                        "IpProtocol": "tcp",
                         "FromPort": "50636",
                         "ToPort": "50636",
                         "CidrIp": {
@@ -2987,7 +2987,7 @@
                         }
                     },
                     {
-                        "IpProtocol": "udp",
+                        "IpProtocol": "tcp",
                         "FromPort": "50636",
                         "ToPort": "50636",
                         "CidrIp": {
