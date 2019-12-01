@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: This template deploys two Windows Server Failover Clustering (Exchange) and
-  Exchange Server 2013 or 2016. This template also deploys the require AD architecture
+  Exchange Server 2016 or 2019. This template also deploys the require AD architecture
   outlined in "Implementing Active Directory Domain Services in the AWS Cloud" **WARNING**
   This template creates Amazon EC2 Windows instance and related resources. You will
   be billed for the AWS resources used if you create a stack from this template.
@@ -24,8 +24,6 @@ Metadata:
           default: Amazon EC2 Configuration
         Parameters:
           - KeyPairName
-          - HostType
-          - DedicatedHostAMI
       - Label:
           default: Microsoft Active Directory Configuration
         Parameters:
@@ -49,6 +47,7 @@ Metadata:
           default: Exchange Server Configuration
         Parameters:
           - ExchangeServerVersion
+          - Exchange2019Source
           - IncludeEdgeTransportRole
           - EdgeInstanceType
           - EdgeNode1NetBIOSName
@@ -103,8 +102,6 @@ Metadata:
         default: Availability Zones
       CertificateArn:
         default: Application Load Balancer Certificate
-      DedicatedHostAMI:
-        default: BYOL AMI to use on dedicated host
       DeployLoadBalancer:
         default: Deploy Application Load Balancer
       DomainAdminPassword:
@@ -115,8 +112,6 @@ Metadata:
         default: Domain DNS name
       DomainNetBIOSName:
         default: Domain NetBIOS name
-      HostType:
-        default: Tenancy
       KeyPairName:
         default: Key pair name
       PrivateSubnet1CIDR:
@@ -143,6 +138,8 @@ Metadata:
         default: Allowed Remote Desktop Gateway external access CIDR
       ExchangeServerVersion:
         default: Exchange Server version
+      Exchange2019Source:
+        default: Exchange Server 2019 source (ISO)
       IncludeEdgeTransportRole:
         default: Deploy Edge servers
       EdgeInstanceType:
@@ -201,14 +198,11 @@ Parameters:
   ADServer1InstanceType:
     AllowedValues:
       - t2.large
-      - m3.large
-      - m3.xlarge
-      - m3.2xlarge
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
-      - m4.4xlarge
+      - t3.large
+      - m5.large
       - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
     Default: m5.xlarge
     Description: The Amazon EC2 instance type for the first Active Directory instance.
     Type: String
@@ -227,14 +221,11 @@ Parameters:
   ADServer2InstanceType:
     AllowedValues:
       - t2.large
-      - m3.large
-      - m3.xlarge
-      - m3.2xlarge
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
-      - m4.4xlarge
+      - t3.large
+      - m5.large
       - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
     Default: m5.xlarge
     Description: The Amazon EC2 instance type for the second Active Directory instance. 
     Type: String
@@ -259,11 +250,6 @@ Parameters:
     Default: ''
     Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.
     MaxLength: '90'
-    Type: String
-  DedicatedHostAMI:
-    Default: ''
-    Description: (Conditional) If the host type is set to "Dedicated" or "Dedicated Host", you 
-      need to specify your imported BYOL AMI ID.
     Type: String
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
@@ -306,12 +292,11 @@ Parameters:
     Type: String
     Default: m5.large
     AllowedValues:
-      - t2.large
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
+      - t3.large
       - m5.large
       - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
     ConstraintDescription: Select a general purpose instance type
   EdgeNode1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
@@ -351,20 +336,11 @@ Parameters:
     Type: String
   ExchangeServerVersion:
     AllowedValues:
-      - '2013'
       - '2016'
+      - '2019'
     Default: '2016'
     Description: Version of Exchange Server to install. Options include
-      either "2013" or "2016".
-    Type: String
-  HostType:
-    AllowedValues:
-      - Shared
-      - Dedicated
-      - Dedicated Host
-    Default: Shared
-    Description: 'The host type. If you select Dedicated or Dedicated Host, hosts will be created in each Availability Zone.
-      Note:   For Dedicated host type, you must already have suitable dedicated hosts in your account.' 
+      either "2016" or "2019".
     Type: String
   IncludeEdgeTransportRole:
     AllowedValues:
@@ -447,10 +423,10 @@ Parameters:
   RDGWInstanceType:
     AllowedValues:
       - t2.large
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
-      - m4.4xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+      - m5.4xlarge
     Default: t2.large
     Description: The Amazon EC2 instance type for the Remote Desktop Gateway instances.
     Type: String
@@ -492,11 +468,11 @@ Parameters:
     Description: The volume type for the Exchange Data and Logs volumes.
     Type: String
   FileServerInstanceType:
-    Default: t2.small
+    Default: t3.small
     AllowedValues:
-      - t2.small
-      - t2.large
-      - m4.xlarge
+      - t3.small
+      - t3.large
+      - m5.xlarge
     Description: The Amazon EC2 instance type for the file-share witness server.
     Type: String
   FileServerNetBIOSName:
@@ -564,7 +540,6 @@ Parameters:
     Type: String
   ExchangeNodeInstanceType:
     AllowedValues:
-      - m4.xlarge
       - m5.xlarge
       - r4.xlarge
       - r4.2xlarge
@@ -575,17 +550,16 @@ Parameters:
     Default: r4.2xlarge
     Description: The Amazon EC2 instance type for the Exchange nodes. 
     Type: String
+  Exchange2019Source:
+    Default: 'https://'
+    Description: (Optional) Full URL (including https://) for Exchange 2019 ISO.
+    MaxLength: '2000'
+    MinLength: '1'
+    Type: String
 Conditions:
   IsTwoAz: !Equals
     - !Ref 'ThirdAZ'
     - 'no'
-  CreateDediHosts: !Not
-    - !Equals
-      - !Ref 'HostType'
-      - Shared
-  HostTypeIsDediHost: !Equals
-    - !Ref 'HostType'
-    - Dedicated Host
   GovCloudCondition: !Equals
     - !Ref 'AWS::Region'
     - us-gov-west-1
@@ -619,7 +593,6 @@ Resources:
           - !Ref 'PublicSubnet3CIDR'
         VPCCIDR: !Ref 'VPCCIDR'
   ADStack:
-    DependsOn: VPCStack
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
@@ -647,7 +620,6 @@ Resources:
         VPCCIDR: !Ref 'VPCCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
   RDGWStack:
-    DependsOn: ADStack
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
@@ -671,32 +643,7 @@ Resources:
         RDGWInstanceType: !Ref 'RDGWInstanceType'
         RDGWCIDR: !Ref 'RDGWCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-  DediHostStack:
-    DependsOn: VPCStack
-    Condition: CreateDediHosts
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub
-        - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}templates/dedicated-hosts.template
-        - QSS3Region: !If
-            - GovCloudCondition
-            - s3-us-gov-west-1
-            - s3
-      Parameters:
-        AvailabilityZones: !Join
-          - ','
-          - !Ref 'AvailabilityZones'
-        ExchangeNodeInstanceType: !Ref 'ExchangeNodeInstanceType'
-        AutoPlacement: !If
-          - HostTypeIsDediHost
-          - 'off'
-          - 'on'
-        3rdAZ: !If
-          - IsTwoAz
-          - 'no'
-          - 'yes'
   ExchangeStack:
-    DependsOn: ADStack
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
@@ -709,24 +656,7 @@ Resources:
         ADServer1NetBIOSName: !Ref 'ADServer1NetBIOSName'
         ADServer1PrivateIP: !Ref 'ADServer1PrivateIP'
         ADServer2NetBIOSName: !Ref 'ADServer2NetBIOSName'
-        ADServer2PrivateIP: !Ref 'ADServer2PrivateIP'
         CertificateArn: !Ref 'CertificateArn'
-        DedicatedHostAMI: !Ref 'DedicatedHostAMI'
-        DedicatedHostIDNode1: !If
-          - CreateDediHosts
-          - !GetAtt 'DediHostStack.Outputs.DedicatedHost1'
-          - !Ref 'AWS::NoValue'
-        DedicatedHostIDNode2: !If
-          - CreateDediHosts
-          - !GetAtt 'DediHostStack.Outputs.DedicatedHost2'
-          - !Ref 'AWS::NoValue'
-        DedicatedHostIDNode3: !If
-          - IsTwoAz
-          - !Ref 'AWS::NoValue'
-          - !If
-            - CreateDediHosts
-            - !GetAtt 'DediHostStack.Outputs.DedicatedHost1'
-            - !Ref 'AWS::NoValue'
         DeployLoadBalancer: !Ref 'DeployLoadBalancer'
         DomainAdminPassword: !Ref 'DomainAdminPassword'
         DomainAdminUser: !Ref 'DomainAdminUser'
@@ -739,12 +669,12 @@ Resources:
         EdgeNode2NetBIOSName: !Ref 'EdgeNode2NetBIOSName'
         EdgeNode2PrivateIP1: !Ref 'EdgeNode2PrivateIP1'
         EncryptionKmsKey: !Ref 'EncryptionKmsKey'
+        Exchange2019Source: !Ref 'Exchange2019Source'
         ExchangeServerVersion: !Ref 'ExchangeServerVersion'
         EncryptDataVolumes: !Ref 'EncryptDataVolumes'
         FileServerInstanceType: !Ref 'FileServerInstanceType'
         FileServerPrivateIP: !Ref 'FileServerPrivateIP'
         FileServerNetBIOSName: !Ref 'FileServerNetBIOSName'
-        HostType: !Ref 'HostType'
         IncludeEdgeTransportRole: !Ref 'IncludeEdgeTransportRole'
         KeyPairName: !Ref 'KeyPairName'
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
