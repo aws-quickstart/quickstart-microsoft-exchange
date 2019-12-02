@@ -438,9 +438,12 @@ Parameters:
     - r4.2xlarge
     - r4.4xlarge
     - r4.8xlarge
-    ConstraintDescription: Only EBS Optimized instance types r4.xlarge, r4.2xlarge,
-      r4.4xlarge, r4.8xlarge allowed
-    Default: r4.2xlarge
+    - r5.xlarge
+    - r5.2xlarge
+    - r5.4xlarge
+    - r5.8xlarge
+    ConstraintDescription: Only EBS Optimized instance types r4.*, r5.* allowed
+    Default: r5.xlarge
     Description: The Amazon EC2 instance type for the Exchange nodes.
     Type: String
   ExchangeNode1NetBIOSName:
@@ -819,8 +822,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
@@ -829,8 +832,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -839,8 +842,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -849,8 +852,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -859,8 +862,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -869,8 +872,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -879,8 +882,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -889,8 +892,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
@@ -899,8 +902,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
@@ -909,8 +912,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
@@ -919,8 +922,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
@@ -929,8 +932,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
@@ -939,8 +942,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -949,8 +952,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -959,8 +962,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -969,8 +972,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -979,8 +982,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1278,8 +1281,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
@@ -1288,8 +1291,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -1298,8 +1301,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -1308,8 +1311,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -1318,8 +1321,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -1328,8 +1331,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -1338,8 +1341,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -1348,8 +1351,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
@@ -1358,8 +1361,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
@@ -1368,8 +1371,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
@@ -1378,8 +1381,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
@@ -1388,8 +1391,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
@@ -1398,8 +1401,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -1408,8 +1411,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -1418,8 +1421,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -1428,8 +1431,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -1438,8 +1441,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1781,8 +1784,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -1791,8 +1794,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -1801,8 +1804,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Invoke-ADReplication.ps1:
               source:
@@ -1811,8 +1814,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -1821,8 +1824,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -2163,8 +2166,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -2173,8 +2176,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -2183,8 +2186,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -2193,8 +2196,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -2203,8 +2206,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -2213,8 +2216,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -2223,8 +2226,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -2233,8 +2236,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -2243,8 +2246,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -2253,8 +2256,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -2263,8 +2266,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -2273,8 +2276,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -2283,8 +2286,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -2293,8 +2296,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -2303,8 +2306,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -2313,8 +2316,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -2323,8 +2326,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -2732,8 +2735,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -2742,8 +2745,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -2752,8 +2755,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -2762,8 +2765,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -2772,8 +2775,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -2782,8 +2785,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -2792,8 +2795,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -2802,8 +2805,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -2812,8 +2815,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -2822,8 +2825,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -2832,8 +2835,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -2842,8 +2845,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -2852,8 +2855,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -2862,8 +2865,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -2872,8 +2875,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -2882,8 +2885,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -2892,8 +2895,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source:
@@ -2902,8 +2905,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Configure-ExchangeDAG.ps1:
               source:
@@ -2912,8 +2915,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -3216,8 +3219,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -3226,8 +3229,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -3236,8 +3239,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -3246,8 +3249,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -3256,8 +3259,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -3266,8 +3269,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -3276,8 +3279,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -3286,8 +3289,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -3296,8 +3299,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -3306,8 +3309,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -3316,8 +3319,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -3326,8 +3329,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -3336,8 +3339,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -3346,8 +3349,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -3356,8 +3359,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -3366,8 +3369,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -3376,8 +3379,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
