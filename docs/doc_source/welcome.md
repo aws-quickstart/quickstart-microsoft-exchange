@@ -9,14 +9,14 @@
 This Quick Start reference deployment guide includes infrastructure information, architectural considerations, and configuration steps for planning and deploying a Microsoft Exchange Server environment on the Amazon Web Services \(AWS\) Cloud\. It uses [AWS CloudFormation](https://aws.amazon.com/cloudformation/) templates to automate the deployment\.
 
 **Note**  
- This Quick Start supports Exchange Server 2013 and Exchange Server 2016\. 
+ This Quick Start supports Exchange Server 2016 and Exchange Server 2019\. 
 
 This Quick Start is for IT infrastructure architects, administrators, and DevOps professionals who are planning to implement or extend their Exchange Server workloads on the AWS Cloud\.
 
 Included are best practices for configuring a highly available, fault\-tolerant, and secure Exchange environment\. This guide doesn’t cover general installation and software configuration tasks for Exchange Server\. For general guidance and best practices, consult the [Microsoft Exchange Server documentation](https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019)\.
 
 The following links are for your convenience\. Before you launch the Quick Start, please review the architecture, configuration, network security, and other considerations discussed in this guide\.
-+  If you have an AWS account and you're already familiar with Microsoft Exchange and AWS, you can launch the Quick Start to deploy Exchange Server 2013 or Exchange Server 2016 into a new or existing virtual private cloud \(VPC\) in your AWS account\. The deployment takes approximately 90 minutes\. 
++  If you have an AWS account and you're already familiar with Microsoft Exchange and AWS, you can launch the Quick Start to deploy Exchange Server 2016 or Exchange Server 2019 into a new or existing virtual private cloud \(VPC\) in your AWS account\. The deployment takes approximately 90 minutes\. 
 
    
 

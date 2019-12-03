@@ -1,0 +1,64 @@
+project:
+  name: quickstart-microsoft-exchange
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+  regions:
+  - ap-northeast-1
+  - ap-northeast-2
+  - ap-south-1
+  - ap-southeast-1
+  - ap-southeast-2
+  - eu-central-1
+  - eu-west-1
+  - sa-east-1
+  - us-east-1
+  - us-east-2
+  - us-west-1
+  - us-west-2
+  s3_bucket: ''
+tests:
+  exchange2016:
+    parameters:
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminPassword: $[taskcat_genpass_16]
+      KeyPairName: $[taskcat_getkeypair]
+      RDGWCIDR: 10.0.0.0/16
+      IncludeEdgeTransportRole: 'yes'
+      EncryptDataVolumes: 'true'
+      DeployLoadBalancer: 'false'
+      ThirdAZ: 'no'
+      ExchangeServerVersion: '2016'
+      QSS3BucketName: $[taskcat_autobucket]
+    regions:
+    # - ap-northeast-1
+    # - ap-southeast-2
+    # - ap-northeast-2
+    # - ap-south-1
+    - us-east-1 
+    - eu-west-1
+    - us-west-2
+    s3_bucket: ''
+    template: templates/exchange-master.template
+  exchange2019:
+    parameters:
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminPassword: $[taskcat_genpass_16]
+      KeyPairName: $[taskcat_getkeypair]
+      RDGWCIDR: 10.0.0.0/16
+      IncludeEdgeTransportRole: 'yes'
+      EncryptDataVolumes: 'true'
+      DeployLoadBalancer: 'false'
+      ExchangeServerVersion: '2019'
+      ThirdAZ: 'no'
+      QSS3BucketName: $[taskcat_autobucket]
+      Exchange2019Source: ''
+    regions:
+    # - ap-northeast-1
+    # - ap-southeast-2
+    # - ap-northeast-2
+    # - ap-south-1
+    - us-east-1
+    - us-west-2
+    - eu-west-1
+    s3_bucket: ''
+    template: templates/exchange-master.template

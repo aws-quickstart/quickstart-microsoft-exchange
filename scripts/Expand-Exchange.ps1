@@ -17,10 +17,13 @@ try {
     $Path = "C:\Exchangeinstall"
     $filename = $ExchangeDownloadLink.Substring($ExchangeDownloadLink.LastIndexOf("/") + 1)
     
-    if($ExchangeServerVersion -eq "2013") {
-        Invoke-Command -ScriptBlock {Start-Process cmd.exe "/c cd $Path && $Path\$filename /extract:$Path /quiet" -NoNewWindow -Wait}
+    if($ExchangeServerVersion -eq "2016") {
+        $isoPath = $Path + "\" + $filename
+        Mount-DiskImage -ImagePath $isoPath
+        $driveLetter = (Get-DiskImage $isoPath | Get-Volume).DriveLetter
+        Copy-Item -Path "${driveLetter}:\*" -Destination $Path -Recurse  
     }
-    elseif ($ExchangeServerVersion -eq "2016") {
+    elseif ($ExchangeServerVersion -eq "2019") {
         $isoPath = $Path + "\" + $filename
         Mount-DiskImage -ImagePath $isoPath
         $driveLetter = (Get-DiskImage $isoPath | Get-Volume).DriveLetter

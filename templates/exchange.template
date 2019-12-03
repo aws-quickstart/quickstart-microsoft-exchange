@@ -1,11 +1,11 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'This template deploys two Windows Server Failover Clustering (Exchange)
-  with Exchange Server 2013 / 2016. This template is intended to be installed into
+  with Exchange Server 2016 / 2019. This template is intended to be installed into
   an existing VPC that was built using the sample reference architecture titled: "Implementing
   Active Directory Domain Services in the AWS Cloud" **WARNING** This template creates
   Amazon EC2 Windows instance and related resources. You will be billed for the AWS
-  resources used if you create a stack from this template. 2016 QS(0042) / 2013 (000E)'
+  resources used if you create a stack from this template. 2016 QS(0042) / 2019 (000E)'
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -27,8 +27,6 @@ Metadata:
         default: Amazon EC2 Configuration
       Parameters:
       - KeyPairName
-      - HostType
-      - DedicatedHostAMI
     - Label:
         default: Microsoft Active Directory Configuration
       Parameters:
@@ -39,7 +37,6 @@ Metadata:
       - ADServer1NetBIOSName
       - ADServer1PrivateIP
       - ADServer2NetBIOSName
-      - ADServer2PrivateIP
       - DomainMemberSGID
     - Label:
         default: Microsoft Exchange Server Configuration
@@ -51,6 +48,7 @@ Metadata:
       - EdgeNode1PrivateIP1
       - EdgeNode2NetBIOSName
       - EdgeNode2PrivateIP1
+      - EnableReFSVolumes
       - EncryptDataVolumes
       - EncryptionKmsKey
       - VolumeSize
@@ -71,15 +69,12 @@ Metadata:
       - ExchangeNode1NetBIOSName
       - ExchangeNode1PrivateIP1
       - ExchangeNode1PrivateIP2
-      - DedicatedHostIDNode1
       - ExchangeNode2NetBIOSName
       - ExchangeNode2PrivateIP1
       - ExchangeNode2PrivateIP2
-      - DedicatedHostIDNode2
       - ExchangeNode3NetBIOSName
       - ExchangeNode3PrivateIP1
       - ExchangeNode3PrivateIP2
-      - DedicatedHostIDNode3
     - Label:
         default: AWS Quick Start Configuration
       Parameters:
@@ -92,18 +87,8 @@ Metadata:
         default: Domain Controller 1 private IP address
       ADServer2NetBIOSName:
         default: Domain Controller 2 NetBIOS name
-      ADServer2PrivateIP:
-        default: Domain Controller 2 private IP address
       CertificateArn:
         default: Application Load Balancer Certificate
-      DedicatedHostAMI:
-        default: BYOL AMI to use on dedicated host
-      DedicatedHostIDNode1:
-        default: Dedicated HostID for Node 1
-      DedicatedHostIDNode2:
-        default: Dedicated HostID for Node 2
-      DedicatedHostIDNode3:
-        default: Dedicated HostID for Node 3
       DeployLoadBalancer:
         default: Deploy Application Load Balancer
       DomainAdminPassword:
@@ -120,14 +105,14 @@ Metadata:
         default: Exchange Server version
       EdgeInstanceType:
         default: Instance type for Edge server
+      EnableReFSVolumes:
+        default: Enable or disable ReFS
       EncryptDataVolumes:
         default: Encrypt Data volumes
       EncryptionKmsKey:
         default: KMS key to encrypt volumes
       IncludeEdgeTransportRole:
         default: Deploy Edge servers
-      HostType:
-        default: Tenancy
       KeyPairName:
         default: Key Pair Name
       PrivateSubnet1ID:
@@ -218,38 +203,12 @@ Parameters:
     MaxLength: '15'
     MinLength: '1'
     Type: String
-  ADServer2PrivateIP:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.32.10
-    Description: The private IP for the second Active Directory server located in
-      Availability Zone 2.
-    Type: String
   CertificateArn:
     Default: ''
     Description: (Conditional) If 'true' was chosen in Deploy Application Load Balancer
       option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID]
       format.
     MaxLength: '90'
-    Type: String
-  DedicatedHostAMI:
-    Default: ''
-    Description: (Conditional) If the host type is set to "Dedicated" or "Dedicated
-      Host", you need to specify your imported BYOL AMI ID.
-    Type: String
-  DedicatedHostIDNode1:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for Node1, Only used if HostType is
-      set to "host".
-    Type: String
-  DedicatedHostIDNode2:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for Node2, Only used if HostType is
-      set to "host".
-    Type: String
-  DedicatedHostIDNode3:
-    Default: ''
-    Description: (Conditional) Dedicated HostID for the Node3, Only used if HostType
-      is set to "host".
     Type: String
   DeployLoadBalancer:
     AllowedValues:
@@ -296,20 +255,18 @@ Parameters:
   ExchangeServerVersion:
     AllowedValues:
     - '2016'
-    - '2013'
+    - '2019'
     Default: '2016'
-    Description: Version of Exchange Server to install. Options include either "2013"
-      or "2016"
+    Description: Version of Exchange Server to install. Options include either "2016"
+      or "2019"
     Type: String
   EdgeInstanceType:
     Description: The Amazon EC2 instance type for the Exchange Edge Transport servers.
     Type: String
-    Default: t2.large
+    Default: t3.large
     AllowedValues:
-    - t2.large
-    - m4.large
-    - m4.xlarge
-    - m4.2xlarge
+    - t3.large
+    - t3.large
     - m5.large
     - m5.xlarge
     ConstraintDescription: Select a general purpose instance type
@@ -339,6 +296,13 @@ Parameters:
     Description: The primary private IP for the second Edge Server located in Availability
       Zone 2.
     Type: String
+  EnableReFSVolumes:
+    AllowedValues:
+      - 'false'
+      - 'true'
+    Default: 'true'
+    Description: Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS. 
+    Type: String
   EncryptDataVolumes:
     AllowedValues:
     - 'false'
@@ -351,16 +315,6 @@ Parameters:
     Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID].
       Leave blank to use default EBS encryption key.
     MaxLength: '90'
-    Type: String
-  HostType:
-    AllowedValues:
-    - Shared
-    - Dedicated
-    - Dedicated Host
-    Default: Shared
-    Description: 'The host type. If you select Dedicated or Dedicated Host, hosts
-      will be created in each Availability Zone. Note:   For Dedicated host type,
-      you must already have suitable dedicated hosts in your account.'
     Type: String
   IncludeEdgeTransportRole:
     AllowedValues:
@@ -472,7 +426,7 @@ Parameters:
     Description: The volume type for the Exchange data drive.
     Type: String
   FileServerInstanceType:
-    Default: t2.small
+    Default: t3.small
     Description: The Amazon EC2 instance type for the file-share witness server.
     Type: String
   FileServerNetBIOSName:
@@ -489,15 +443,17 @@ Parameters:
     Type: String
   ExchangeNodeInstanceType:
     AllowedValues:
-    - m4.xlarge
     - m5.xlarge
     - r4.xlarge
     - r4.2xlarge
     - r4.4xlarge
     - r4.8xlarge
-    ConstraintDescription: Only EBS Optimized instance types r4.xlarge, r4.2xlarge,
-      r4.4xlarge, r4.8xlarge allowed
-    Default: r4.2xlarge
+    - r5.xlarge
+    - r5.2xlarge
+    - r5.4xlarge
+    - r5.8xlarge
+    ConstraintDescription: Only EBS Optimized instance types r4.*, r5.* allowed
+    Default: r5.xlarge
     Description: The Amazon EC2 instance type for the Exchange nodes.
     Type: String
   ExchangeNode1NetBIOSName:
@@ -555,15 +511,22 @@ Parameters:
   WS2016FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
-  WS2012R2:
+  WS2019FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+  Exchange2016Source:
+    Default: 'https://download.microsoft.com/download/f/4/e/f4e4b3a0-925b-4eff-8cc7-8b5932d75b49/ExchangeServer2016-x64-cu14.iso'
+    Description: Full URL (including https://) for Exchange 2016 ISO.
+    MaxLength: '2000'
+    MinLength: '1'
+    Type: String
+  Exchange2019Source:
+    Default: 'https://'
+    Description: Full URL (including https://) for Exchange 2019 ISO.
+    MaxLength: '2000'
+    MinLength: '1'
+    Type: String
 Conditions:
-  ByolAmi:
-    !Not
-    - !Equals
-      - !Ref HostType
-      - Shared
   DeployEdge:
     !Equals
     - !Ref IncludeEdgeTransportRole
@@ -580,14 +543,6 @@ Conditions:
     !Equals
     - !Ref AWS::Region
     - us-gov-west-1
-  HostTypeIsDediHost:
-    !Equals
-    - !Ref HostType
-    - Dedicated Host
-  HostTypeIsDefault:
-    !Equals
-    - !Ref HostType
-    - Shared
   EncryptionKmsKeySelected:
     !Not
     - !Equals
@@ -610,6 +565,10 @@ Conditions:
     !Equals
     - !Ref EncryptDataVolumes
     - 'true'
+  UseReFSDataVolumes:
+    !Equals
+    - !Ref EnableReFSVolumes
+    - 'true'
   VolIsIo1:
     !Equals
     - !Ref VolumeType
@@ -626,11 +585,8 @@ Rules:
       AssertDescription: All subnets must in the VPC
 Mappings:
   MediaLinksMapper:
-    Exchange:
-      '2013': https://download.microsoft.com/download/7/F/D/7FDCC96C-26C0-4D49-B5DB-5A8B36935903/Exchange2013-x64-cu23.exe
-      '2016': https://download.microsoft.com/download/f/4/e/f4e4b3a0-925b-4eff-8cc7-8b5932d75b49/ExchangeServer2016-x64-cu14.iso
     UCMA:
-      ALL: https://download.microsoft.com/download/B/D/7/BD7BAD4F-1D91-4B1B-9F7B-9EEA67381BCC/UcmaRuntimeSetup.exe
+      ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
     NetFramework:
       v472: https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe
       v48: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
@@ -665,15 +621,7 @@ Resources:
                 -status Enable"
               waitAfterCompletion: '0'
             c-remove-wsmantrustedhost:
-              command:
-                !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '' -Force"
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+              command: powershell.exe -Command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '' -Force"
               waitAfterCompletion: '0'
         Finalize:
           commands:
@@ -772,10 +720,10 @@ Resources:
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
                   - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             i-expand-exchange-kit:
@@ -788,25 +736,15 @@ Resources:
                   - ' C:\cfn\scripts\Expand-Exchange.ps1 -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ExchangeDownloadLink '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             j-configure-wsmantrustedhost:
-              command:
-                !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts
-                      -value '
-                    - !Ref ADServer1PrivateIP
-                    - ''' -Force"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+              command: !Sub |
+                powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '${ADServer1PrivateIP}' -Force"
               waitAfterCompletion: '0'
             k-download-visualcruntime:
               command:
@@ -898,8 +836,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
@@ -908,8 +846,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -918,8 +856,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -928,8 +866,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -938,8 +876,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -948,8 +886,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -958,8 +896,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -968,8 +906,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
@@ -978,8 +916,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
@@ -988,8 +926,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
@@ -998,8 +936,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
@@ -1008,8 +946,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
@@ -1018,8 +956,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -1028,8 +966,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -1038,8 +976,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -1048,8 +986,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -1058,8 +996,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1069,14 +1007,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -1084,19 +1014,11 @@ Resources:
           VolumeType: gp2
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2019FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
@@ -1113,14 +1035,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref EdgeNode1NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
+      Tenancy: default
       UserData:
         !Base64
           Fn::Join:
@@ -1165,16 +1080,7 @@ Resources:
                 -status Enable"
               waitAfterCompletion: '0'
             c-remove-wsmantrustedhost:
-              command:
-                !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts
-                      -value '' -Force"
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+              command: powershell.exe -Command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '' -Force"
               waitAfterCompletion: '0'
         Finalize:
           commands:
@@ -1273,10 +1179,10 @@ Resources:
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
                   - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             i-expand-exchange-kit:
@@ -1289,25 +1195,15 @@ Resources:
                   - ' C:\cfn\scripts\Expand-Exchange.ps1 -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ExchangeDownloadLink '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             j-configure-wsmantrustedhost:
-              command:
-                !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts
-                      -value '
-                    - !Ref ADServer1PrivateIP
-                    - ''' -Force"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+              command: !Sub |
+                powershell.exe -command "Set-Item WSMan:\localhost\Client\TrustedHosts -value '${ADServer1PrivateIP}' -Force"
               waitAfterCompletion: '0'
             k-download-visualcruntime:
               command:
@@ -1399,8 +1295,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
@@ -1409,8 +1305,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -1419,8 +1315,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -1429,8 +1325,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -1439,8 +1335,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -1449,8 +1345,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -1459,8 +1355,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -1469,8 +1365,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
@@ -1479,8 +1375,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
@@ -1489,8 +1385,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
@@ -1499,8 +1395,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
@@ -1509,8 +1405,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
@@ -1519,8 +1415,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -1529,8 +1425,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -1539,8 +1435,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -1549,8 +1445,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -1559,8 +1455,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1570,14 +1466,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -1585,20 +1473,12 @@ Resources:
           VolumeType: gp2
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       IamInstanceProfile: !Ref ExchangeProfile
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2019FULLBASE
       InstanceType: !Ref EdgeInstanceType
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
@@ -1614,14 +1494,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref EdgeNode2NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
+      Tenancy: default
       UserData:
         !Base64
           Fn::Join:
@@ -1925,8 +1798,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -1935,8 +1808,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -1945,8 +1818,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Invoke-ADReplication.ps1:
               source:
@@ -1955,8 +1828,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -1965,8 +1838,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1982,7 +1855,7 @@ Resources:
         Ebs:
           VolumeSize: 100
           VolumeType: gp2
-      ImageId: !Ref WS2012R2
+      ImageId: !Ref WS2019FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref FileServerInstanceType
       KeyName: !Ref KeyPairName
@@ -2133,14 +2006,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -2150,10 +2018,10 @@ Resources:
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
                   - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             j-expand-exchange-kit:
@@ -2166,10 +2034,10 @@ Resources:
                   - ' C:\cfn\scripts\Expand-Exchange.ps1 -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ExchangeDownloadLink '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             k-download-ucmaruntime:
@@ -2307,8 +2175,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -2317,8 +2185,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -2327,8 +2195,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -2337,8 +2205,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -2347,8 +2215,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -2357,8 +2225,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -2367,8 +2235,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -2377,8 +2245,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -2387,8 +2255,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -2397,8 +2265,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -2407,8 +2275,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -2417,8 +2285,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -2427,8 +2295,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -2437,8 +2305,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -2447,8 +2315,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -2457,8 +2325,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -2467,8 +2335,18 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -2478,14 +2356,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -2494,19 +2364,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode1
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2019FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -2526,14 +2388,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode1NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
+      Tenancy: default
       UserData:
         !Base64
           Fn::Join:
@@ -2725,14 +2580,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -2742,10 +2592,10 @@ Resources:
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
                   - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             j-expand-exchange-kit:
@@ -2758,10 +2608,10 @@ Resources:
                   - ' C:\cfn\scripts\Expand-Exchange.ps1 -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ExchangeDownloadLink '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             k-download-ucmaruntime:
@@ -2899,8 +2749,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -2909,8 +2759,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -2919,8 +2769,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -2929,8 +2779,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -2939,8 +2789,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -2949,8 +2799,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -2959,8 +2809,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -2969,8 +2819,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -2979,8 +2829,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -2989,8 +2839,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -2999,8 +2849,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -3009,8 +2859,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -3019,8 +2869,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -3029,8 +2879,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -3039,8 +2889,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -3049,8 +2899,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -3059,8 +2909,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source:
@@ -3069,8 +2919,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Configure-ExchangeDAG.ps1:
               source:
@@ -3079,26 +2929,28 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
           - setup
           - Prep
           - Install
-          - ConfigureDAG
+          # - ConfigureDAG 
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -3107,19 +2959,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode2
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2019FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3139,14 +2983,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode2NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
+      Tenancy: default
       UserData:
         !Base64
           Fn::Join:
@@ -3262,14 +3099,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -3279,10 +3111,10 @@ Resources:
                   - '-ExecutionPolicy RemoteSigned '
                   - -Command "
                   - ' C:\cfn\scripts\Download-PreRequisites.ps1 -source '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             j-expand-exchange-kit:
@@ -3295,10 +3127,10 @@ Resources:
                   - ' C:\cfn\scripts\Expand-Exchange.ps1 -ExchangeServerVersion '''
                   - !Ref ExchangeServerVersion
                   - ''' -ExchangeDownloadLink '''
-                  - !FindInMap
-                    - MediaLinksMapper
-                    - Exchange
-                    - !Ref ExchangeServerVersion
+                  - !If
+                    - Exchange2016Selected
+                    - !Ref Exchange2016Source
+                    - !Ref Exchange2019Source
                   - '''"'
               waitAfterCompletion: '0'
             k-download-ucmaruntime:
@@ -3406,8 +3238,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
@@ -3416,8 +3248,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
@@ -3426,8 +3258,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
@@ -3436,8 +3268,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
@@ -3446,8 +3278,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
@@ -3456,8 +3288,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
@@ -3466,8 +3298,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
@@ -3476,8 +3308,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
@@ -3486,8 +3318,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
@@ -3496,8 +3328,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
@@ -3506,8 +3338,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
@@ -3516,8 +3348,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
@@ -3526,8 +3358,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
@@ -3536,8 +3368,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
@@ -3546,8 +3378,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
@@ -3556,8 +3388,8 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
@@ -3566,8 +3398,18 @@ Resources:
                 - QSS3Region:
                     !If
                     - GovCloudCondition
-                    - s3-us-gov-west-1
-                    - s3
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
               authentication: S3AccessCreds
         configSets:
           config:
@@ -3577,14 +3419,6 @@ Resources:
           - Cleanup
           - Finalize
     Properties:
-      Affinity:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - !Ref AWS::NoValue
-          - default
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
@@ -3593,19 +3427,11 @@ Resources:
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
-      HostId:
-        !If
-        - HostTypeIsDediHost
-        - !Ref DedicatedHostIDNode3
-        - !Ref AWS::NoValue
       ImageId:
         !If
-        - ByolAmi
-        - !Ref DedicatedHostAMI
-        - !If
-            - Exchange2016Selected
-            - !Ref WS2016FULLBASE
-            - !Ref WS2012R2
+        - Exchange2016Selected
+        - !Ref WS2016FULLBASE
+        - !Ref WS2019FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref ExchangeNodeInstanceType
       KeyName: !Ref KeyPairName
@@ -3625,14 +3451,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode3NetBIOSName
-      Tenancy:
-        !If
-        - HostTypeIsDediHost
-        - host
-        - !If
-          - HostTypeIsDefault
-          - default
-          - dedicated
+      Tenancy: default
       UserData:
         !Base64
           Fn::Join:

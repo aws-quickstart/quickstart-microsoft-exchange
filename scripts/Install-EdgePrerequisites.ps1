@@ -17,12 +17,12 @@ try {
 
     do {
         try {
-            if($ExchangeServerVersion -eq "2013") {
+            if($ExchangeServerVersion -eq "2016") {
                Install-WindowsFeature ADLDS -ErrorAction Stop
                $Installed = $true
             }
 
-            elseif ($ExchangeServerVersion -eq "2016") {
+            elseif ($ExchangeServerVersion -eq "2019") {
                Install-WindowsFeature ADLDS -ErrorAction Stop
                $Installed = $true
             }

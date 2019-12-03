@@ -33,10 +33,10 @@ try {
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
-        if($Using:ExchangeServerVersion -eq "2013") {
-            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:ClientAccess,Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
+        if($Using:ExchangeServerVersion -eq "2016") {
+            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
-        elseif ($Using:ExchangeServerVersion -eq "2016") {
+        elseif ($Using:ExchangeServerVersion -eq "2019") {
             $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
 

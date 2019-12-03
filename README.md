@@ -3,7 +3,7 @@
 
 Amazon Web Services (AWS) provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. This Quick Start implements a high availability solution built with Microsoft Windows Server and Microsoft Exchange Server running on Amazon Elastic Compute Cloud (Amazon EC2), using the Database Availability Groups (DAGs) feature of Exchange Server.
 
-The deployment includes Windows Server Failover Clustering (WSFC) and Exchange Server 2013 or Exchange Server 2016 instances on the AWS Cloud. The Quick Start includes a rich set of configuration options for Exchange Server, Microsoft Active Directory, and the WSFC cluster, including Exchange Server version, tenancy options, and whether Edge instances or load balancers are created.
+The deployment includes Windows Server Failover Clustering (WSFC) and Exchange Server 2016 or Exchange Server 2019 instances on the AWS Cloud. The Quick Start includes a rich set of configuration options for Exchange Server, Microsoft Active Directory, and the WSFC cluster, including Exchange Server version, tenancy options, and whether Edge instances or load balancers are created.
 
 The AWS CloudFormation templates included with the Quick Start automate the following:
 

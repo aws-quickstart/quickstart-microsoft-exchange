@@ -26,10 +26,10 @@ try {
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
-        if($Using:ExchangeServerVersion -eq "2013") {
+        if($Using:ExchangeServerVersion -eq "2016") {
             $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
-        elseif ($Using:ExchangeServerVersion -eq "2016") {
+        elseif ($Using:ExchangeServerVersion -eq "2019") {
             $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
         }
 
