@@ -3,18 +3,18 @@ project:
   owner: quickstart-eng@amazon.com
   package_lambda: false
   regions:
-  # - ap-northeast-1
-  # - ap-northeast-2
-  # - ap-south-1
-  # - ap-southeast-1
-  # - ap-southeast-2
-  # - eu-central-1
-  # - eu-west-1
-  # - sa-east-1
+  - ap-northeast-1
+  - ap-northeast-2
+  - ap-south-1
+  - ap-southeast-1
+  - ap-southeast-2
+  - eu-central-1
+  - eu-west-1
+  - sa-east-1
   - us-east-1
-  # - us-east-2
-  # - us-west-1
-  # - us-west-2
+  - us-east-2
+  - us-west-1
+  - us-west-2
   s3_bucket: ''
 tests:
   exchange2016:
@@ -24,77 +24,41 @@ tests:
       KeyPairName: $[taskcat_getkeypair]
       RDGWCIDR: 10.0.0.0/16
       IncludeEdgeTransportRole: 'yes'
-      EncryptDataVolumes: 'false'
+      EncryptDataVolumes: 'true'
       DeployLoadBalancer: 'false'
       ThirdAZ: 'no'
+      ExchangeServerVersion: '2016'
+      QSS3BucketName: $[taskcat_autobucket]
+    regions:
+    # - ap-northeast-1
+    # - ap-southeast-2
+    # - ap-northeast-2
+    # - ap-south-1
+    - us-east-1 
+    - eu-west-1
+    - us-west-2
+    s3_bucket: ''
+    template: templates/exchange-master.template
+  exchange2019:
+    parameters:
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminPassword: $[taskcat_genpass_16]
+      KeyPairName: $[taskcat_getkeypair]
+      RDGWCIDR: 10.0.0.0/16
+      IncludeEdgeTransportRole: 'yes'
+      EncryptDataVolumes: 'true'
+      DeployLoadBalancer: 'false'
+      ExchangeServerVersion: '2019'
+      ThirdAZ: 'no'
+      QSS3BucketName: $[taskcat_autobucket]
+      Exchange2019Source: ''
     regions:
     # - ap-northeast-1
     # - ap-southeast-2
     # - ap-northeast-2
     # - ap-south-1
     - us-east-1
-    # - us-west-2
-    # - eu-west-1
+    - us-west-2
+    - eu-west-1
     s3_bucket: ''
     template: templates/exchange-master.template
-  # exchange2016-3az-full:
-  #   parameters:
-  #     ADServer1InstanceType: m5.xlarge
-  #     ADServer1NetBIOSName: DCEXCH3AZF1
-  #     ADServer1PrivateIP: 10.0.0.10
-  #     ADServer2InstanceType: m5.xlarge
-  #     ADServer2NetBIOSName: DCEXCH3AZF2
-  #     ADServer2PrivateIP: 10.0.32.10
-  #     AvailabilityZones: $[taskcat_getaz_3]
-  #     DedicatedHostAMI: ''
-  #     DeployLoadBalancer: 'false'
-  #     DomainAdminPassword: $[taskcat_genpass_16]
-  #     DomainAdminUser: StackAdmin
-  #     DomainDNSName: example.com
-  #     DomainNetBIOSName: example
-  #     EdgeInstanceType: m5.large
-  #     EdgeNode1NetBIOSName: EdgeNode1
-  #     EdgeNode1PrivateIP1: 10.0.128.12
-  #     EdgeNode2NetBIOSName: EdgeNode2
-  #     EdgeNode2PrivateIP1: 10.0.144.12
-  #     EncryptDataVolumes: 'false'
-  #     EncryptionKmsKey: ''
-  #     ExchangeNode1NetBIOSName: ExchangeNode1
-  #     ExchangeNode1PrivateIP1: 10.0.0.100
-  #     ExchangeNode1PrivateIP2: 10.0.0.101
-  #     ExchangeNode2NetBIOSName: ExchangeNode2
-  #     ExchangeNode2PrivateIP1: 10.0.32.100
-  #     ExchangeNode2PrivateIP2: 10.0.32.101
-  #     ExchangeNode3NetBIOSName: ExchangeNode3
-  #     ExchangeNode3PrivateIP1: 10.0.64.100
-  #     ExchangeNode3PrivateIP2: 10.0.64.101
-  #     ExchangeNodeInstanceType: m5.xlarge
-  #     ExchangeServerVersion: '2016'
-  #     FileServerInstanceType: t2.small
-  #     FileServerPrivateIP: 10.0.0.200
-  #     HostType: Shared
-  #     IncludeEdgeTransportRole: 'yes'
-  #     KeyPairName: $[taskcat_getkeypair]
-  #     NumberOfAZs: '3'
-  #     NumberOfRDGWHosts: '1'
-  #     PrivateSubnet1CIDR: 10.0.0.0/19
-  #     PrivateSubnet2CIDR: 10.0.32.0/19
-  #     PrivateSubnet3CIDR: 10.0.64.0/19
-  #     PublicSubnet1CIDR: 10.0.128.0/20
-  #     PublicSubnet2CIDR: 10.0.144.0/20
-  #     PublicSubnet3CIDR: 10.0.160.0/20
-  #     QSS3BucketName: $[taskcat_autobucket]
-  #     QSS3KeyPrefix: quickstart-microsoft-exchange/
-  #     RDGWCIDR: 10.0.0.0/16
-  #     RDGWInstanceType: t2.large
-  #     ThirdAZ: full
-  #     VPCCIDR: 10.0.0.0/16
-  #     VolumeIops: '1000'
-  #     VolumeSize: '100'
-  #     VolumeType: gp2
-  #   regions:
-  #   - ap-southeast-1
-  #   - eu-central-1
-  #   - us-east-2
-  #   s3_bucket: ''
-  #   template: templates/exchange-master.template

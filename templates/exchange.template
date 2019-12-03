@@ -48,6 +48,7 @@ Metadata:
       - EdgeNode1PrivateIP1
       - EdgeNode2NetBIOSName
       - EdgeNode2PrivateIP1
+      - EnableReFSVolumes
       - EncryptDataVolumes
       - EncryptionKmsKey
       - VolumeSize
@@ -104,6 +105,8 @@ Metadata:
         default: Exchange Server version
       EdgeInstanceType:
         default: Instance type for Edge server
+      EnableReFSVolumes:
+        default: Enable or disable ReFS
       EncryptDataVolumes:
         default: Encrypt Data volumes
       EncryptionKmsKey:
@@ -292,6 +295,13 @@ Parameters:
     Default: 10.0.144.12
     Description: The primary private IP for the second Edge Server located in Availability
       Zone 2.
+    Type: String
+  EnableReFSVolumes:
+    AllowedValues:
+      - 'false'
+      - 'true'
+    Default: 'true'
+    Description: Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS. 
     Type: String
   EncryptDataVolumes:
     AllowedValues:
@@ -554,6 +564,10 @@ Conditions:
   UseEncryptedDataVolumes:
     !Equals
     - !Ref EncryptDataVolumes
+    - 'true'
+  UseReFSDataVolumes:
+    !Equals
+    - !Ref EnableReFSVolumes
     - 'true'
   VolIsIo1:
     !Equals
@@ -1992,14 +2006,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -2329,6 +2338,16 @@ Resources:
                     - s3.us-gov-west-1
                     - s3.us-east-1
               authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
@@ -2561,14 +2580,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -2918,12 +2932,22 @@ Resources:
                     - s3.us-gov-west-1
                     - s3.us-east-1
               authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
           - Prep
           - Install
-          - ConfigureDAG
+          # - ConfigureDAG 
           - Cleanup
           - Finalize
     Properties:
@@ -3075,14 +3099,9 @@ Resources:
             h-initializedisks:
               command:
                 !If
-                - Exchange2016Selected
-                - !Join
-                  - ''
-                  - - powershell.exe -command "C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1
-                    - '"'
-                - !Join
-                  - ''
-                  - - powershell.exe -Command exit
+                - UseReFSDataVolumes
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $true
+                - powershell.exe -command "C:\cfn\scripts\Initialize-Disks.ps1" -EnableReFSVolumes $false
               waitAfterCompletion: '0'
             i-download-exchange-kit:
               command:
@@ -3376,6 +3395,16 @@ Resources:
               source:
                 !Sub
                 - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - QSS3Region:
+                    !If
+                    - GovCloudCondition
+                    - s3.us-gov-west-1
+                    - s3.us-east-1
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Initialize-Disks.ps1:
+              source:
+                !Sub
+                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
                 - QSS3Region:
                     !If
                     - GovCloudCondition

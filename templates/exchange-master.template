@@ -54,6 +54,7 @@ Metadata:
           - EdgeNode1PrivateIP1
           - EdgeNode2NetBIOSName
           - EdgeNode2PrivateIP1
+          - EnableReFSVolumes
           - EncryptDataVolumes
           - EncryptionKmsKey
           - VolumeIops
@@ -152,6 +153,8 @@ Metadata:
         default: Edge Node 2 NetBIOS name
       EdgeNode2PrivateIP1:
         default: Edge Node 2 private IP address
+      EnableReFSVolumes:
+        default: Enable or disable ReFS
       EncryptDataVolumes:
         default: Encrypt data volumes
       EncryptionKmsKey:
@@ -328,6 +331,13 @@ Parameters:
       - 'true'
     Default: 'false'
     Description: Choose true to encrypt the data and log volumes on Exchange nodes. 
+    Type: String
+  EnableReFSVolumes:
+    AllowedValues:
+      - 'false'
+      - 'true'
+    Default: 'true'
+    Description: Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS. 
     Type: String
   CertificateArn:
     Default: ''
@@ -674,6 +684,7 @@ Resources:
         EncryptionKmsKey: !Ref 'EncryptionKmsKey'
         Exchange2019Source: !Ref 'Exchange2019Source'
         ExchangeServerVersion: !Ref 'ExchangeServerVersion'
+        EnableReFSVolumes: !Ref 'EnableReFSVolumes'
         EncryptDataVolumes: !Ref 'EncryptDataVolumes'
         FileServerInstanceType: !Ref 'FileServerInstanceType'
         FileServerPrivateIP: !Ref 'FileServerPrivateIP'
