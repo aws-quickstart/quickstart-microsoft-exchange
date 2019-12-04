@@ -1,7 +1,7 @@
 global:
   marketplace-ami: false
   owner: quickstart-eng@amazon.com
-  qsname: quickstart-microsoft-activedirectory
+  qsname: quickstart-microsoft-exchange
   regions:
   - ap-northeast-1
   - ap-northeast-2
