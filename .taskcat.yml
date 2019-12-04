@@ -51,7 +51,7 @@ tests:
       ExchangeServerVersion: '2019'
       ThirdAZ: 'no'
       QSS3BucketName: $[taskcat_autobucket]
-      Exchange2019Source: ''
+      Exchange2019Source: 'https://s3.amazonaws.com/quickstart-ci-media/microsoft/exchange/SW_DVD9_Exchange_Svr_2019_CU_3_MultiLang_Std_Ent_.iso_MLF_X22-18612.ISO'
     regions:
     # - ap-northeast-1
     # - ap-southeast-2
