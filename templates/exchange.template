@@ -27,6 +27,8 @@ Metadata:
         default: Amazon EC2 Configuration
       Parameters:
       - KeyPairName
+      - WS2016FULLBASE
+      - WS2019FULLBASE
     - Label:
         default: Microsoft Active Directory Configuration
       Parameters:
@@ -54,6 +56,8 @@ Metadata:
       - VolumeSize
       - VolumeType
       - VolumeIops
+      - Exchange2016Source
+      - Exchange2019Source
     - Label:
         default: Load Balancer Configuration
       Parameters:
@@ -111,6 +115,10 @@ Metadata:
         default: Encrypt Data volumes
       EncryptionKmsKey:
         default: KMS key to encrypt volumes
+      Exchange2016Source:
+        default: Path to Exchange 2016 ISO
+      Exchange2019Source:
+        default: Path to Exchange 2019 ISO
       IncludeEdgeTransportRole:
         default: Deploy Edge servers
       KeyPairName:
@@ -147,6 +155,10 @@ Metadata:
         default: Data Volume size (GiB)
       VolumeType:
         default: Data Volume type
+      WS2016FULLBASE:
+        default: Windows Server 2016 AMI name
+      WS2019FULLBASE:
+        default: Windows Server 2019 AMI name
       FileServerInstanceType:
         default: File Server instance type
       FileServerNetBIOSName:
@@ -511,9 +523,11 @@ Parameters:
   WS2016FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
+    Description: The image name for the AWS Systems Manager Windows Server 2016 AMI ID lookup
   WS2019FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+    Description: The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
   Exchange2016Source:
     Default: 'https://download.microsoft.com/download/f/4/e/f4e4b3a0-925b-4eff-8cc7-8b5932d75b49/ExchangeServer2016-x64-cu14.iso'
     Description: Full URL (including https://) for Exchange 2016 ISO.
