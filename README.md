@@ -12,7 +12,7 @@ The AWS CloudFormation templates included with the Quick Start automate the foll
 
 You can also use the AWS CloudFormation templates as a starting point for your own implementation.
 
-![Quick Start architecture for Exchange Server on AWS](https://d1.awsstatic.com/partner-network/QuickStart/datasheets/exchange-server-on-aws-architecture.54386a95a6e17c6fa38dbef5b3187d9989e23948.png)
+![Quick Start architecture for Exchange Server on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/exchange-architecture.png)
 
 For architectural details, best practices, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/NvamP).
 
