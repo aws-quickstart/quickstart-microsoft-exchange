@@ -83,6 +83,7 @@ Metadata:
         default: AWS Quick Start Configuration
       Parameters:
       - QSS3BucketName
+      - QSS3BucketRegion
       - QSS3KeyPrefix
     ParameterLabels:
       ADServer1NetBIOSName:
@@ -141,6 +142,8 @@ Metadata:
         default: Public Subnet 2 ID
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
+      QSS3BucketRegion:
+        default: Quick Start S3 bucket region
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
       ThirdAZ:
@@ -388,6 +391,10 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
     Type: String
+  QSS3BucketRegion:
+    Default: us-east-1
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
+    Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
@@ -541,6 +548,7 @@ Parameters:
     MinLength: '1'
     Type: String
 Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   DeployEdge:
     !Equals
     - !Ref IncludeEdgeTransportRole
@@ -622,8 +630,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -846,172 +853,223 @@ Resources:
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1081,8 +1139,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -1305,172 +1362,223 @@ Resources:
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-EdgePrerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-EdgePrerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeEdgeServer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeEdgeServer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-PrimaryDNSSuffix.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Set-PrimaryDNSSuffix.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-EdgeDnsRecord.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-EdgeDnsRecord.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1724,8 +1832,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup: {}
         Configure: {}
@@ -1808,52 +1915,67 @@ Resources:
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Invoke-ADReplication.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
@@ -1914,8 +2036,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -2185,182 +2306,236 @@ Resources:
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Initialize-Disks.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
@@ -2434,8 +2609,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -2759,202 +2933,262 @@ Resources:
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Add-ExchangeGroup.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Add-ExchangeGroup.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Configure-ExchangeDAG.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-ExchangeDAG.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Initialize-Disks.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
@@ -3022,8 +3256,7 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets:
-          - !Ref QSS3BucketName
+          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -3248,182 +3481,236 @@ Resources:
             C:\cfn\scripts\Unzip-Archive.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Rename-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Rename-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Restart-Computer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Restart-Computer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Enable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Disable-CredSSP.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-CredSSP.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchPrerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchPrerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Expand-Exchange.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Expand-Exchange.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-WindowsFailoverClustering.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-WindowsFailoverClustering.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-UcmaRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UcmaRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeOrg.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeOrg.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Install-ExchangeServer.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-ExchangeServer.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             c:\cfn\scripts\Configure-UAC.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Configure-UAC.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Download-Prerequisites.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Download-Prerequisites.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-VisualCRuntime.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-VisualCRuntime.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Install-NetFramework.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
             C:\cfn\scripts\Initialize-Disks.ps1:
               source:
                 !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
-                - QSS3Region:
-                    !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
               authentication: S3AccessCreds
         configSets:
           config:
