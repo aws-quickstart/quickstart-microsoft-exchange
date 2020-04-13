@@ -52,7 +52,7 @@ tests:
       ThirdAZ: 'no'
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
-      Exchange2019Source: 'https://quickstart-ci-media.s3.amazonaws.com/microsoft/exchange/EX2019.ISO'
+      Exchange2019Source: 'override'
     regions:
     # - ap-northeast-1
     # - ap-southeast-2
