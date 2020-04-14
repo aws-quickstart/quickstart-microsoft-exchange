@@ -1716,14 +1716,7 @@ Resources:
           Statement:
           - Action:
             - s3:GetObject
-            Resource:
-              !Sub
-              - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+            Resource: "*"
             Effect: Allow
       - PolicyName: AD-SSM-Secrets
         PolicyDocument:
