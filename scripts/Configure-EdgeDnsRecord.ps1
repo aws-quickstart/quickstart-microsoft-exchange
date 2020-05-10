@@ -11,7 +11,7 @@ param(
     [string]
     [Parameter(Mandatory=$true)]
     $DnsServer,
-   
+
     [Parameter(Mandatory=$true)]
     [string]
     $DomainNetBIOSName,
@@ -30,16 +30,16 @@ param(
 try {
     Start-Transcript -Path C:\cfn\log\Configure-EdgeDNSRecord.ps1.txt -Append
     $ErrorActionPreference = "Stop"
- 
+
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
     $DomainAdminPassword = ConvertFrom-Json -InputObject (Get-SECSecretValue -SecretId $ExUserSecParam).SecretString
     $DomainAdminCreds = (New-Object PSCredential($DomainAdminFullUser,(ConvertTo-SecureString $DomainAdminPassword.Password -AsPlainText -Force)))
-    
+
     $EdgeRecordPs={
         $ErrorActionPreference = "Stop"
         Add-DnsServerResourceRecordA -Name $Using:EdgeNodeNetBIOSName -IPv4Address $Using:EdgeNodePrivateIP -ZoneName $Using:DomainNetBIOSName
     }
-    
+
     $Retries = 0
     $Installed = $false
     while (($Retries -lt 4) -and (!$Installed)) {

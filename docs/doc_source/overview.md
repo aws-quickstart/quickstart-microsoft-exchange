@@ -2,7 +2,7 @@
 
 ## Microsoft Exchange Server on AWS<a name="exchange-server-on-aws"></a>
 
-Microsoft Exchange Server is a messaging and collaboration solution with support for mailboxes, calendars, compliance, and e\-archival\. In an Exchange Server environment, your users can collaborate and—when you deploy the environment in AWS—you can scale your environment based on demand\. 
+Microsoft Exchange Server is a messaging and collaboration solution with support for mailboxes, calendars, compliance, and e\-archival\. In an Exchange Server environment, your users can collaborate and—when you deploy the environment in AWS—you can scale your environment based on demand\.
 
 The AWS Cloud provides infrastructure services that enable you to deploy Exchange Server in a highly available, fault\-tolerant, and affordable way\. By deploying on AWS, you get the functionality of Exchange Server and the flexibility and security of AWS\.
 
@@ -21,7 +21,7 @@ You are responsible for all costs incurred by your use of the AWS services used 
 
 The template for this Quick Start includes configuration parameters that you can customize\. Some of these settings, such as instance type, will affect the cost of deployment\. For cost estimates, see the pricing pages for each AWS service you will be using\. Prices are subject to change\.
 
-**Note**  
+**Note**
 After you deploy the Quick Start, we recommend that you enable the [AWS Cost and Usage Report](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-gettingstarted-turnonreports.html) to track costs associated with the Quick Start\. This report delivers billing metrics to an Amazon Simple Storage Service \(Amazon S3\) bucket in your account\. It provides cost estimates based on usage throughout each month, and finalizes the data at the end of the month\. For more information about the report, see the [AWS documentation](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-costusage.html)\.
 
 Exchange Server can be deployed and licensed via the [Microsoft License Mobility through Software Assurance](https://aws.amazon.com/windows/mslicensemobility/) program\. For development and test environments, you can use your existing MSDN licenses for Exchange Server with Amazon Elastic Compute Cloud \(Amazon EC2\) Dedicated Instances\. For details, see the [MSDN on AWS](https://aws.amazon.com/windows/msdn/) page\.
@@ -33,13 +33,13 @@ This Quick Start launches the Amazon Machine Image \(AMI\) for Microsoft Windows
 ## AWS Services<a name="services"></a>
 
 Before you deploy this Quick Start, we recommend that you become familiar with the following AWS services\. If you are new to AWS, see the [Getting Started](https://aws.amazon.com/getting-started/) section of the AWS documentation\.
-+ [Amazon Virtual Private Cloud \(Amazon VPC\)](https://aws.amazon.com/documentation/vpc/) 
-+ [Amazon Elastic Compute Cloud \(Amazon EC2\)](https://aws.amazon.com/documentation/ec2/) 
-+ [Amazon Elastic Block Store \(Amazon EBS\)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html) 
++ [Amazon Virtual Private Cloud \(Amazon VPC\)](https://aws.amazon.com/documentation/vpc/)
++ [Amazon Elastic Compute Cloud \(Amazon EC2\)](https://aws.amazon.com/documentation/ec2/)
++ [Amazon Elastic Block Store \(Amazon EBS\)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html)
 + [AWS CloudFormation](https://aws.amazon.com/documentation/cloudformation/)
-+ [NAT Gateway](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html) 
-+ [AWS Identity and Access Management \(IAM\)](https://aws.amazon.com/documentation/iam/) 
-+ [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/) 
++ [NAT Gateway](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html)
++ [AWS Identity and Access Management \(IAM\)](https://aws.amazon.com/documentation/iam/)
++ [Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/)
 + [AWS Certificate Manager \(ACM\)](https://aws.amazon.com/documentation/acm/index.html#lang/en_us/)
 
 In addition, you should be familiar with the following:

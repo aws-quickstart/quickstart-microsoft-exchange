@@ -11,7 +11,7 @@ param(
 try {
     Start-Transcript -Path C:\cfn\log\Install-ExchPrerequisites.ps1.txt -Append
     $ErrorActionPreference = "Stop"
-    
+
     $Retries = 0
     $Installed = $false
 

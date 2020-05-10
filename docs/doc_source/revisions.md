@@ -1,16 +1,16 @@
 # Document Revisions<a name="revisions"></a>
 
 
-****  
+****
 
-| Date | Change | Location | 
-| --- | --- | --- | 
-| October 2018 | Added support for Exchange Server 2016; added Exchange Edge Transport nodes\. | Throughout doc; architecture diagram and template updates | 
-| March 2018 | Updated Active Directory to use the Windows Server 2016 AMI; updated template parameters\. | Template updates | 
-| September 2015 | In the sample templates, changed the default type for Active Directory and RD Gateway instances from m3\.xlarge to m4\.xlarge for better performance and price\. | Template updates | 
-| August 2015 | Updated DAG guidance and deployment scenarios\. | [Deployment Options](scenarios.md) | 
-| March 2015 | Optimized the underlying Amazon VPC design to support expansion and to reduce complexity\. | Architecture diagram and template updates | 
-| January 2015 | Initial publication | – | 
+| Date | Change | Location |
+| --- | --- | --- |
+| October 2018 | Added support for Exchange Server 2016; added Exchange Edge Transport nodes\. | Throughout doc; architecture diagram and template updates |
+| March 2018 | Updated Active Directory to use the Windows Server 2016 AMI; updated template parameters\. | Template updates |
+| September 2015 | In the sample templates, changed the default type for Active Directory and RD Gateway instances from m3\.xlarge to m4\.xlarge for better performance and price\. | Template updates |
+| August 2015 | Updated DAG guidance and deployment scenarios\. | [Deployment Options](scenarios.md) |
+| March 2015 | Optimized the underlying Amazon VPC design to support expansion and to reduce complexity\. | Architecture diagram and template updates |
+| January 2015 | Initial publication | – |
 
 ## Notices<a name="notices"></a>
 

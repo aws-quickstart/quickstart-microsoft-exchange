@@ -1,5 +1,5 @@
 # quickstart-microsoft-exchange
-## Microsoft Exchange Server on AWS 
+## Microsoft Exchange Server on AWS
 
 Amazon Web Services (AWS) provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. This Quick Start implements a high availability solution built with Microsoft Windows Server and Microsoft Exchange Server running on Amazon Elastic Compute Cloud (Amazon EC2), using the Database Availability Groups (DAGs) feature of Exchange Server.
 
