@@ -758,4 +758,3 @@ Resources:
           - IsTwoAz
           - !Ref 'AWS::NoValue'
           - !Ref 'ExchangeNode3PrivateIP2'
-
