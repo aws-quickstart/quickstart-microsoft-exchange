@@ -16,12 +16,12 @@ try {
     $ErrorActionPreference = "Stop"
     $Path = "C:\Exchangeinstall"
     $filename = $ExchangeDownloadLink.Substring($ExchangeDownloadLink.LastIndexOf("/") + 1)
-    
+
     if($ExchangeServerVersion -eq "2016") {
         $isoPath = $Path + "\" + $filename
         Mount-DiskImage -ImagePath $isoPath
         $driveLetter = (Get-DiskImage $isoPath | Get-Volume).DriveLetter
-        Copy-Item -Path "${driveLetter}:\*" -Destination $Path -Recurse  
+        Copy-Item -Path "${driveLetter}:\*" -Destination $Path -Recurse
     }
     elseif ($ExchangeServerVersion -eq "2019") {
         $isoPath = $Path + "\" + $filename

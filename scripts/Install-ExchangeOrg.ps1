@@ -26,7 +26,7 @@ try {
     $DomainAdminFullUser = $DomainNetBIOSName + '\' + $DomainAdminUser
     $DomainAdminPassword = ConvertFrom-Json -InputObject (Get-SECSecretValue -SecretId $ExUserSecParam).SecretString
     $DomainAdminCreds = (New-Object PSCredential($DomainAdminFullUser,(ConvertTo-SecureString $DomainAdminPassword.Password -AsPlainText -Force)))
-    
+
     $InstallExchPs={
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"

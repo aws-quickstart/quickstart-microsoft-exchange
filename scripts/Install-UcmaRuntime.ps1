@@ -26,7 +26,7 @@ try {
     } while (($retries -lt 6) -and (-not $installed))
     if (-not $installed) {
           throw $exception
-    }    
+    }
 }
 catch {
     $_ | Write-AWSQuickStartException
