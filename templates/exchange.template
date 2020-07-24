@@ -5,7 +5,7 @@ Description: 'This template deploys two Windows Server Failover Clustering (Exch
   an existing VPC that was built using the sample reference architecture titled: "Implementing
   Active Directory Domain Services in the AWS Cloud" **WARNING** This template creates
   Amazon EC2 Windows instance and related resources. You will be billed for the AWS
-  resources used if you create a stack from this template. 2016 QS(0042) / 2019 (000E)'
+  resources used if you create a stack from this template. (qs-1qup6raed)'
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
