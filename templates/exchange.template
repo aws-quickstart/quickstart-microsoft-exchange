@@ -630,7 +630,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -1139,7 +1138,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -1825,7 +1823,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup: {}
         Configure: {}
@@ -2029,7 +2026,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -2602,7 +2598,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
@@ -3249,7 +3244,6 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref ExchangeRole
-          buckets: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         Cleanup:
           commands:
