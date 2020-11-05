@@ -20,6 +20,7 @@ tests:
   exchange2016:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
+      NumberOfRDGWHosts: '0'
       DomainAdminPassword: $[taskcat_genpass_16]
       KeyPairName: $[taskcat_getkeypair]
       RDGWCIDR: 10.0.0.0/16
@@ -43,6 +44,7 @@ tests:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
       DomainAdminPassword: $[taskcat_genpass_16]
+      NumberOfRDGWHosts: '0'
       KeyPairName: $[taskcat_getkeypair]
       RDGWCIDR: 10.0.0.0/16
       IncludeEdgeTransportRole: 'yes'

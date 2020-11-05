@@ -377,6 +377,7 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   NumberOfRDGWHosts:
     AllowedValues:
+      - '0'
       - '1'
       - '2'
       - '3'
@@ -584,6 +585,10 @@ Conditions:
   GovCloudCondition: !Equals
     - !Ref 'AWS::Region'
     - us-gov-west-1
+  IncludeRDGW: !Not
+    - !Equals
+      - !Ref NumberOfRDGWHosts
+      - None
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
   VPCStack:
@@ -654,6 +659,7 @@ Resources:
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
   RDGWStack:
     Type: AWS::CloudFormation::Stack
+    Condition: IncludeRDGW
     Properties:
       TemplateURL:
         Fn::Sub:
