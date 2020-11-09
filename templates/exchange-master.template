@@ -47,6 +47,7 @@ Metadata:
       - Label:
           default: Exchange Server Configuration
         Parameters:
+          - EnableBackups
           - ExchangeServerVersion
           - Exchange2019Source
           - IncludeEdgeTransportRole
@@ -104,9 +105,9 @@ Metadata:
       AvailabilityZones:
         default: Availability Zones
       CertificateArn:
-        default: Application Load Balancer Certificate
+        default: Network Load Balancer Certificate
       DeployLoadBalancer:
-        default: Deploy Application Load Balancer
+        default: Deploy Network Load Balancer
       DomainAdminPassword:
         default: Domain Admin password
       DomainAdminUser:
@@ -115,6 +116,8 @@ Metadata:
         default: Domain DNS name
       DomainNetBIOSName:
         default: Domain NetBIOS name
+      EnableBackups:
+        default: Enable AWS Backups      
       KeyPairName:
         default: Key pair name
       PrivateSubnet1CIDR:
@@ -253,9 +256,9 @@ Parameters:
       You must specify two Availability Zones, unless you specify the Third AZ parameter. In this case, you must specify three Availability Zones.
       The Quick Start preserves the logical order you specify.'
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  EncryptionKmsKey:
+  CertificateArn:
     Default: ''
-    Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.
+    Description: (Conditional) If 'true' was chosen in Deploy Network Load Balancer option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID] format.
     MaxLength: '90'
     Type: String
   DomainAdminPassword:
@@ -292,7 +295,7 @@ Parameters:
       - 'false'
       - 'true'
     Default: 'false'
-    Description: Choose true to deploy an Application Load Balancer (ALB).
+    Description: Choose true to deploy a Network Load Balancer (NLB).
     Type: String
   EdgeInstanceType:
     Description: The Amazon EC2 instance type for the Exchange Edge Transport servers.
@@ -343,9 +346,16 @@ Parameters:
     Default: 'true'
     Description: Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS.
     Type: String
-  CertificateArn:
+  EnableBackups:
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    Default: 'yes'
+    Description: Creates a default daily/weekly backup schedule using AWS Backup
+    Type: String
+  EncryptionKmsKey:
     Default: ''
-    Description: (Conditional) If 'true' was chosen in Deploy Application Load Balancer option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID] format.
+    Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.
     MaxLength: '90'
     Type: String
   ExchangeServerVersion:
@@ -469,8 +479,8 @@ Parameters:
   VolumeIops:
     Default: '1000'
     Description: The provisioned IOPS for the Exchange Data and Logs volumes. This parameter
-      is only applicable when Exchange Server Volume Type is set to "io1".
-    MaxValue: '20000'
+      is only applicable when Exchange Server Volume Type is set to "io2".
+    MaxValue: '64000'
     MinValue: '100'
     Type: Number
   VolumeSize:
@@ -482,7 +492,7 @@ Parameters:
   VolumeType:
     AllowedValues:
       - gp2
-      - io1
+      - io2
     Default: gp2
     Description: The volume type for the Exchange Data and Logs volumes.
     Type: String
@@ -582,9 +592,6 @@ Conditions:
   IsTwoAz: !Equals
     - !Ref 'ThirdAZ'
     - 'no'
-  GovCloudCondition: !Equals
-    - !Ref 'AWS::Region'
-    - us-gov-west-1
   IncludeRDGW: !Not
     - !Equals
       - !Ref NumberOfRDGWHosts
@@ -719,6 +726,7 @@ Resources:
         EdgeNode1PrivateIP1: !Ref 'EdgeNode1PrivateIP1'
         EdgeNode2NetBIOSName: !Ref 'EdgeNode2NetBIOSName'
         EdgeNode2PrivateIP1: !Ref 'EdgeNode2PrivateIP1'
+        EnableBackups: !Ref 'EnableBackups'
         EncryptionKmsKey: !Ref 'EncryptionKmsKey'
         Exchange2019Source: !Ref 'Exchange2019Source'
         ExchangeServerVersion: !Ref 'ExchangeServerVersion'

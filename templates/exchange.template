@@ -58,6 +58,7 @@ Metadata:
       - VolumeIops
       - Exchange2016Source
       - Exchange2019Source
+      - EnableBackups
     - Label:
         default: Load Balancer Configuration
       Parameters:
@@ -93,9 +94,9 @@ Metadata:
       ADServer2NetBIOSName:
         default: Domain Controller 2 NetBIOS name
       CertificateArn:
-        default: Application Load Balancer Certificate
+        default: Network Load Balancer Certificate
       DeployLoadBalancer:
-        default: Deploy Application Load Balancer
+        default: Deploy Network Load Balancer
       DomainAdminPassword:
         default: Domain Admin password
       DomainAdminUser:
@@ -116,6 +117,8 @@ Metadata:
         default: Encrypt Data volumes
       EncryptionKmsKey:
         default: KMS key to encrypt volumes
+      EnableBackups:
+        default: Enable AWS Backups
       Exchange2016Source:
         default: Path to Exchange 2016 ISO
       Exchange2019Source:
@@ -220,7 +223,7 @@ Parameters:
     Type: String
   CertificateArn:
     Default: ''
-    Description: (Conditional) If 'true' was chosen in Deploy Application Load Balancer
+    Description: (Conditional) If 'true' was chosen in Deploy Network Load Balancer
       option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID]
       format.
     MaxLength: '90'
@@ -230,7 +233,7 @@ Parameters:
     - 'false'
     - 'true'
     Default: 'false'
-    Description: Choose true to deploy an Application Load Balancer (ALB).
+    Description: Choose true to deploy an Network Load Balancer (NLB).
     Type: String
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
@@ -310,6 +313,13 @@ Parameters:
     Default: 10.0.144.12
     Description: The primary private IP for the second Edge Server located in Availability
       Zone 2.
+    Type: String
+  EnableBackups:
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    Default: 'yes'
+    Description: Creates a default daily/weekly backup schedule using AWS Backup
     Type: String
   EnableReFSVolumes:
     AllowedValues:
@@ -427,8 +437,8 @@ Parameters:
   VolumeIops:
     Default: '1000'
     Description: The Iops for the Exchange Data drive (Only used when volume type
-      is io1).
-    MaxValue: '20000'
+      is io2).
+    MaxValue: '64000'
     MinValue: '100'
     Type: Number
   VolumeSize:
@@ -440,7 +450,7 @@ Parameters:
   VolumeType:
     AllowedValues:
     - gp2
-    - io1
+    - io2
     Default: gp2
     Description: The volume type for the Exchange data drive.
     Type: String
@@ -536,7 +546,7 @@ Parameters:
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
     Description: The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
   Exchange2016Source:
-    Default: 'https://download.microsoft.com/download/f/4/e/f4e4b3a0-925b-4eff-8cc7-8b5932d75b49/ExchangeServer2016-x64-cu14.iso'
+    Default: 'https://download.microsoft.com/download/d/2/3/d23b113b-9634-4456-acba-1f7b0ce22b0e/ExchangeServer2016-x64-cu18.iso'
     Description: Full URL (including https://) for Exchange 2016 ISO.
     MaxLength: '2000'
     MinLength: '1'
@@ -561,10 +571,6 @@ Conditions:
     !Equals
     - !Ref ExchangeServerVersion
     - '2016'
-  GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
   EncryptionKmsKeySelected:
     !Not
     - !Equals
@@ -591,10 +597,14 @@ Conditions:
     !Equals
     - !Ref EnableReFSVolumes
     - 'true'
-  VolIsIo1:
+  VolIsio2:
     !Equals
     - !Ref VolumeType
-    - io1
+    - io2
+  EnableBackups:
+    !Equals
+    - !Ref EnableBackups
+    - 'yes'
 Rules:
   SubnetsInVPC:
     Assertions:
@@ -610,7 +620,6 @@ Mappings:
     UCMA:
       ALL: https://download.microsoft.com/download/2/C/4/2C47A5C1-A1F3-4843-B9FE-84C0032C61EC/UcmaRuntimeSetup.exe
     NetFramework:
-      v472: https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe
       v48: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
     VisualCRuntime:
       2012x64: https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe
@@ -1770,17 +1779,6 @@ Resources:
         FromPort: 25
         ToPort: 25
         CidrIp: 0.0.0.0/0
-  LoadBalancerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Condition: DeployLoadBalancer
-    Properties:
-      GroupDescription: Allow https to the load balancer
-      VpcId: !Ref VPCID
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
   FileServerWaitCondition:
     Condition: IsTwoNode
     DependsOn: FileServer
@@ -2566,6 +2564,8 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode1NetBIOSName
+      - Key: Backup
+        Value: !If [EnableBackups, 'yes', 'no']
       Tenancy: default
       UserData:
         !Base64
@@ -3219,6 +3219,8 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode2NetBIOSName
+      - Key: Backup
+        Value: !If [EnableBackups, 'yes', 'no']
       Tenancy: default
       UserData:
         !Base64
@@ -3739,6 +3741,8 @@ Resources:
       Tags:
       - Key: Name
         Value: !Ref ExchangeNode3NetBIOSName
+      - Key: Backup
+        Value: !If [EnableBackups, 'yes', 'no']
       Tenancy: default
       UserData:
         !Base64
@@ -3765,8 +3769,6 @@ Resources:
     - ExchangeNode2WaitCondition
     Properties:
       Scheme: internal
-      SecurityGroups:
-      - !Ref LoadBalancerSecurityGroup
       Subnets:
         !If
         - ThirdAzIsFullNode
@@ -3775,24 +3777,21 @@ Resources:
           - !Ref PrivateSubnet3ID
         - - !Ref PrivateSubnet1ID
           - !Ref PrivateSubnet2ID
-      Type: application
+      Type: network
   TargetGroup:
     Condition: DeployLoadBalancer
     DependsOn:
     - loadBalancer
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 60
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 5
-      HealthCheckPath: /owa/auth/logon.aspx
-      HealthCheckProtocol: HTTPS
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      HealthCheckProtocol: TCP
       HealthCheckPort: '443'
-      Matcher:
-        HttpCode: '200'
       Name: ExchangeNodes
       Port: 443
-      Protocol: HTTPS
+      Protocol: TLS
       TargetGroupAttributes:
       - Key: deregistration_delay.timeout_seconds
         Value: '20'
@@ -3809,7 +3808,7 @@ Resources:
             Port: '443'
           - Id: !Ref ExchangeNode2
             Port: '443'
-      UnhealthyThresholdCount: 5
+      UnhealthyThresholdCount: 3
       VpcId: !Ref VPCID
   Listener:
     Condition: DeployLoadBalancer
@@ -3820,7 +3819,7 @@ Resources:
         TargetGroupArn: !Ref TargetGroup
       LoadBalancerArn: !Ref loadBalancer
       Port: 443
-      Protocol: HTTPS
+      Protocol: TLS
       Certificates:
       - CertificateArn: !Ref CertificateArn
       SslPolicy: ELBSecurityPolicy-2016-08
@@ -3829,7 +3828,7 @@ Resources:
       AvailabilityZone: !GetAtt ExchangeNode1.AvailabilityZone
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Encrypted:
@@ -3866,7 +3865,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -3890,7 +3889,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -3914,7 +3913,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -3939,7 +3938,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -3964,7 +3963,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsIo1
+        - VolIsio2
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -4020,6 +4019,71 @@ Resources:
       IpProtocol: '-1'
       SourceSecurityGroupId: !Ref ExchangeSecurityGroup
     Type: AWS::EC2::SecurityGroupIngress
+  BackupEncryptionKmsKey:
+    Type: AWS::KMS::Key
+    Condition: EnableBackups
+    Properties:
+      Description: "Encryption key Exchange backups"
+      EnableKeyRotation: True
+      Enabled: True
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              "AWS": !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action:
+              - kms:*
+            Resource: "*"
+  ExchangeBackupVault:
+    Type: "AWS::Backup::BackupVault"
+    Condition: EnableBackups
+    Properties:
+      BackupVaultName: "exchange-backup-vault"
+      EncryptionKeyArn: !GetAtt BackupEncryptionKmsKey.Arn
+  ExchangeBackupPlan:
+    Type: "AWS::Backup::BackupPlan"
+    Condition: EnableBackups
+    Properties:
+      BackupPlan:
+        BackupPlanName: "BackupPlanWithThinBackups"
+        AdvancedBackupSettings:
+          - 
+            ResourceType: 'EC2'
+            BackupOptions:
+              WindowsVSS: 'enabled'          
+        BackupPlanRule:
+          -
+            RuleName: "DailyBackups"
+            TargetBackupVault: !Ref ExchangeBackupVault
+            ScheduleExpression: "cron(0 5 ? * * *)"
+            Lifecycle:
+              DeleteAfterDays: 7
+          -
+            RuleName: "WeeklyBackups"
+            TargetBackupVault: !Ref ExchangeBackupVault
+            ScheduleExpression: "cron(0 5 ? * 1 *)"
+            Lifecycle:
+              DeleteAfterDays: 28
+          -
+            RuleName: "MonthlyBackups"
+            TargetBackupVault: !Ref ExchangeBackupVault
+            ScheduleExpression: "cron(0 5 1 * ? *)"
+            Lifecycle:
+              DeleteAfterDays: 90
+  ExchangeBackupSelection:
+    Type: "AWS::Backup::BackupSelection"
+    Condition: EnableBackups
+    Properties:
+      BackupSelection:
+        SelectionName: "TagBasedBackupSelection"
+        IamRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/service-role/AWSBackupDefaultServiceRole"
+        ListOfTags:
+         -
+           ConditionType: "STRINGEQUALS"
+           ConditionKey: "Backup"
+           ConditionValue: "yes"
+      BackupPlanId: !Ref ExchangeBackupPlan
 Outputs:
   DomainAdmin:
     Description: Domain administrator account
