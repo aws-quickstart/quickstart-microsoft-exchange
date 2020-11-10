@@ -1,0 +1,98 @@
+
+.Network Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Availability Zones
+(`AvailabilityZones`)|`**__Requires input__**`|List of Availability Zones to use for the subnets in the VPC. Note: You must specify two Availability Zones, unless you specify the Third AZ parameter. In this case, you must specify three Availability Zones. The Quick Start preserves the logical order you specify.|Number of Availability Zones
+(`NumberOfAZs`)|`2`|Number of Availability Zones to use in the VPC. This must match your selections in the list of Availability Zones parameter.|Third Availability Zone
+(`ThirdAZ`)|`no`|Enable a 3 AZ deployment, the 3rd AZ can either be used just for the witness, or can be a full Exchange node. Note that if witness is chosen, the WFC File Server Private IP Address parameter must be set to an IP in the 3rd subnet range.|VPC CIDR
+(`VPCCIDR`)|`10.0.0.0/16`|CIDR Block for the VPC.|Public Subnet 1 CIDR
+(`PublicSubnet1CIDR`)|`10.0.128.0/20`|CIDR Block for the public DMZ subnet 1 located in Availability Zone 1.|Public Subnet 2 CIDR
+(`PublicSubnet2CIDR`)|`10.0.144.0/20`|CIDR Block for the public DMZ subnet 2 located in Availability Zone 2.|Public Subnet 3 CIDR
+(`PublicSubnet3CIDR`)|`10.0.160.0/20`|(Optional) CIDR Block for the public DMZ subnet 3 located in Availability Zone 3.|Private Subnet 1 CIDR
+(`PrivateSubnet1CIDR`)|`10.0.0.0/19`|CIDR Block for private subnet 1 located in Availability Zone 1.|Private Subnet 2 CIDR
+(`PrivateSubnet2CIDR`)|`10.0.32.0/19`|CIDR Block for private subnet 2 located in Availability Zone 2.|Private Subnet 3 CIDR
+(`PrivateSubnet3CIDR`)|`10.0.64.0/19`|(Optional) CIDR Block for private subnet 3 located in Availability Zone 3.
+|===
+.Amazon EC2 Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Key pair name
+(`KeyPairName`)|`**__Requires input__**`|Public/private key pairs allow you to securely connect to your instance after it launches.
+|===
+.Microsoft Active Directory Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Domain DNS name
+(`DomainDNSName`)|`example.com`|The fully qualified domain name (FQDN) of the forest root domain e.g. example.com.|Domain NetBIOS name
+(`DomainNetBIOSName`)|`example`|The NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE.|Domain Admin user name
+(`DomainAdminUser`)|`StackAdmin`|The user name for the account that will be added as Domain Administrator. This is separate from the default Administrator account.|Domain Admin password
+(`DomainAdminPassword`)|`**__Requires input__**`|The password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols.|Domain Controller 1 instance type
+(`ADServer1InstanceType`)|`m5.xlarge`|The Amazon EC2 instance type for the first Active Directory instance.|Domain Controller 1 NetBIOS name
+(`ADServer1NetBIOSName`)|`DC1`|The NetBIOS name of the first Active Directory server (up to 15 characters).|Domain Controller 1 private IP address
+(`ADServer1PrivateIP`)|`10.0.0.10`|The private IP for the first Active Directory server located in Availability Zone 1.|Domain Controller 2 instance type
+(`ADServer2InstanceType`)|`m5.xlarge`|The Amazon EC2 instance type for the second Active Directory instance.|Domain Controller 2 NetBIOS name
+(`ADServer2NetBIOSName`)|`DC2`|The NetBIOS name of the second Active Directory server (up to 15 characters).|Domain Controller 2 private IP address
+(`ADServer2PrivateIP`)|`10.0.32.10`|The private IP for the second Active Directory server located in Availability Zone 2.
+|===
+.Remote Desktop Gateway Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Allowed Remote Desktop Gateway external access CIDR
+(`RDGWCIDR`)|`**__Requires input__**`|The allowed CIDR Block for external access to the Remote Desktop Gateways.|Remote Desktop Gateway instance type
+(`RDGWInstanceType`)|`t2.large`|The Amazon EC2 instance type for the Remote Desktop Gateway instances.|Number of RDGW Hosts
+(`NumberOfRDGWHosts`)|`1`|The number of Remote Desktop Gateway hosts to create.
+|===
+.Exchange Server Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Enable AWS Backups
+(`EnableBackups`)|`yes`|Creates a default daily/weekly backup schedule using AWS Backup|Exchange Server version
+(`ExchangeServerVersion`)|`2016`|Version of Exchange Server to install. Options include either "2016" or "2019".|Exchange Server 2019 source (ISO)
+(`Exchange2019Source`)|`https://`|(Optional) Full URL (including https://) for Exchange 2019 ISO.|Deploy Edge servers
+(`IncludeEdgeTransportRole`)|`no`|Choose yes to deploy Exchange Edge Transport servers in the public subnets.|Edge Role instance type
+(`EdgeInstanceType`)|`m5.large`|The Amazon EC2 instance type for the Exchange Edge Transport servers.|Edge Node 1 NetBIOS name
+(`EdgeNode1NetBIOSName`)|`EdgeNode1`|The NetBIOS name of the first Edge server (up to 15 characters).|Edge Node 1 private IP address
+(`EdgeNode1PrivateIP1`)|`10.0.128.12`|The primary private IP for the first Edge server located in Availability Zone 1.|Edge Node 2 NetBIOS name
+(`EdgeNode2NetBIOSName`)|`EdgeNode2`|The NetBIOS name of the second Edge server (up to 15 characters).|Edge Node 2 private IP address
+(`EdgeNode2PrivateIP1`)|`10.0.144.12`|The primary private IP for the second Edge server located in Availability Zone 1.|Enable or disable ReFS
+(`EnableReFSVolumes`)|`true`|Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS.|Encrypt data volumes
+(`EncryptDataVolumes`)|`false`|Choose true to encrypt the data and log volumes on Exchange nodes.|KMS key to encrypt volumes
+(`EncryptionKmsKey`)|`**__Blank string__**`|(Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.|Exchange Server volume IOPS
+(`VolumeIops`)|`1000`|The provisioned IOPS for the Exchange Data and Logs volumes. This parameter is only applicable when Exchange Server Volume Type is set to "io2".|Exchange Server volume size (GiB)
+(`VolumeSize`)|`500`|The volume size for the Exchange Data and Logs volumes.|Exchange Server volume type
+(`VolumeType`)|`gp2`|The volume type for the Exchange Data and Logs volumes.
+|===
+.Load Balancer Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Deploy Network Load Balancer
+(`DeployLoadBalancer`)|`false`|Choose true to deploy a Network Load Balancer (NLB).|Network Load Balancer Certificate
+(`CertificateArn`)|`**__Blank string__**`|(Conditional) If 'true' was chosen in Deploy Network Load Balancer option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID] format.
+|===
+.Failover Cluster Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Instance type for Exchange nodes
+(`ExchangeNodeInstanceType`)|`r5.xlarge`|The Amazon EC2 instance type for the Exchange nodes.|Exchange Node 1 NetBIOS name
+(`ExchangeNode1NetBIOSName`)|`ExchangeNode1`|The NetBIOS name of the first Exchange node (up to 15 characters).|Exchange Node 1 private IP address 1
+(`ExchangeNode1PrivateIP1`)|`10.0.0.100`|The primary private IP for Exchange node 1.|Exchange Node 1 private IP address 2
+(`ExchangeNode1PrivateIP2`)|`10.0.0.101`|The secondary private IP for Exchange node 1.|Exchange Node 2 NetBIOS name
+(`ExchangeNode2NetBIOSName`)|`ExchangeNode2`|The NetBIOS name of the second Exchange node (up to 15 characters).|Exchange Node 2 private IP address 1
+(`ExchangeNode2PrivateIP1`)|`10.0.32.100`|The primary private IP for Exchange node 2.|Exchange Node 2 private IP address 2
+(`ExchangeNode2PrivateIP2`)|`10.0.32.101`|The secondary private IP for Exchange node 2.|Exchange Node 3 NetBIOS name
+(`ExchangeNode3NetBIOSName`)|`ExchangeNode3`|(Optional) The NetBIOS name of the third Exchange node (up to 15 characters).|Exchange Node 3 private IP address 1
+(`ExchangeNode3PrivateIP1`)|`10.0.64.100`|(Optional) The primary private IP for the Exchange node 3.|Exchange Node 3 private IP address 2
+(`ExchangeNode3PrivateIP2`)|`10.0.64.101`|(Optional) The secondary private IP for the Exchange node 3.|File Server instance type
+(`FileServerInstanceType`)|`t3.small`|The Amazon EC2 instance type for the file-share witness server.|File Server NetBIOS name
+(`FileServerNetBIOSName`)|`FileServer`|The NetBIOS name of the file-share witness server (up to 15 characters).|File Server private IP address
+(`FileServerPrivateIP`)|`10.0.0.200`|The primary private IP for the file-share witness server.
+|===
+.AWS Quick Start Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Quick Start S3 bucket name
+(`QSS3BucketName`)|`aws-quickstart`|The S3 bucket you’ve created for your copy of Quick Start assets, if you decide to customize or extend the Quick Start for your own use. The bucket name can include numbers, lowercase letters, uppercase letters, and hyphens, but should not start or end with a hyphen.|Quick Start S3 key prefix
+(`QSS3KeyPrefix`)|`quickstart-microsoft-exchange/`|The S3 key name prefix used to simulate a folder for your copy of Quick Start assets, if you decide to customize or extend the Quick Start for your own use. This prefix can include numbers, lowercase letters, uppercase letters, hyphens, and forward slashes, but should not start or end with a forward slash (which is automatically added).|Quick Start S3 bucket region
+(`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
+|===

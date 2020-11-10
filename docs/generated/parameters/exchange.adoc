@@ -1,0 +1,92 @@
+
+.Network Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Third Availability Zone
+(`ThirdAZ`)|`no`|Enables you to deploy three Availability Zones. The third Availability Zone can either be used just for the witness, or can be a full Exchange node. If you use the Availability Zone for the witness, you must set the File Server Private IP Address parameter to an IP in the third subnet range.|VPC for Exchange deployment
+(`VPCID`)|`**__Requires input__**`|The ID of the VPC (e.g., vpc-0343606e).|CIDR block of VPC
+(`VPCCidrBlock`)|`10.0.0.0/16`|The CIDR block for the VPC.|Private Subnet 1 ID
+(`PrivateSubnet1ID`)|`**__Requires input__**`|The ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd).|Private Subnet 1 CIDR
+(`PrivateSubnet1CIDR`)|`10.0.0.0/19`|The CIDR block for the private subnet 1 located in Availability Zone 1.|Private Subnet 2 ID
+(`PrivateSubnet2ID`)|`**__Requires input__**`|The ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd).|Private Subnet 2 CIDR
+(`PrivateSubnet2CIDR`)|`10.0.32.0/19`|The CIDR block for the private subnet 2 located in Availability Zone 2.|Private Subnet 3 ID
+(`PrivateSubnet3ID`)|`**__Blank string__**`|(Optional) The ID of the private subnet 3 in Availability Zone 3 (e.g., subnet-a0246dcd)|Private Subnet 3 CIDR
+(`PrivateSubnet3CIDR`)|`10.0.64.0/19`|(Optional) The CIDR block for private subnet 3 located in Availability Zone 3.|Public Subnet 1 ID
+(`PublicSubnet1ID`)|`**__Requires input__**`|(Optional) The ID of the public subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd).|Public Subnet 2 ID
+(`PublicSubnet2ID`)|`**__Requires input__**`|(Optional) The ID of the public subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd).
+|===
+.Amazon EC2 Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Key Pair Name
+(`KeyPairName`)|`**__Requires input__**`|The public/private key pair, which allows you to connect securely to your instance after it launches. When you created an AWS account, this is the key pair you created in your preferred region.|Windows Server 2016 AMI name
+(`WS2016FULLBASE`)|`/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base`|The image name for the AWS Systems Manager Windows Server 2016 AMI ID lookup|Windows Server 2019 AMI name
+(`WS2019FULLBASE`)|`/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base`|The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
+|===
+.Microsoft Active Directory Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Domain DNS name
+(`DomainDNSName`)|`example.com`|The fully qualified domain name (FQDN) of the forest root domain (e.g. example.com).|Domain NetBIOS name
+(`DomainNetBIOSName`)|`EXAMPLE`|The NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (e.g. EXAMPLE).|Domain Admin user name
+(`DomainAdminUser`)|`StackAdmin`|The user name for the account that will be used as Domain Administrator. This is separate from the default "Administrator" account.|Domain Admin password
+(`DomainAdminPassword`)|`**__Requires input__**`|The password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols.|Domain Controller 1 NetBIOS name
+(`ADServer1NetBIOSName`)|`DC1`|The NetBIOS name of the first Active Directory server (up to 15 characters).|Domain Controller 1 private IP address
+(`ADServer1PrivateIP`)|`10.0.0.10`|The private IP for the first Active Directory server located in Availability Zone 1.|Domain Controller 2 NetBIOS name
+(`ADServer2NetBIOSName`)|`DC2`|The NetBIOS name of the second Active Directory server (up to 15 characters).|Security Group ID for AD domain members
+(`DomainMemberSGID`)|`**__Requires input__**`|The ID of the Domain Member Security Group (e.g., sg-7f16e910).
+|===
+.Microsoft Exchange Server Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Exchange Server version
+(`ExchangeServerVersion`)|`2016`|Version of Exchange Server to install. Options include either "2016" or "2019"|Deploy Edge servers
+(`IncludeEdgeTransportRole`)|`no`|Choose yes to deploy Exchange Edge Transport servers in the public subnets.|Instance type for Edge server
+(`EdgeInstanceType`)|`t3.large`|The Amazon EC2 instance type for the Exchange Edge Transport servers.|Edge Node 1 NetBIOS Name
+(`EdgeNode1NetBIOSName`)|`EdgeNode1`|The NetBIOS name of the first Edge Server (up to 15 characters).|Edge Node 1 private IP address
+(`EdgeNode1PrivateIP1`)|`10.0.128.12`|The primary private IP for the first Edge Server located in Availability Zone 1.|Edge Node 2 NetBIOS name
+(`EdgeNode2NetBIOSName`)|`EdgeNode2`|The NetBIOS name of the second Edge Server (up to 15 characters).|Edge Node 2 private IP address
+(`EdgeNode2PrivateIP1`)|`10.0.144.12`|The primary private IP for the second Edge Server located in Availability Zone 2.|Enable or disable ReFS
+(`EnableReFSVolumes`)|`true`|Choose false to format the data and log volumes on Exchange nodes using NTFS instead of ReFS.|Encrypt Data volumes
+(`EncryptDataVolumes`)|`false`|Choose true to encrypt the data and log volumes on Exchange nodes.|KMS key to encrypt volumes
+(`EncryptionKmsKey`)|`**__Blank string__**`|(Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID]. Leave blank to use default EBS encryption key.|Data Volume size (GiB)
+(`VolumeSize`)|`500`|The volume size for the Exchange data drive.|Data Volume type
+(`VolumeType`)|`gp2`|The volume type for the Exchange data drive.|Data Volume IOPS
+(`VolumeIops`)|`1000`|The Iops for the Exchange Data drive (Only used when volume type is io2).|Path to Exchange 2016 ISO
+(`Exchange2016Source`)|`https://download.microsoft.com/download/d/2/3/d23b113b-9634-4456-acba-1f7b0ce22b0e/ExchangeServer2016-x64-cu18.iso`|Full URL (including https://) for Exchange 2016 ISO.|Path to Exchange 2019 ISO
+(`Exchange2019Source`)|`https://`|Full URL (including https://) for Exchange 2019 ISO.|Enable AWS Backups
+(`EnableBackups`)|`yes`|Creates a default daily/weekly backup schedule using AWS Backup
+|===
+.Load Balancer Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Deploy Network Load Balancer
+(`DeployLoadBalancer`)|`false`|Choose true to deploy an Network Load Balancer (NLB).|Network Load Balancer Certificate
+(`CertificateArn`)|`**__Blank string__**`|(Conditional) If 'true' was chosen in Deploy Network Load Balancer option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID] format.
+|===
+.Failover Cluster Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|File Server instance type
+(`FileServerInstanceType`)|`t3.small`|The Amazon EC2 instance type for the file-share witness server.|File Server NetBIOS name
+(`FileServerNetBIOSName`)|`FileServer`|The NetBIOS name of the file-share witness server (up to 15 characters).|File Server private IP address
+(`FileServerPrivateIP`)|`10.0.0.200`|The primary private IP for the file-share witness server.|Instance type for Exchange nodes
+(`ExchangeNodeInstanceType`)|`r5.xlarge`|The Amazon EC2 instance type for the Exchange nodes.|Exchange Node 1 NetBIOS name
+(`ExchangeNode1NetBIOSName`)|`ExchangeNode1`|The NetBIOS name of the first Exchange Node (up to 15 characters).|Exchange Node 1 private IP address 1
+(`ExchangeNode1PrivateIP1`)|`10.0.0.100`|The primary private IP for Exchange node 1.|Exchange Node 1 private IP address 2
+(`ExchangeNode1PrivateIP2`)|`10.0.0.101`|The secondary private IP for Exchange node 1.|Exchange Node 2 NetBIOS name
+(`ExchangeNode2NetBIOSName`)|`ExchangeNode2`|The NetBIOS name of the second Exchange Node (up to 15 characters).|Exchange Node 2 private IP address 1
+(`ExchangeNode2PrivateIP1`)|`10.0.32.100`|The primary private IP for Exchange node 2.|Exchange Node 2 private IP address 2
+(`ExchangeNode2PrivateIP2`)|`10.0.32.101`|The secondary private IP for Exchange node 2.|Exchange Node 3 NetBIOS Name
+(`ExchangeNode3NetBIOSName`)|`ExchangeNode3`|(Optional) The NetBIOS name of the third Exchange node (up to 15 characters).|Exchange Node 3 private IP address 1
+(`ExchangeNode3PrivateIP1`)|`10.0.64.100`|(Optional) The primary private IP for the Exchange node 3.|Exchange Node 3 private IP address 2
+(`ExchangeNode3PrivateIP2`)|`10.0.64.101`|(Optional) The secondary private IP for the Exchange node 3.
+|===
+.AWS Quick Start Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Quick Start S3 Bucket Name
+(`QSS3BucketName`)|`aws-quickstart`|S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|Quick Start S3 bucket region
+(`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.|Quick Start S3 Key Prefix
+(`QSS3KeyPrefix`)|`quickstart-microsoft-exchange/`|S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
+|===
