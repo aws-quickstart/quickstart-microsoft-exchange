@@ -18,13 +18,13 @@ Deploying this Quick Start for a new virtual private cloud (VPC) with default pa
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/image1.png[Architecture,width=648,height=418]
+image::../images/image1.png[Architecture,width=100%,height=100%]
 
 You can also choose to build an architecture with three Availability Zones, as shown in the following figure:
 
 [#architecture2]
 .Quick Start architecture for {partner-product-short-name} across three Availability Zones on AWS
-image::../images/image2.png[Architecture,width=648,height=329]
+image::../images/image2.png[Architecture,width=100%,height=100%]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
