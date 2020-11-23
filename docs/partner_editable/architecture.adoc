@@ -2,7 +2,7 @@ Before you deploy the template in this Quick Start, decide whether to use two Av
 
 By default, the Exchange Server Quick Start uses two Availability Zones, with one Exchange node in each zone. The file share witness is launched in the same Availability Zone as the first Exchange node.
 
-*Note* Where possible, we recommend deploying the Exchange Server Quick Start using three Availability Zones. This enables automatic failover of database availability groups (DAGs), without the need for manual intervention.
+*Note*: Where possible, we recommend deploying the Exchange Server Quick Start using three Availability Zones. This enables automatic failover of database availability groups (DAGs), without the need for manual intervention.
 
 You can deploy a full Exchange node instead of a file share witness. In addition, you can specify whether to deploy the full node or the file share witness in a third Availability Zone.
 
@@ -80,7 +80,7 @@ image::../images/image3.png[Architecture,width=521,height=172]
 Depending on the instance type selected, you might see additional drives for instance store (ephemeral) volumes such as (Z:). Data on instance storage will be lost when you stop your EC2 instance.
 
 [[ip-addresses-on-the-exchange-nodes]]
-==== IP Addresses on the Exchange Nodes
+==== IP Addresses on the Exchange nodes
 
 By default, the Microsoft Exchange Quick Start template deploys two Exchange nodes with two IP addresses each:
 
@@ -114,7 +114,7 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 -MailboxServer ExchangeNode2
 ----
 
-*Note* By default, the database availability group is created with the name DAG. To change this value, modify the DAGName default parameter value in the Configure-ExchangeDAG.ps1 file.
+*Note*: By default, the database availability group is created with the name DAG. To change this value, modify the DAGName default parameter value in the Configure-ExchangeDAG.ps1 file.
 
 The first command runs on each instance during the bootstrapping process. It installs the required components and management tools for the failover clustering services. The rest of the commands run near the end of the bootstrapping process on the second node and are responsible for creating the cluster and for defining the server nodes and IP addresses.
 
@@ -144,7 +144,7 @@ Copy the subscription file to a *mailbox* server, and import the subscription by
 New-EdgeSubscription -FileData ([byte[]]$(Get-Content -Path "C:\EdgeServerSubscription.xml" -Encoding Byte -ReadCount 0)) -Site "AZ1"
 
 [[load-balancer]]
-==== Load Balancer
+==== Load balancer
 
 Exchange servers running with the Client Access/Transport roles are usually situated behind a network load balancer (NLB) with a unified Exchange namespace such as “mail.example.com.” The namespace resolves to the load balancer, which in turns distributes traffic to the Exchange servers.
 
