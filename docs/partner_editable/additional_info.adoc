@@ -4,7 +4,7 @@
 == Post-deployment steps
 // If post-deployment steps are required, add them here. If not, remove the heading
 
-=== (Optional) Create Database Copies
+=== (Optional) Create database copies
 
 The Quick Start creates a database availability group (DAG) and adds the Exchange nodes to the DAG. As part of the Exchange installation, each Exchange node contains a mailbox database. The first node contains a database called DB1, and the second node contains a database called DB2.
 
@@ -18,7 +18,7 @@ Add-MailboxDatabaseCopy -Identity DB1 –MailboxServer ExchangeNode2 -Activation
 Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -ActivationPreference 2
 ----
 
-=== (Optional) Create a DNS Entry for the Load Balancer
+=== (Optional) Create a DNS entry for the load balancer
 
 1.  If you chose the option to deploy a load balancer, the Network Load Balancer (NLB) will have an endpoint address such as [elb.amazonaws.com].
 2.  To use the load balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the ALB.
@@ -66,14 +66,14 @@ image::../images/image10.png[Architecture,width=647,height=278]
 The architecture built by this Quick Start supports AWS best practices for high availability and security.
 
 [[high-availability-and-disaster-recovery]]
-=== High Availability and Disaster Recovery
+=== High availability and disaster recovery
 
 Amazon EC2 provides the ability to place instances in multiple locations composed of AWS Regions and Availability Zones. Regions are dispersed and located in separate geographic areas. Availability Zones are distinct locations within a Region that are engineered to be isolated from failures in other Availability Zones and that provide inexpensive, low-latency network connectivity to other Availability Zones in the same Region.
 
 By launching your instances in separate Regions, you can design your application to be closer to specific customers or to meet legal or other requirements. By launching your instances in separate Availability Zones, you can protect your applications from the failure of a single location. Exchange provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.
 
 [[automatic-failover]]
-=== Automatic Failover
+=== Automatic failover
 
 Deploying the Quick Start with the *default parameters* configures a two-node database availability group (DAG) with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.
 
@@ -90,7 +90,7 @@ The Quick Start also provides an option to deploy into three Availability Zones.
 We recommend that you consult the https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019[Microsoft Exchange Server documentation] and customize some of the steps described in this guide or add ones (e.g., deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that best meets your business, IT, and security requirements.
 
 [[security-groups-and-firewalls]]
-=== Security Groups and Firewalls
+=== Security groups and firewalls
 
 When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.
 
