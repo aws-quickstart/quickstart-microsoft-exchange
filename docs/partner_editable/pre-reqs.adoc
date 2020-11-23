@@ -16,4 +16,4 @@ Improper path:
 
 https://[yourbucket].s3-us-east-1.amazonaws.com/SW_DVD9_Exchange_Svr_2019.zip
 
-*Note* We recommend uploading the Exchange 2019 installation media to an S3 bucket and temporarily making the installation media public. This will ensure that the file is quickly downloaded to the EC2 instances.
+*Note*: Upload the Exchange 2019 installation media to an S3 bucket and temporarily make the installation media public. This will ensure that the file is quickly downloaded to the EC2 instances.
