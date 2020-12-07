@@ -659,7 +659,6 @@ Resources:
         DomainAdminUser: !Ref 'DomainAdminUser'
         DomainDNSName: !Ref 'DomainDNSName'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
-        EntCaServerSubnet: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         KeyPairName: !Ref 'KeyPairName'
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
