@@ -4,6 +4,15 @@
 == Post-deployment steps
 // If post-deployment steps are required, add them here. If not, remove the heading
 
+=== Apply security update for Microsoft Exchange Server 2019, and 2016: March 2, 2021 (KB5000871)
+
+On March 2, 2021, Microsoft identified https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/[several 0-day exploits targeting on-premises Exchange servers]. The patches for these 0-day exploits are available from Microsoft Windows Update or to download from https://support.microsoft.com/en-us/topic/description-of-the-security-update-for-microsoft-exchange-server-2019-2016-and-2013-march-2-2021-kb5000871-9800a6bb-0a21-4ee7-b9da-fa85b3e1d23b[the Microsoft support website], but are not included in the latest Exchange Cumulative Update packages. Once your Exchange environment has been deployed you will need to install these patches manually.
+
+* Launch Microsoft Windows Update on each deployed Exchange server and download and install all available updates; or
+* Download the patches and manually deploy them
+** For Exchange 2019 CU8, download from https://www.microsoft.com/download/details.aspx?familyid=18c75641-e53d-4979-8d5e-29a80674e41f[here].
+** For Exchange 2016 CU19, download from https://www.microsoft.com/download/details.aspx?familyid=31211a48-0cef-462e-bb11-c36440f80bb3[here].
+
 === (Optional) Create database copies
 
 The Quick Start creates a database availability group (DAG) and adds the Exchange nodes to the DAG. As part of the Exchange installation, each Exchange node contains a mailbox database. The first node contains a database called DB1, and the second node contains a database called DB2.
