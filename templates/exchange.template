@@ -549,7 +549,7 @@ Parameters:
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
     Description: The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
   Exchange2016Source:
-    Default: 'https://download.microsoft.com/download/d/2/3/d23b113b-9634-4456-acba-1f7b0ce22b0e/ExchangeServer2016-x64-cu18.iso'
+    Default: 'https://download.microsoft.com/download/a/8/4/a84c8458-c924-4e6d-a19b-be65848c0fe3/ExchangeServer2016-x64-CU19.ISO'
     Description: Full URL (including https://) for Exchange 2016 ISO.
     MaxLength: '2000'
     MinLength: '1'
@@ -660,7 +660,16 @@ Resources:
             a-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
-            b-signal-success:
+            b-install-patch:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                    -ExchangeServerVersion '
+                  - !Ref ExchangeServerVersion
+                  - '''"'
+              waitAfterCompletion: '0'
+            c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
         Install:
           commands:
@@ -861,6 +870,19 @@ Resources:
                   - '''"'
               waitAfterCompletion: '0'
           files:
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
@@ -1168,7 +1190,16 @@ Resources:
             a-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
-            b-signal-success:
+            b-install-patch:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                    -ExchangeServerVersion '
+                  - !Ref ExchangeServerVersion
+                  - '''"'
+              waitAfterCompletion: '0'
+            c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
         Install:
           commands:
@@ -1386,6 +1417,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1916,6 +1960,19 @@ Resources:
                     - !Sub '${QSS3BucketName}-${AWS::Region}'
                     - !Ref QSS3BucketName
               authentication: S3AccessCreds
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source:
                 !Sub
@@ -2042,7 +2099,16 @@ Resources:
             a-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
-            b-signal-success:
+            b-install-patch:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                    -ExchangeServerVersion '
+                  - !Ref ExchangeServerVersion
+                  - '''"'
+              waitAfterCompletion: '0'
+            c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
         Install:
           commands:
@@ -2297,6 +2363,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -2685,7 +2764,16 @@ Resources:
             a-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
-            b-signal-success:
+            b-install-patch:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                    -ExchangeServerVersion '
+                  - !Ref ExchangeServerVersion
+                  - '''"'
+              waitAfterCompletion: '0'
+            c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
         Install:
           commands:
@@ -2925,6 +3013,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -3264,7 +3365,15 @@ Resources:
             a-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
-            b-signal-success:
+            b-install-patch:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                    -ExchangeServerVersion '
+                  - '''"'
+              waitAfterCompletion: '0'
+            c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
         Install:
           commands:
@@ -3474,6 +3583,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-March2021Patch.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-March2021Patch.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region

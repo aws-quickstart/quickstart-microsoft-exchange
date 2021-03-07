@@ -28,9 +28,13 @@ try {
     $DomainAdminCreds = (New-Object PSCredential($DomainAdminFullUser,(ConvertTo-SecureString $DomainAdminPassword.Password -AsPlainText -Force)))
 
     $InstallExchPs={
+        param($username)
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
         $ExchangeArgs = "/PrepareAD /OrganizationName:Exchange /IAcceptExchangeServerLicenseTerms"
+
+        Add-AdGroupMember -Identity 'Schema Admins' -Members $username
+        Add-AdGroupMember -Identity 'Enterprise Admins' -Members $username
         Start-Process $InstallPath -args $ExchangeArgs -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\ExchangeOrgInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\ExchangeOrgInstallerErrors.txt"
     }
 
@@ -39,7 +43,7 @@ try {
 
     do {
         try {
-            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName $env:COMPUTERNAME -Credential $DomainAdminCreds
+            Invoke-Command -Authentication Credssp -Scriptblock $InstallExchPs -ComputerName $env:COMPUTERNAME -Credential $DomainAdminCreds -ArgumentList $DomainAdminUser
             $installed = $true
         }
         catch {
