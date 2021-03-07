@@ -664,10 +664,10 @@ Resources:
               command:
                 !Join
                 - ''
-                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                - - powershell.exe -Command C:\cfn\scripts\Install-March2021Patch.ps1
                     -ExchangeServerVersion '
                   - !Ref ExchangeServerVersion
-                  - '''"'
+                  - ''''
               waitAfterCompletion: '0'
             c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
@@ -1197,7 +1197,7 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
                     -ExchangeServerVersion '
                   - !Ref ExchangeServerVersion
-                  - '''"'
+                  - ''''
               waitAfterCompletion: '0'
             c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
@@ -2103,10 +2103,10 @@ Resources:
               command:
                 !Join
                 - ''
-                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                - - powershell.exe -Command C:\cfn\scripts\Install-March2021Patch.ps1
                     -ExchangeServerVersion '
                   - !Ref ExchangeServerVersion
-                  - '''"'
+                  - ''''
               waitAfterCompletion: '0'
             c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
@@ -2768,10 +2768,10 @@ Resources:
               command:
                 !Join
                 - ''
-                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                - - powershell.exe -Command C:\cfn\scripts\Install-March2021Patch.ps1
                     -ExchangeServerVersion '
                   - !Ref ExchangeServerVersion
-                  - '''"'
+                  - ''''
               waitAfterCompletion: '0'
             c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
@@ -3369,9 +3369,10 @@ Resources:
               command:
                 !Join
                 - ''
-                - - powershell.exe -Command "C:\cfn\scripts\Install-March2021Patch.ps1
+                - - powershell.exe -Command C:\cfn\scripts\Install-March2021Patch.ps1
                     -ExchangeServerVersion '
-                  - '''"'
+                  - !Ref ExchangeServerVersion
+                  - ''''
               waitAfterCompletion: '0'
             c-signal-success:
               command: powershell -Command "Write-AWSQuickStartStatus"
