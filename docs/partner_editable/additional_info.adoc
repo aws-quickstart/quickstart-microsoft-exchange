@@ -4,6 +4,16 @@
 == Post-deployment steps
 // If post-deployment steps are required, add them here. If not, remove the heading
 
+=== Run Windows Updates
+
+In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.
+
+1. Create an RDP session from the Remote Desktop Gateway server to each deployed server.
+2. Open the *Settings* application.
+3. Open *Update & Security*.
+4. Click *Check for updates*.
+5. Install any updates and reboot if necessary.
+
 === (Optional) Create database copies
 
 The Quick Start creates a database availability group (DAG) and adds the Exchange nodes to the DAG. As part of the Exchange installation, each Exchange node contains a mailbox database. The first node contains a database called DB1, and the second node contains a database called DB2.
