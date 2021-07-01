@@ -555,7 +555,7 @@ Parameters:
     MinLength: '1'
     Type: String
   Exchange2019Source:
-    Default: 'https://download.microsoft.com/download/d/7/b/d7bcf78a-00d2-4a46-a3d2-7d506116bcd2/ExchangeServer2019-x64-CU9.ISO'
+    Default: 'https://download.microsoft.com/download/7/3/f/73f75f9e-e7fd-4cb0-a2fc-405cbb800f2d/ExchangeServer2019-x64-CU10.ISO'
     Description: Full URL (including https://) for Exchange 2019 ISO.
     MaxLength: '2000'
     MinLength: '1'
