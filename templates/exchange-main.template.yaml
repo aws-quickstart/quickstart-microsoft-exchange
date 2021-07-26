@@ -6,6 +6,14 @@ Description: This template deploys two Windows Server Failover Clustering (Excha
   This template creates Amazon EC2 Windows instance and related resources. You will
   be billed for the AWS resources used if you create a stack from this template. (qs-1qup6raep)
 Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+        - W9006
+        - W9901
+  QuickStartDocumentation:
+    EntrypointName: "Launch into a new VPC"
+    Order: "1"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -583,7 +591,7 @@ Parameters:
     Description: The Amazon EC2 instance type for the Exchange nodes.
     Type: String
   Exchange2019Source:
-    Default: 'https://'
+    Default: 'https://download.microsoft.com/download/7/3/f/73f75f9e-e7fd-4cb0-a2fc-405cbb800f2d/ExchangeServer2019-x64-CU10.ISO'
     Description: (Optional) Full URL (including https://) for Exchange 2019 ISO.
     MaxLength: '2000'
     MinLength: '1'
@@ -699,7 +707,7 @@ Resources:
     Properties:
       TemplateURL:
         Fn::Sub:
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/exchange.template'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/exchange.template.yaml'
           - S3Region: !If
               - UsingDefaultBucket
               - !Ref AWS::Region

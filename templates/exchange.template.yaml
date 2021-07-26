@@ -12,6 +12,9 @@ Metadata:
       ignore_checks:
         - W9001
         - W9006
+  QuickStartDocumentation:
+    EntrypointName: "Launch into an existing VPC"
+    Order: "2"
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -564,18 +567,9 @@ Parameters:
     Type: String
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
-  DeployEdge:
-    !Equals
-    - !Ref IncludeEdgeTransportRole
-    - 'yes'
-  DeployLoadBalancer:
-    !Equals
-    - !Ref DeployLoadBalancer
-    - 'true'
-  Exchange2016Selected:
-    !Equals
-    - !Ref ExchangeServerVersion
-    - '2016'
+  DeployEdge: !Equals [!Ref IncludeEdgeTransportRole, 'yes']
+  DeployLoadBalancer: !Equals [!Ref DeployLoadBalancer, 'true']
+  Exchange2016Selected: !Equals [!Ref ExchangeServerVersion, '2016']
   EncryptionKmsKeySelected:
     !Not
     - !Equals
@@ -586,30 +580,12 @@ Conditions:
     - !Equals
       - !Ref ThirdAZ
       - full
-  ThirdAzIsFullNode:
-    !Equals
-    - !Ref ThirdAZ
-    - full
-  ThirdAzIsWitness:
-    !Equals
-    - !Ref ThirdAZ
-    - witness
-  UseEncryptedDataVolumes:
-    !Equals
-    - !Ref EncryptDataVolumes
-    - 'true'
-  UseReFSDataVolumes:
-    !Equals
-    - !Ref EnableReFSVolumes
-    - 'true'
-  VolIsio2:
-    !Equals
-    - !Ref VolumeType
-    - io2
-  EnableBackups:
-    !Equals
-    - !Ref EnableBackups
-    - 'yes'
+  ThirdAzIsFullNode: !Equals [!Ref ThirdAZ, 'full']
+  ThirdAzIsWitness: !Equals [!Ref ThirdAZ, 'witness']
+  UseEncryptedDataVolumes: !Equals [!Ref EncryptDataVolumes, 'true']
+  UseReFSDataVolumes: !Equals [!Ref EnableReFSVolumes, 'true']
+  VolIsio2: !Equals [!Ref VolumeType, 'io2']
+  EnableBackups: !Equals [!Ref EnableBackups, 'yes']
 Rules:
   SubnetsInVPC:
     Assertions:
@@ -635,7 +611,7 @@ Resources:
     Properties:
       Name: !Sub 'ExAltUserSecrets-${AWS::StackName}'
       Description: Exchange Admin User from AD Quick Start
-      SecretString: !Sub '{"username":"${DomainAdminUser}","password":"${DomainAdminPassword}"}'
+      SecretString: !Sub '{"UserName":"${DomainAdminUser}","Password":"${DomainAdminPassword}"}'
   EDGE1:
     DependsOn: ExchangeNode1WaitCondition
     Condition: DeployEdge
@@ -732,8 +708,8 @@ Resources:
                 !Join
                 - ''
                 - - powershell.exe -command C:\cfn\scripts\Reset-LocalAdminPassword.ps1
-                    -password '
-                  - !Ref DomainAdminPassword
+                    -ADAdminSecParam '
+                  - !Ref ExchangeAdminSecrets
                   - ''''
               waitAfterCompletion: '0'
             e-enable-credssp:
@@ -918,7 +894,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1022,7 +998,7 @@ Resources:
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1240,8 +1216,8 @@ Resources:
                 !Join
                 - ''
                 - - powershell.exe -command C:\cfn\scripts\Reset-LocalAdminPassword.ps1
-                    -password '
-                  - !Ref DomainAdminPassword
+                    -ADAdminSecParam '
+                  - !Ref ExchangeAdminSecrets
                   - ''''
               waitAfterCompletion: '0'
             e-enable-credssp:
@@ -1426,7 +1402,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1530,7 +1506,7 @@ Resources:
             c:\cfn\scripts\Reset-LocalAdminPassword.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Reset-LocalAdminPassword.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Reset-LocalAdminPassword.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1727,8 +1703,10 @@ Resources:
           Version: '2012-10-17'
           Statement:
           - Action:
-            - s3:GetObject
-            Resource: "*"
+              - s3:GetObject
+            Resource: !Sub
+              - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+              - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
             Effect: Allow
       - PolicyName: AD-SSM-Secrets
         PolicyDocument:
@@ -1741,7 +1719,7 @@ Resources:
             Resource: !Ref ExchangeAdminSecrets
       Path: /
       ManagedPolicyArns:
-      - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM'
       AssumeRolePolicyDocument:
         Statement:
         - Action:
@@ -1852,12 +1830,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName
                     '
                   - !Ref DomainDNSName
-                  - ''' -UserName '''
-                  - !Ref DomainNetBIOSName
-                  - \
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ''' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: forever
             c-Invoke-ADReplication-DC1:
@@ -1865,12 +1839,10 @@ Resources:
                 !Join
                 - ''
                 - - powershell.exe -Command "C:\cfn\scripts\Invoke-ADReplication.ps1
-                  - ' -UserName '''
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -DomainController '''
-                  - !Ref ADServer1NetBIOSName
+                  - !Ref ADServer1NetBIOSName                  
                   - '''"'
               waitAfterCompletion: '0'
             d-Invoke-ADReplication-DC2:
@@ -1878,10 +1850,8 @@ Resources:
                 !Join
                 - ''
                 - - powershell.exe -Command "C:\cfn\scripts\Invoke-ADReplication.ps1
-                  - ' -UserName '''
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - ''' -DomainController '''
                   - !Ref ADServer2NetBIOSName
                   - '''"'
@@ -1934,7 +1904,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1947,7 +1917,7 @@ Resources:
             C:\cfn\scripts\Invoke-ADReplication.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Invoke-ADReplication.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Invoke-ADReplication.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -2100,12 +2070,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName
                     '
                   - !Ref DomainDNSName
-                  - ''' -UserName '''
-                  - !Ref DomainNetBIOSName
-                  - \
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ''' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: forever
             c-install-windows-failover-clustering:
@@ -2350,7 +2316,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -2728,12 +2694,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName
                     '
                   - !Ref DomainDNSName
-                  - ''' -UserName '''
-                  - !Ref DomainNetBIOSName
-                  - \
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ''' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: forever
             c-install-windows-failover-clustering:
@@ -2978,7 +2940,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -3307,12 +3269,8 @@ Resources:
                 - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName
                     '
                   - !Ref DomainDNSName
-                  - ''' -UserName '''
-                  - !Ref DomainNetBIOSName
-                  - \
-                  - !Ref DomainAdminUser
-                  - ''' -Password '''
-                  - !Ref DomainAdminPassword
+                  - ''' -ADAdminSecParam '''
+                  - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: forever
             c-install-windows-failover-clustering:
@@ -3527,7 +3485,7 @@ Resources:
             C:\cfn\scripts\Join-Domain.ps1:
               source:
                 !Sub
-                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Join-Domain.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region

@@ -39,7 +39,7 @@ tests:
     # - us-east-1
     - eu-west-1
     # - us-west-2
-    template: templates/exchange-master.template
+    template: templates/exchange-main.template.yaml
   exchange2019:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
@@ -63,4 +63,4 @@ tests:
     - us-east-1
     # - us-west-2
     # - eu-west-1
-    template: templates/exchange-master.template
+    template: templates/exchange-main.template.yaml
