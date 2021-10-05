@@ -551,7 +551,7 @@ Parameters:
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
     Description: The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
   Exchange2016Source:
-    Default: 'https://download.microsoft.com/download/f/0/e/f0e65686-3761-4c9d-b8b2-9fb71a207b8d/ExchangeServer2016-x64-CU22.ISO'
+    Default: 'https://download.microsoft.com/download/0/b/7/0b702b8b-03ab-4553-9e2c-c73bb0c8535f/ExchangeServer2016-x64-CU20.ISO'
     Description: Full URL (including https://) for Exchange 2016 ISO.
     MaxLength: '2000'
     MinLength: '1'
