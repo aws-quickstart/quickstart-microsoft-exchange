@@ -282,7 +282,7 @@ Parameters:
     AllowedValues:
     - '2016'
     - '2019'
-    Default: '2016'
+    Default: '2019'
     Description: Version of Exchange Server to install. Options include either "2016"
       or "2019"
     Type: String
@@ -554,13 +554,13 @@ Parameters:
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
     Description: The image name for the AWS Systems Manager Windows Server 2019 AMI ID lookup
   Exchange2016Source:
-    Default: 'https://download.microsoft.com/download/0/b/7/0b702b8b-03ab-4553-9e2c-c73bb0c8535f/ExchangeServer2016-x64-CU20.ISO'
+    Default: 'https://download.microsoft.com/download/f/0/e/f0e65686-3761-4c9d-b8b2-9fb71a207b8d/ExchangeServer2016-x64-CU22.ISO'
     Description: Full URL (including https://) for Exchange 2016 ISO.
     MaxLength: '2000'
     MinLength: '1'
     Type: String
   Exchange2019Source:
-    Default: 'https://download.microsoft.com/download/7/3/f/73f75f9e-e7fd-4cb0-a2fc-405cbb800f2d/ExchangeServer2019-x64-CU10.ISO'
+    Default: 'https://download.microsoft.com/download/5/3/e/53e75dbd-ca33-496a-bd23-1d861feaa02a/ExchangeServer2019-x64-CU11.ISO'
     Description: Full URL (including https://) for Exchange 2019 ISO.
     MaxLength: '2000'
     MinLength: '1'
@@ -605,6 +605,8 @@ Mappings:
     VisualCRuntime:
       2012x64: https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe
       2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
+    UrlRewrite:
+      v21: https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi
 Resources:
   ExchangeAdminSecrets:
     Type: AWS::SecretsManager::Secret
@@ -2239,7 +2241,37 @@ Resources:
                     - VisualCRuntime
                     - 2012x64
                   - '''"'
-            r-reboot:
+            r-download-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            s-install-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-UrlRewrite.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -UrlRewriteLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            z-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
         setup:
@@ -2486,6 +2518,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-UrlRewrite.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UrlRewrite.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -2863,7 +2908,37 @@ Resources:
                     - VisualCRuntime
                     - 2012x64
                   - '''"'
-            r-reboot:
+            r-download-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            s-install-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-UrlRewrite.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -UrlRewriteLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            z-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
         setup:
@@ -3145,6 +3220,19 @@ Resources:
                     - !Sub '${QSS3BucketName}-${AWS::Region}'
                     - !Ref QSS3BucketName
               authentication: S3AccessCreds
+            C:\cfn\scripts\Install-UrlRewrite.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UrlRewrite.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
@@ -3408,7 +3496,67 @@ Resources:
                     - NetFramework
                     - v48
                   - '''"'
-            p-reboot:
+            p-download-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            q-install-visualcruntime2012:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-VisualCRuntime.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -UrlRewriteLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - VisualCRuntime
+                    - 2012x64
+                  - '''"'
+            r-download-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - 'powershell.exe '
+                  - '-ExecutionPolicy RemoteSigned '
+                  - -Command "
+                  - ' C:\cfn\scripts\Download-Prerequisites.ps1 -source '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            s-install-urlrewrite:
+              command:
+                !Join
+                - ''
+                - - powershell.exe -Command "C:\cfn\scripts\Install-UrlRewrite.ps1
+                    -DomainNetBIOSName '
+                  - !Ref DomainNetBIOSName
+                  - ''' -DomainAdminUser '''
+                  - !Ref DomainAdminUser
+                  - ''' -ExUserSecParam '''
+                  - !Ref ExchangeAdminSecrets
+                  - ''' -UrlRewriteLink '''
+                  - !FindInMap
+                    - MediaLinksMapper
+                    - UrlRewrite
+                    - v21
+                  - '''"'
+            z-reboot:
               command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
               waitAfterCompletion: forever
         setup:
@@ -3655,6 +3803,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-Disks.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-UrlRewrite.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UrlRewrite.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region

@@ -31,7 +31,7 @@ try {
         param($username)
         $ErrorActionPreference = "Stop"
         $InstallPath = "C:\Exchangeinstall\setup.exe"
-        $ExchangeArgs = "/PrepareAD /OrganizationName:Exchange /IAcceptExchangeServerLicenseTerms"
+        $ExchangeArgs = "/PrepareAD /OrganizationName:Exchange /IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF"
 
         Add-AdGroupMember -Identity 'Schema Admins' -Members $username
         Add-AdGroupMember -Identity 'Enterprise Admins' -Members $username

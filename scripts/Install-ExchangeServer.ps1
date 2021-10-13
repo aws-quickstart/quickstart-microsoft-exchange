@@ -34,10 +34,10 @@ try {
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
         if($Using:ExchangeServerVersion -eq "2016") {
-            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
+            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF"
         }
         elseif ($Using:ExchangeServerVersion -eq "2019") {
-            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
+            $ExchangeArgs = "/mode:Install /OrganizationName:Exchange /role:Mailbox /MdbName:DB$Using:ServerIndex /DbFilePath:D:\Databases\DB$Using:ServerIndex\DB$Using:ServerIndex.edb /LogFolderPath:E:\Databases\DB$Using:ServerIndex /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF"
         }
 
         Start-Process $InstallPath -args $ExchangeArgs -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\ExchangeServerInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\ExchangeServerInstallerErrors.txt"

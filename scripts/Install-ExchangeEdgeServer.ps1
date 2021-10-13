@@ -27,10 +27,10 @@ try {
         $InstallPath = "C:\Exchangeinstall\setup.exe"
 
         if($Using:ExchangeServerVersion -eq "2016") {
-            $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
+            $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF"
         }
         elseif ($Using:ExchangeServerVersion -eq "2019") {
-            $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms"
+            $ExchangeArgs = "/mode:Install /role:EdgeTransport /InstallWindowsComponents /IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF"
         }
 
         Start-Process $InstallPath -args $ExchangeArgs -Wait -ErrorAction Stop -RedirectStandardOutput "C:\cfn\log\ExchangeEdgeInstallerOutput.txt" -RedirectStandardError "C:\cfn\log\ExchangeEdgeInstallerErrors.txt"
