@@ -1,8 +1,8 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'This template deploys two Windows Server Failover Clustering (Exchange)
-  with Exchange Server 2016 / 2019. This template is intended to be installed into
-  an existing VPC that was built using the sample reference architecture titled: "Implementing
+  with Exchange Server 2016 / 2019. This template is intended to be installed
+  into an existing VPC that was built using the sample reference architecture titled: "Implementing
   Active Directory Domain Services in the AWS Cloud" **WARNING** This template creates
   Amazon EC2 Windows instance and related resources. You will be billed for the AWS
   resources used if you create a stack from this template. (qs-1qup6raed)'
