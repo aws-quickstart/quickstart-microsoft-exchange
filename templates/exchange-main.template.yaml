@@ -481,8 +481,8 @@ Parameters:
     Type: String
   VolumeIops:
     Default: '1000'
-    Description: The provisioned IOPS for the Exchange Data and Logs volumes. This parameter
-      is only applicable when Exchange Server Volume Type is set to "io2".
+    Description: The provisioned IOPS for the Exchange Data and Logs volumes.
+      This parameter is only applicable when Exchange Server Volume Type is set to "io2".
     MaxValue: '64000'
     MinValue: '100'
     Type: Number
