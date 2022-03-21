@@ -1,0 +1,14 @@
+:quickstart-project-name: quickstart-microsoft-exchange
+:quickstart-github-org: aws-quickstart
+:partner-product-name: Microsoft Exchange
+:partner-product-short-name: Exchange
+//:partner-company-name: AWS
+:doc-month: March
+:doc-year: 2022
+//:partner-contributors: John Smith, {partner-company-name}
+// :other-contributors: Akua Mansa, Trek10
+//:aws-contributors: Dragos Madarasan, Aaron Lima, and Dave May
+:aws-ia-contributors: Dragos Madarasan, Aaron Lima, and Dave May, AWS Integration & Automation team
+:deployment_time: 3 hours
+:default_deployment_region: us-east-1
+// :private_repo:

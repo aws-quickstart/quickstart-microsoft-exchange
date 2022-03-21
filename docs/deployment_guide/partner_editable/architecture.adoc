@@ -1,0 +1,42 @@
+Before you deploy the template in this Quick Start, decide whether to use two Availability Zones or three, and whether to use a https://docs.microsoft.com/en-us/windows-server/failover-clustering/manage-cluster-quorum[file share witness] or a full node.
+
+By default, the Exchange Server Quick Start uses two Availability Zones, with one Exchange node in each zone. The file share witness is launched in the same Availability Zone as the first Exchange node.
+
+*Note*: Where possible, we recommend deploying the Exchange Server Quick Start using three Availability Zones. This enables automatic failover of database availability groups (DAGs), without the need for manual intervention.
+
+You can deploy a full Exchange node instead of a file share witness. In addition, you can specify whether to deploy the full node or the file share witness in a third Availability Zone.
+
+To learn more about Exchange DAGs and quorum models, see https://technet.microsoft.com/en-us/library/dd979799[TechNet – database availability groups].
+
+In addition, you can deploy an internal Application Load Balancer (ALB) to provide high availability and distribute traffic to the Exchange nodes. In this configuration, you need to import a Secure Sockets Layer (SSL) certificate into AWS Certificate Manager (ACM) before you launch the template.
+
+AWS Secrets Manager is used to securely store the Exchange administrative account credentials. AWS Systems Manager Parameter Store is used to retrieve the credentials.
+
+Deploying this Quick Start for a new virtual private cloud (VPC) with default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
+
+// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
+:xrefstyle: short
+[#architecture1]
+.Quick Start architecture for {partner-product-short-name} on AWS
+image::../docs/deployment_guide/images/image1.png[Architecture,width=100%,height=100%]
+
+You can also choose to build an architecture with three Availability Zones, as shown in the following figure:
+
+[#architecture2]
+.Quick Start architecture for {partner-product-short-name} across three Availability Zones on AWS
+image::../docs/deployment_guide/images/image2.png[Architecture,width=100%,height=100%]
+
+As shown in <<architecture1>>, the Quick Start sets up the following:
+
+* A highly available architecture that spans two or three Availability Zones.*
+* A VPC configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
+* In the public subnets:
+** Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
+** A Remote Desktop Gateway in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
+* In the private subnets:
+** Active Directory domain controllers.
+** Windows Server EC2 instances as Exchange nodes.
+** (Optional) In the public subnets, Exchange Edge Transport servers for routing internet email in and out of your environment.
+// Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram. End each bullet with a period.
+
+[.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
