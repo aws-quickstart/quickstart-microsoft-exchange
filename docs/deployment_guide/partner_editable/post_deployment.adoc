@@ -1,0 +1,5 @@
+// Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
+
+== Postdeployment steps
+
+There are several optional postdeployment steps, including creating database copies, creating a DNS entry for the load balancer, and configuring automatic failover. For more information, see the https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html[Operational Guide].
