@@ -1,0 +1,19 @@
+// If no preperation is required, remove all content from here
+
+==== Prepare for the deployment
+
+Microsoft has released Exchange Server 2019 only via https://www.microsoft.com/Licensing/servicecenter/default.aspx[Volume Licensing Service Center], so if you are deploying Exchange 2019 you need to provide your own installation media. The *Exchange2019Source* parameter takes as an input the full URL to the installation media (ISO file).
+
+The *Exchange2019Source* parameter value should always end in an ISO file extension, although the file name itself is not important as the scripts have built-in logic to determine it from the URL.
+
+Acceptable paths:
+
+https://[yourbucket].s3-us-east-1.amazonaws.com/SW_DVD9_Exchange_Svr_2019.ISO
+
+http://media.example.com/Exchange2019.ISO
+
+Improper path:
+
+https://[yourbucket].s3-us-east-1.amazonaws.com/SW_DVD9_Exchange_Svr_2019.zip
+
+*Note*: Upload the Exchange 2019 installation media to an S3 bucket and temporarily make the installation media public. This will ensure that the file is quickly downloaded to the EC2 instances.

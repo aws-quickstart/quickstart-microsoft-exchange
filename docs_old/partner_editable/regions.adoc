@@ -1,0 +1,3 @@
+This Quick Start supports deployment in either two or three Availability Zones, however some AWS Regions support only two Availability Zones; for a current list, see https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure].
+
+//Full list: https://docs.aws.amazon.com/general/latest/gr/rande.html

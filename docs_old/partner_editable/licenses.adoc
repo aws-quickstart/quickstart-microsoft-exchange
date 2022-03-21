@@ -1,0 +1,7 @@
+// Include details about the license and how they can sign up. If no license is required, clarify that. 
+
+Exchange Server can be deployed and licensed through the https://aws.amazon.com/windows/mslicensemobility/[Microsoft License Mobility through Software Assurance] program. For development and test environments, you can use your existing MSDN licenses for Exchange Server using Amazon Elastic Compute Cloud (Amazon EC2) Dedicated Instances. For details, see the https://aws.amazon.com/windows/msdn/[MSDN on AWS] page.
+
+This Quick Start deployment uses an evaluation copy of Exchange Server. To upgrade your version, see the Microsoft Exchange Server website.
+
+This Quick Start launches the Amazon Machine Image (AMI) for Microsoft Windows Server 2016 and Windows Server 2019, and includes the license for the Windows Server operating system. The AMI is updated on a regular basis with the latest service pack for the operating system, so you don’t have to install any updates. The Windows Server AMI doesn’t require client access licenses (CALs) and includes two Microsoft Remote Desktop Services licenses. For details, see https://aws.amazon.com/windows/resources/licensing/[Microsoft Licensing on AWS].

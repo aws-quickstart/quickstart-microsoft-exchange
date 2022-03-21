@@ -1,0 +1,24 @@
+// Replace the content in <>
+// For example: “familiarity with basic concepts in networking, database operations, and data encryption” or “familiarity with <software>.”
+// Include links if helpful. 
+// You don't need to list AWS services or point to general info about AWS; the boilerplate already covers this.
+
+Before you deploy this Quick Start, we recommend that you become familiar with the following AWS services. (If you are new to AWS, see https://aws.amazon.com/getting-started/[Getting Started with AWS].)
+
+* https://aws.amazon.com/documentation/ec2/[Amazon Elastic Compute Cloud (Amazon EC2)]
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html[Amazon Elastic Block Store (Amazon EBS)]
+* https://aws.amazon.com/documentation/vpc/[Amazon Virtual Private Cloud (Amazon VPC)]
+* https://aws.amazon.com/documentation/cloudformation/[AWS CloudFormation]
+* http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html[NAT gateway]
+* http://aws.amazon.com/documentation/iam/[AWS Identity and Access Management (IAM)]
+* https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html[Elastic Load Balancing (ELB)]
+* https://aws.amazon.com/documentation/acm/[AWS Certificate Manager (ACM)]
+
+In addition, you should be familiar with the following:
+
+* Windows Server 2016 or Windows Server 2019
+* Microsoft Active Directory and Domain Name System (DNS)
+* Windows Server Failover Clustering (WSFC)
+* Exchange database availability groups (DAGs)
+
+For information, see the Microsoft product documentation for these technologies.

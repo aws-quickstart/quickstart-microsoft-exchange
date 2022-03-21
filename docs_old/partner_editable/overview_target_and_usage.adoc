@@ -1,0 +1,11 @@
+// Replace the content in <>
+// Identify your target audience and explain how/why they would use this Quick Start.
+//Avoid borrowing text from third-party websites (copying text from AWS service documentation is fine). Also, avoid marketing-speak, focusing instead on the technical aspect.
+
+This Quick Start reference deployment guide includes infrastructure information, architectural considerations, and configuration steps for planning and deploying a Microsoft Exchange Server environment on the AWS Cloud. It uses https://aws.amazon.com/cloudformation/[AWS CloudFormation] templates to automate the deployment.
+
+*Note* This Quick Start supports Exchange Server 2016 and Exchange Server 2019.
+
+This Quick Start is for IT infrastructure architects, administrators, and DevOps professionals who are planning to implement or extend their Exchange Server workloads on the AWS Cloud.
+
+Included are best practices for configuring a highly available, fault-tolerant, and secure Exchange environment. This guide doesn’t cover general installation and software configuration tasks for Exchange Server. For general guidance and best practices, consult the https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019[Microsoft Exchange Server documentation].
