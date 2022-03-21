@@ -31,7 +31,7 @@ The following figure shows the disk layout on each Exchange Server node:
 
 [#architecture3]
 .Disk layout on Exchange Server node
-image::../docs/operational/images/image3.png[Architecture,width=521,height=172]
+image::../docs/operational_guide/images/image3.png[Architecture,width=521,height=172]
 
 *Note* You’ll find the installation software on each node in the *C:\Exchangeinstall* folder.
 
@@ -49,7 +49,7 @@ When you launch the AWS CloudFormation template, you can specify the addresses f
 
 [#architecture4]
 .Configuring IP addresses on the Exchange node
-image::../docs/operational/images/image4.png[Architecture,width=639,height=146]
+image::../docs/operational_guide/images/image4.png[Architecture,width=639,height=146]
 
 [[database-availability-group]]
 ==== Database Availability Group
@@ -91,7 +91,7 @@ Because Edge Transport role nodes aren’t required for end-to-end mail flow, by
 
 [#architecture5]
 .Deploying Edge servers
-image::../docs/operational/images/image5.png[Architecture,width=648,height=89]
+image::../docs/operational_guide/images/image5.png[Architecture,width=648,height=89]
 
 A pair of Edge servers is deployed in the public subnets (which must be defined), and the Exchange Server Edge Transport role is installed using default settings. The EC2 instances aren’t domain-joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards (NICs). Also, DNS records are created in Active Directory corresponding to their hostname.
 
@@ -125,7 +125,7 @@ Optionally, the Quick Start provides an option to encrypt the EBS volumes with e
 
 [#architecture6]
 .Encrypting the EBS volumes
-image::../docs/operational/images/image5.png[Architecture,width=648,height=83]
+image::../docs/operational_guide/images/image5.png[Architecture,width=648,height=83]
 
 *Note* The root volume of the Exchange nodes (C:\) isn’t encrypted, if *Encrypt data volumes* is selected.
 
@@ -168,7 +168,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 
 [#architecture7]
 .Creating a DNS entry for the load balancer
-image::../docs/operational/images/image7.png[Architecture,width=646,height=275]
+image::../docs/operational_guide/images/image7.png[Architecture,width=646,height=275]
 
 [start=5]
 5.  To create the DNS record, connect using Remote Desktop to one of the domain controllers using domain credentials, and open the DNS console by going to the Start menu and typing “DNS”.
@@ -176,14 +176,14 @@ image::../docs/operational/images/image7.png[Architecture,width=646,height=275]
 
 [#architecture8]
 .Selecting New Alias (CNAME)
-image::../docs/operational/images/image8.png[Architecture,width=355,height=557]
+image::../docs/operational_guide/images/image8.png[Architecture,width=355,height=557]
 
 [start=7]
 7.  Create the DNS entry such as “mail” and in *fully qualified domain name (FQDN) for target host*, paste the value of the Application Load Balancer endpoint, as shown in Figure 9.
 
 [#architecture9]
 .Creating the DNS entry (“mail”)
-image::../docs/operational/images/image9.png[Architecture,width=422,height=480]
+image::../docs/operational_guide/images/image9.png[Architecture,width=422,height=480]
 
 [start=8]
 9.  Verify that the DNS entry is resolved successfully by performing an nslookup. Go to Start and type “cmd”. In the command line window, type the following:
@@ -234,8 +234,6 @@ We recommend that you consult the https://docs.microsoft.com/en-us/Exchange/exch
 ==== Security groups and firewalls
 
 When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.
-
-The https://d0.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services] whitepaper discusses the different methods for securing your AWS infrastructure. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic, so that you reduce the attack surface of your EC2 instances.
 
 Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time service], and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my[Exchange, Firewalls, and Support].
 

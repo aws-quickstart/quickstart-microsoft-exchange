@@ -974,7 +974,7 @@ Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchan
 </div>
 <div id="architecture3" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image3.png" alt="Architecture" width="521" height="172">
+<img src="docs/operational_guide/images/image3.png" alt="Architecture" width="521" height="172">
 </div>
 <div class="title">Figure 1. Disk layout on Exchange Server node</div>
 </div>
@@ -1005,7 +1005,7 @@ Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchan
 </div>
 <div id="architecture4" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image4.png" alt="Architecture" width="639" height="146">
+<img src="docs/operational_guide/images/image4.png" alt="Architecture" width="639" height="146">
 </div>
 <div class="title">Figure 2. Configuring IP addresses on the Exchange node</div>
 </div>
@@ -1058,7 +1058,7 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 </div>
 <div id="architecture5" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image5.png" alt="Architecture" width="648" height="89">
+<img src="docs/operational_guide/images/image5.png" alt="Architecture" width="648" height="89">
 </div>
 <div class="title">Figure 3. Deploying Edge servers</div>
 </div>
@@ -1113,7 +1113,7 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 </div>
 <div id="architecture6" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image5.png" alt="Architecture" width="648" height="83">
+<img src="docs/operational_guide/images/image5.png" alt="Architecture" width="648" height="83">
 </div>
 <div class="title">Figure 4. Encrypting the EBS volumes</div>
 </div>
@@ -1188,7 +1188,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 <div id="architecture7" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image7.png" alt="Architecture" width="646" height="275">
+<img src="docs/operational_guide/images/image7.png" alt="Architecture" width="646" height="275">
 </div>
 <div class="title">Figure 5. Creating a DNS entry for the load balancer</div>
 </div>
@@ -1204,7 +1204,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 <div id="architecture8" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image8.png" alt="Architecture" width="355" height="557">
+<img src="docs/operational_guide/images/image8.png" alt="Architecture" width="355" height="557">
 </div>
 <div class="title">Figure 6. Selecting New Alias (CNAME)</div>
 </div>
@@ -1217,7 +1217,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 <div id="architecture9" class="imageblock">
 <div class="content">
-<img src="docs/operational/images/image9.png" alt="Architecture" width="422" height="480">
+<img src="docs/operational_guide/images/image9.png" alt="Architecture" width="422" height="480">
 </div>
 <div class="title">Figure 7. Creating the DNS entry (“mail”)</div>
 </div>
@@ -1305,9 +1305,6 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <h4 id="security-groups-and-firewalls">Security groups and firewalls</h4>
 <div class="paragraph">
 <p>When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="https://d0.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf">Securing the Microsoft Platform on Amazon Web Services</a> whitepaper discusses the different methods for securing your AWS infrastructure. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic, so that you reduce the attack surface of your EC2 instances.</p>
 </div>
 <div class="paragraph">
 <p>Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, <a href="https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top">Windows Time service</a>, and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see <a href="https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my">Exchange, Firewalls, and Support</a>.</p>
