@@ -839,7 +839,20 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_architecture">Architecture</a></li>
 <li><a href="#_deployment_options">Deployment options</a></li>
 <li><a href="#_deployment_steps">Deployment steps</a></li>
-<li><a href="#_postdeployment_steps">Postdeployment steps</a></li>
+<li><a href="#_postdeployment_steps">Postdeployment steps</a>
+<ul class="sectlevel2">
+<li><a href="#_run_windows_updates">Run Windows Updates</a></li>
+<li><a href="#_optional_create_database_copies">(Optional) Create database copies</a></li>
+<li><a href="#_optional_create_a_dns_entry_for_the_load_balancer">(Optional) Create a DNS entry for the load balancer</a></li>
+</ul>
+</li>
+<li><a href="#_best_practices_for_using_exchange_on_aws">Best practices for using Exchange on AWS</a>
+<ul class="sectlevel2">
+<li><a href="#high-availability-and-disaster-recovery">High availability and disaster recovery</a></li>
+<li><a href="#automatic-failover">Automatic failover</a></li>
+<li><a href="#security-groups-and-firewalls">Security groups and firewalls</a></li>
+</ul>
+</li>
 <li><a href="#_troubleshooting">Troubleshooting</a></li>
 <li><a href="#_feedback">Feedback</a></li>
 <li><a href="#_notices">Notices</a></li>
@@ -886,7 +899,41 @@ See the <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchange
 <h2 id="_overview">Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>. For more information on deploying Microsoft Exchange on the AWS Cloud, see the <a href="https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html">Operational Guide</a>.</p>
+<p>This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>Exchange Server is a messaging and collaboration solution that Microsoft developed, with support for mailboxes, calendars, compliance, and e-archival. In an Exchange Server environment, your users can collaborate and—when you deploy the environment in AWS—you can scale your environment based on demand.</p>
+</div>
+<div class="paragraph">
+<p>The AWS Cloud provides infrastructure services that enable you to deploy Exchange Server in a highly available, fault-tolerant, and affordable way. By deploying on AWS, you get the functionality of Exchange Server and the flexibility and security of AWS.</p>
+</div>
+<div class="paragraph">
+<p>In addition to this Quick Start, we’ve published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Microsoft Active Directory</p>
+</li>
+<li>
+<p>Remote Desktop Gateway (RD Gateway)</p>
+</li>
+<li>
+<p>Microsoft SharePoint Server</p>
+</li>
+<li>
+<p>Microsoft Web Application Proxy with Active Directory Federation Services (ADFS)</p>
+</li>
+<li>
+<p>Microsoft SQL Server</p>
+</li>
+<li>
+<p>Windows Server Update Services</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each of those Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. To read more about deploying Microsoft workloads by using our Quick Starts, see the <a href="https://aws.amazon.com/quickstart/#microsoft_technologies">Quick Starts in the Microsoft Technologies category</a>.</p>
 </div>
 </div>
 </div>
@@ -1068,8 +1115,196 @@ Unless you are customizing the Quick Start templates for your own projects, don&
 <div class="sect1">
 <h2 id="_postdeployment_steps">Postdeployment steps</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_run_windows_updates">Run Windows Updates</h3>
 <div class="paragraph">
-<p>There are several optional postdeployment steps, including creating database copies, creating a DNS entry for the load balancer, and configuring automatic failover. For more information, see the <a href="https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html">Operational Guide</a>.</p>
+<p>In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create an RDP session from the Remote Desktop Gateway server to each deployed server.</p>
+</li>
+<li>
+<p>Open the <strong>Settings</strong> application.</p>
+</li>
+<li>
+<p>Open <strong>Update &amp; Security</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Check for updates</strong>.</p>
+</li>
+<li>
+<p>Install any updates and reboot if necessary.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_optional_create_database_copies">(Optional) Create database copies</h3>
+<div class="paragraph">
+<p>The Quick Start creates a database availability group (DAG) and adds the Exchange nodes to the DAG. As part of the Exchange installation, each Exchange node contains a mailbox database. The first node contains a database called DB1, and the second node contains a database called DB2.</p>
+</div>
+<div class="paragraph">
+<p>As part of configuring high availability for the mailbox roles, you can add mailbox database copies on the other Exchange nodes. Alternatively, you can create entirely new databases and only then create additional copies.</p>
+</div>
+<div class="paragraph">
+<p>To create a second copy for the initial databases, use the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Add-MailboxDatabaseCopy -Identity DB1 –MailboxServer ExchangeNode2 -ActivationPreference 2
+
+Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -ActivationPreference 2</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_optional_create_a_dns_entry_for_the_load_balancer">(Optional) Create a DNS entry for the load balancer</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you chose the option to deploy a load balancer, the Network Load Balancer (NLB) will have an endpoint address such as [elb.amazonaws.com].</p>
+</li>
+<li>
+<p>To use the load balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the ALB.</p>
+</li>
+<li>
+<p>Before proceeding, go to the <a href="https://console.aws.amazon.com/ec2/v2/home">Amazon EC2 console</a> and, under <strong>Load balancer</strong>, select the load balancer that the Quick Start created.</p>
+</li>
+<li>
+<p>Copy the value listed under the DNS name, as shown in Figure 7.</p>
+</li>
+</ol>
+</div>
+<div id="architecture7" class="imageblock">
+<div class="content">
+<img src="docs/deployment_guide/images/image7.png" alt="Architecture" width="646" height="275">
+</div>
+<div class="title">Figure 3. Creating a DNS entry for the load balancer</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>To create the DNS record, connect using Remote Desktop to one of the domain controllers using domain credentials, and open the DNS console by going to the Start menu and typing “DNS”.</p>
+</li>
+<li>
+<p>In the DNS console, navigate to the Active Directory zone, right-click, and select <strong>New Alias (CNAME)</strong>, as shown in Figure 8.</p>
+</li>
+</ol>
+</div>
+<div id="architecture8" class="imageblock">
+<div class="content">
+<img src="docs/deployment_guide/images/image8.png" alt="Architecture" width="355" height="557">
+</div>
+<div class="title">Figure 4. Selecting New Alias (CNAME)</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="7">
+<li>
+<p>Create the DNS entry such as “mail” and in <strong>fully qualified domain name (FQDN) for target host</strong>, paste the value of the Application Load Balancer endpoint, as shown in Figure 9.</p>
+</li>
+</ol>
+</div>
+<div id="architecture9" class="imageblock">
+<div class="content">
+<img src="docs/deployment_guide/images/image9.png" alt="Architecture" width="422" height="480">
+</div>
+<div class="title">Figure 5. Creating the DNS entry (“mail”)</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="8">
+<li>
+<p>Verify that the DNS entry is resolved successfully by performing an nslookup. Go to Start and type “cmd”. In the command line window, type the following:</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Nslookup <strong>mail</strong>.<em>example.com</em></p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Where mail is the name of the CNAME record you created, and “example.com” is your Active Directory domain name.</p>
+</div>
+</blockquote>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="10">
+<li>
+<p>Ensure that the record resolves to the load balancer DNS record, such as shown in Figure 10.</p>
+</li>
+</ol>
+</div>
+<div id="architecture10" class="imageblock">
+<div class="content">
+<img src="images/image10.png" alt="Architecture" width="647" height="278">
+</div>
+<div class="title">Figure 6. Verifying the DNS record</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_best_practices_for_using_exchange_on_aws">Best practices for using Exchange on AWS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The architecture built by this Quick Start supports AWS best practices for high availability and security.</p>
+</div>
+<div class="sect2">
+<h3 id="high-availability-and-disaster-recovery">High availability and disaster recovery</h3>
+<div class="paragraph">
+<p>Amazon EC2 provides the ability to place instances in multiple locations composed of AWS Regions and Availability Zones. Regions are dispersed and located in separate geographic areas. Availability Zones are distinct locations within a Region that are engineered to be isolated from failures in other Availability Zones and that provide inexpensive, low-latency network connectivity to other Availability Zones in the same Region.</p>
+</div>
+<div class="paragraph">
+<p>By launching your instances in separate Regions, you can design your application to be closer to specific customers or to meet legal or other requirements. By launching your instances in separate Availability Zones, you can protect your applications from the failure of a single location. Exchange provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="automatic-failover">Automatic failover</h3>
+<div class="paragraph">
+<p>Deploying the Quick Start with the <strong>default parameters</strong> configures a two-node database availability group (DAG) with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.</p>
+</div>
+<div class="paragraph">
+<p>The Quick Start implementation supports the following scenarios:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Protection from the failure of a single instance</p>
+</li>
+<li>
+<p>Automatic failover between the cluster nodes</p>
+</li>
+<li>
+<p>Automatic failover between Availability Zones</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>However, the Quick Start default implementation doesn’t provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing quorum on the second cluster node (e.g., ExchangeNode2) to restore application availability.</p>
+</div>
+<div class="paragraph">
+<p>The Quick Start also provides an option to deploy into three Availability Zones. This deployment option can mitigate the loss of quorum in the case of a failure of a single node. However, you can select this option only in AWS Regions that include three or more Availability Zones; for a current list, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/">AWS Global Infrastructure</a>.</p>
+</div>
+<div class="paragraph">
+<p>We recommend that you consult the <a href="https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019">Microsoft Exchange Server documentation</a> and customize some of the steps described in this guide or add ones (e.g., deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that best meets your business, IT, and security requirements.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="security-groups-and-firewalls">Security groups and firewalls</h3>
+<div class="paragraph">
+<p>When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.</p>
+</div>
+<div class="paragraph">
+<p>Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, <a href="https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top">Windows Time service</a>, and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see <a href="https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my">Exchange, Firewalls, and Support</a>.</p>
+</div>
+<div class="paragraph">
+<p>Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet.</p>
+</div>
+<div class="paragraph">
+<p>The Quick Start creates certain security groups and rules for you. For a detailed list of port mappings, see the <a href="https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/security.html">Security section</a> of the Active Directory Domain Services Quick Start deployment guide, and the <a href="#security">Security section</a> of this guide.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1132,12 +1367,12 @@ Unless you are customizing the Quick Start templates for your own projects, don&
 </html>
 <!--
 repo commit:
-46dce473e514b557cccdd7d52ab03aa7f3ca3e7b
+8db9f2146022fc1b7381091cbbe5980aabb06cc6
 
 submodule config:
  0955a35c7a5e463294433afb878608960a5dbe3a docs/boilerplate (heads/main)
- b7aefd089e944d77cdc2b083886cdc498d2a6ee4 submodules/quickstart-aws-vpc (v1.0-59-gb7aefd0)
- 7c7b86e2c7397d5210d19758f8e3e75c60fd1bde submodules/quickstart-microsoft-activedirectory (remotes/origin/doc-edits-25-g7c7b86e)
- f282fbb4e807dd4b4044244361d260c4f206bf0c submodules/quickstart-microsoft-rdgateway (remotes/origin/develop)
+ 3f3028bf08ccb8120b9ecd7b0c552ec1ecbba74e submodules/quickstart-aws-vpc (v1.0-61-g3f3028b)
+ c8a1ebc836d1a12cc94ad4c6950e81ab2438a253 submodules/quickstart-microsoft-activedirectory (heads/main)
+ 5bf78cd31d505340b3921f71b2cd5f43ea235d3a submodules/quickstart-microsoft-rdgateway (heads/main)
  1a304a96c2e934f48a8f21b7716c392b299bcc8e submodules/quickstart-microsoft-utilities (heads/main)
 -->

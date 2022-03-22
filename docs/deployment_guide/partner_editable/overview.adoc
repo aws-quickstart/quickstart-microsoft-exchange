@@ -1,4 +1,21 @@
-This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^]. For more information on deploying Microsoft Exchange on the AWS Cloud, see the https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html[Operational Guide].
+This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
+
+Exchange Server is a messaging and collaboration solution that Microsoft developed, with support for mailboxes, calendars, compliance, and e-archival. In an Exchange Server environment, your users can collaborate and—when you deploy the environment in AWS—you can scale your environment based on demand.
+
+The AWS Cloud provides infrastructure services that enable you to deploy Exchange Server in a highly available, fault-tolerant, and affordable way. By deploying on AWS, you get the functionality of Exchange Server and the flexibility and security of AWS.
+
+In addition to this Quick Start, we’ve published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, including:
+
+* Microsoft Active Directory
+* Remote Desktop Gateway (RD Gateway)
+* Microsoft SharePoint Server
+* Microsoft Web Application Proxy with Active Directory Federation Services (ADFS)
+* Microsoft SQL Server
+* Windows Server Update Services
+
+Each of those Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. To read more about deploying Microsoft workloads by using our Quick Starts, see the https://aws.amazon.com/quickstart/#microsoft_technologies[Quick Starts in the Microsoft Technologies category].
+
+// For more information on deploying Microsoft Exchange on the AWS Cloud, see the https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html[Operational Guide].
 
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
