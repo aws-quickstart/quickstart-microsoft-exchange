@@ -1217,7 +1217,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 <div id="architecture9" class="imageblock">
 <div class="content">
-<img src="images/image9.png" alt="Architecture" width="422" height="480">
+<img src="docs/operational_guide/images/image9.png" alt="Architecture" width="422" height="480">
 </div>
 <div class="title">Figure 7. Creating the DNS entry (“mail”)</div>
 </div>
@@ -1305,9 +1305,6 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <h4 id="security-groups-and-firewalls">Security groups and firewalls</h4>
 <div class="paragraph">
 <p>When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="https://d0.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf">Securing the Microsoft Platform on Amazon Web Services</a> whitepaper discusses the different methods for securing your AWS infrastructure. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic, so that you reduce the attack surface of your EC2 instances.</p>
 </div>
 <div class="paragraph">
 <p>Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, <a href="https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top">Windows Time service</a>, and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see <a href="https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my">Exchange, Firewalls, and Support</a>.</p>
