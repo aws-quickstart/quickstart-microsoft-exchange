@@ -49,20 +49,16 @@ image::../docs/deployment_guide/images/image8.png[Architecture,width=355,height=
 image::../docs/deployment_guide/images/image9.png[Architecture,width=422,height=480]
 
 [start=8]
-. Verify that the DNS entry successfully resolves by running `nslookup``. Navigate to *Start* and enter `cmd`. In the command line, enter the following:
+. Verify that the DNS entry successfully resolves by running `nslookup``. Navigate to *Start* and enter `cmd`. In the command line, enter the following (where *mail* is the name of your CNAME record, and *example.com* is the domain name of your Active Directory):
 
 Nslookup *mail*._example.com_
-
-_______________________________________________________________________________________________________________
-Where mail is the name of the CNAME record you created, and *example.com* is the domain name of your Active Directory.
-_______________________________________________________________________________________________________________
 
 [start=9]
 . Ensure that the record resolves to the load balancer DNS record, as shown in Figure 10.
 
 [#architecture10]
 .Verifying the DNS record
-image::../images/image10.png[Architecture,width=647,height=278]
+image::../docs/deployment_guide/images/image10.png[Architecture,width=647,height=278]
 
 
 [[high-availability-and-disaster-recovery]]
@@ -94,6 +90,6 @@ We recommend that you consult the https://docs.microsoft.com/en-us/Exchange/exch
 
 When the Amazon EC2 instances launch, they must be associated with a security group, which acts as a stateful firewall. You control the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all outgoing security-group traffic is permitted. Inbound traffic, however, must be configured to allow the appropriate traffic to reach your instances.
 
-Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time service (W32Time)^], and Distributed File System (DFS), among others. The nodes that run Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, refer to https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-firewalls-and-support-8230-oh-my/ba-p/595710[Exchange, Firewalls, and Support ... Oh, my!^].
+Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time service (W32Time)^], and Distributed File System (DFS), among others. The nodes that run Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, refer to https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-firewalls-and-support-8230-oh-my/ba-p/595710[Exchange, Firewalls, and Support ... Oh, my!^]
 
 Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet. The Quick Start creates certain security groups and rules for you.
