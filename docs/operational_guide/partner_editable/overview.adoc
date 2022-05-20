@@ -2,7 +2,7 @@ Exchange Server is a messaging and collaboration solution that Microsoft develop
 
 The AWS Cloud provides infrastructure services that enable you to deploy Exchange Server in a highly available, fault-tolerant, and affordable way. By deploying on AWS, you get the functionality of Exchange Server and the flexibility and security of AWS.
 
-In addition to this Quick Start, we’ve published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, including:
+In addition to this Quick Start, we published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS:
 
 * Microsoft Active Directory
 * Remote Desktop Gateway (RD Gateway)
@@ -11,4 +11,4 @@ In addition to this Quick Start, we’ve published a set of Microsoft-based Quic
 * Microsoft SQL Server
 * Windows Server Update Services
 
-Each of those Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. To read more about deploying Microsoft workloads by using our Quick Starts, see the https://aws.amazon.com/quickstart/#microsoft_technologies[Quick Starts in the Microsoft Technologies category].
+Each of those Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. To read more about deploying Microsoft workloads by using our Quick Starts, refer to the https://aws.amazon.com/quickstart/#microsoft_technologies[Quick Starts in the Microsoft Technologies category^].

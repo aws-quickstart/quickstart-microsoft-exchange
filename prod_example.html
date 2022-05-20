@@ -5,9 +5,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.17">
-<meta name="description" content="Microsoft Exchange Operational Guide on AWS">
+<meta name="description" content="Microsoft Exchange Deployment Guide on AWS">
 <meta name="keywords" content="Quick Start, AWS, Microsoft Exchange">
-<title>Microsoft Exchange on the AWS Cloud—Operational Guide</title>
+<title>Microsoft Exchange on the AWS Cloud</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
 /* Uncomment @import statement to use as custom stylesheet */
@@ -750,6 +750,7 @@ p {
 
 /* image layout */
 #toc.toc2 #toctitle {
+  /* Do not change! This link is intended to be broken for non-production builds. */
   background-image: url("images/AWS-Logo.svg");
   background-repeat: no-repeat;
   background-size: 50%;
@@ -834,20 +835,23 @@ p.footer-text a{color:#d7d8d8}
 <div id="toc" class="toc2">
 <div id="toctitle"></div>
 <ul class="sectlevel1">
-<li><a href="#_overview">Overview</a>
+<li><a href="#_overview">Overview</a></li>
+<li><a href="#_costs_and_licenses">Costs and licenses</a></li>
+<li><a href="#_architecture">Architecture</a></li>
+<li><a href="#_deployment_options">Deployment options</a></li>
+<li><a href="#_predeployment_steps">Predeployment steps</a></li>
+<li><a href="#_deployment_steps">Deployment steps</a></li>
+<li><a href="#_postdeployment_steps">Postdeployment steps</a>
 <ul class="sectlevel2">
-<li><a href="#implementation-details">Implementation Details</a></li>
-<li><a href="#_post_deployment_steps">Post-deployment steps</a></li>
-</ul>
-</li>
-<li><a href="#_best_practices_for_using_exchange_on_aws">Best practices for using Exchange on AWS</a>
-<ul class="sectlevel3">
+<li><a href="#_update_windows">Update Windows</a></li>
+<li><a href="#_optional_create_database_copies">(Optional) Create database copies</a></li>
+<li><a href="#_optional_create_a_dns_entry_for_the_network_load_balancer">(Optional) Create a DNS entry for the Network Load Balancer</a></li>
 <li><a href="#high-availability-and-disaster-recovery">High availability and disaster recovery</a></li>
 <li><a href="#automatic-failover">Automatic failover</a></li>
 <li><a href="#security-groups-and-firewalls">Security groups and firewalls</a></li>
-<li><a href="#_security">Security</a></li>
 </ul>
 </li>
+<li><a href="#_troubleshooting">Troubleshooting</a></li>
 <li><a href="#_feedback">Feedback</a></li>
 <li><a href="#_notices">Notices</a></li>
 </ul>
@@ -857,19 +861,20 @@ p.footer-text a{color:#d7d8d8}
 <div id="preamble">
 <div class="sectionbody">
 <h2 id="_microsoft_exchange_on_the_aws_cloud" class="discrete text-center">Microsoft Exchange on the AWS Cloud</h2>
-<h2 id="_quick_start_operational_guide" class="discrete text-left text-center">Quick Start Operational Guide</h2>
+<h2 id="_quick_start_deployment_guide" class="discrete text-left text-center">Quick Start Deployment Guide</h2>
 <div class="imageblock text-center">
 <div class="content">
-<img src="https://aws-quickstart.s3.amazonaws.com/docs/operational-guide/aws-quickstart-operational-graphic.png" alt="QS" width="80" height="80">
+<img src="https://aws-quickstart.s3.amazonaws.com/docs/deployment-guide/aws-quickstart-deployment-graphic.png" alt="QS" width="80" height="80">
 </div>
 </div>
 <div class="imageblock image-container">
 <div class="content">
-<img src="https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-exchange/docs/boilerplate/.images/aws-quickstart-operational-graphic.png" alt="">
+<img src="https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-exchange/docs/boilerplate/.images/aws-quickstart-graphic.png" alt="">
 </div>
 </div>
 <div class="paragraph text-center">
-<p><strong>March 2022</strong><br></p>
+<p><strong>March 2022</strong><br>
+<em>Dragos Madarasan, Aaron Lima, and Dave May, AWS Integration &amp; Automation team</em><br></p>
 </div>
 <div class="admonitionblock tip text-left">
 <table>
@@ -878,7 +883,7 @@ p.footer-text a{color:#d7d8d8}
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchange" target="_blank" rel="noopener">GitHub repository</a> to view source files, report bugs, submit feature ideas, and post feedback about this Quick Start. To comment on the documentation, refer to <a href="#_feedback">Feedback</a>.
+Refer to the <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchange" target="_blank" rel="noopener">GitHub repository</a> to view source files, report bugs, submit feature ideas, and post feedback about this Quick Start. To comment on the documentation, refer to <a href="#_feedback">Feedback</a>.
 </td>
 </tr>
 </table>
@@ -892,13 +897,10 @@ Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchan
 <h2 id="_overview">Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Exchange Server is a messaging and collaboration solution that Microsoft developed, with support for mailboxes, calendars, compliance, and e-archival. In an Exchange Server environment, your users can collaborate and—when you deploy the environment in AWS—you can scale your environment based on demand.</p>
+<p>This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>.</p>
 </div>
 <div class="paragraph">
-<p>The AWS Cloud provides infrastructure services that enable you to deploy Exchange Server in a highly available, fault-tolerant, and affordable way. By deploying on AWS, you get the functionality of Exchange Server and the flexibility and security of AWS.</p>
-</div>
-<div class="paragraph">
-<p>In addition to this Quick Start, we’ve published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, including:</p>
+<p>In addition to this Quick Start, we published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, which include the following:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -923,211 +925,209 @@ Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchan
 </ul>
 </div>
 <div class="paragraph">
-<p>Each of those Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. To read more about deploying Microsoft workloads by using our Quick Starts, see the <a href="https://aws.amazon.com/quickstart/#microsoft_technologies">Quick Starts in the Microsoft Technologies category</a>.</p>
+<p>Each of these Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. For more information about using Quick Starts to deploy Microsoft workloads, refer to <a href="https://aws.amazon.com/quickstart/?solutions-all.sort-by=item.additionalFields.sortDate&amp;solutions-all.sort-order=desc&amp;awsf.filter-tech-category=*all&amp;awsf.filter-industry=*all&amp;awsf.filter-content-type=content-type%23quick-start&amp;solutions-all.q=microsoft&amp;solutions-all.q_operator=AND" target="_blank" rel="noopener">AWS Quick Starts</a>.</p>
 </div>
-<div class="sect2">
-<h3 id="implementation-details">Implementation Details</h3>
-<div class="sect3">
-<h4 id="storage-on-the-exchange-nodes">Storage on the Exchange Nodes</h4>
-<div class="paragraph">
-<p>Storage capacity and performance are key aspects of any production installation. Although capacity and performance vary from one deployment to the next, this Quick Start provides a reference configuration that you can use as a starting point. The AWS CloudFormation template deploys the Exchange nodes using the memory-optimized r5.xlarge instance type by default.</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_costs_and_licenses">Costs and licenses</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>To provide highly performant and durable storage, we’ve also included Amazon EBS volumes in this reference architecture. EBS volumes are network-attached disk storage, which you can create and attach to EC2 instances. Once these are attached, you can create a file system on top of these volumes, run a mailbox database, or use them in any other way you would use a block device. EBS volumes are placed in a specific Availability Zone, where they are automatically replicated to protect you from the failure of a single component.</p>
+<p>Exchange Server can be deployed and licensed through <a href="https://aws.amazon.com/windows/mslicensemobility/" target="_blank" rel="noopener">Microsoft License Mobility</a>. For development and test environments, you can use your existing MSDN licenses for Exchange Server using Amazon Elastic Compute Cloud (Amazon EC2)–dedicated instances. For more information, refer to <a href="https://aws.amazon.com/windows/msdn/" target="_blank" rel="noopener">Licensing—MSDN</a>.</p>
 </div>
 <div class="paragraph">
-<p>Provisioned IOPS EBS volumes offer storage with consistent and low-latency performance. They are backed by solid state drives (SSDs) and are designed for applications with I/O-intensive workloads such as databases.</p>
+<p>This Quick Start deployment uses an evaluation copy of Exchange Server. To upgrade your version, see the Microsoft Exchange Server website.</p>
 </div>
 <div class="paragraph">
-<p>Amazon EBS-optimized instances, such as the R5 instance type, deliver dedicated throughput between Amazon EC2 and Amazon EBS. The dedicated throughput minimizes contention between Amazon EBS I/O and other traffic from your Amazon EC2 instance, and provides the best performance for your EBS volumes.</p>
+<p>This Quick Start launches the Amazon Machine Image (AMI) for Microsoft Windows Server 2016 and Windows Server 2019, and it includes the license for Windows Server. The AMI is regularly updated with the latest service pack, so there&#8217;s no need update it. The Windows Server AMI doesn’t require client access licenses (CALs) and includes two Microsoft Remote Desktop Services licenses. For more information, refer to <a href="https://aws.amazon.com/windows/resources/licensing/" target="_blank" rel="noopener">Microsoft Licensing on AWS</a>.</p>
 </div>
 <div class="paragraph">
-<p>By default, on each Exchange node, the Quick Start deploys three 500-GiB General Purpose (GP2) SSD volumes to store mailbox databases and transaction logs. The database and log partitions are formatted using GUID Partition Table ( GPT).</p>
+<p>There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architecture">Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploying this Quick Start for a new virtual private cloud (VPC) with default parameters builds the following Exchange environment in the AWS Cloud:</p>
+</div>
+<div id="architecture1" class="imageblock">
+<div class="content">
+<img src="docs/deployment_guide/images/architecture_diagram.png" alt="Architecture" width="100%" height="100%">
+</div>
+<div class="title">Figure 1. Quick Start architecture for Exchange on AWS</div>
 </div>
 <div class="paragraph">
-<p>By default, partitions are created using Resilient File System (ReFS), which is the Preferred Architecture (PA) choice for Exchange Server 2016 and Exchange Server 2019. If you set the Enable or disable ReFS parameter to <strong>false</strong>, the partitions are formatted using NTFS.</p>
-</div>
-<div class="paragraph">
-<p>The GP2 volume type delivers a consistent baseline of 3 IOPS/GiB, which provides a total of 1,500 IOPS per volume for Exchange database and transaction log volumes. You can customize the volume size, and you can switch to using dedicated IOPS volumes.</p>
-</div>
-<div class="paragraph">
-<p>If you need more IOPS per volume, consider using Provisioned IOPS SSD volumes by changing the <strong>Exchange Server Volume Type</strong> and <strong>Exchange Server Volume IOPS</strong> parameters, or use disk striping within Windows.</p>
-</div>
-<div class="paragraph">
-<p>The default disk layout in this Quick Start uses the following EBS volumes:</p>
+<p>As shown in <a href="#architecture1">Figure 1</a>, this Quick Start sets up the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>One General Purpose SSD volume (100 GiB) for the operating system (C:)</p>
+<p>A highly available architecture that spans two or three Availability Zones.*</p>
 </li>
 <li>
-<p>One General Purpose SSD volume (500 GiB) to host the Exchange Server database files (D:)</p>
+<p>A VPC configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*</p>
 </li>
 <li>
-<p>One General Purpose SSD volume (500 GiB) to host the Exchange Server transaction log files (E:)</p>
+<p>In the public subnets:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Elastic IP addresses associated with the NAT gateway and RD Gateway instances.*</p>
+</li>
+<li>
+<p>Microsoft Windows Server–based RD Gateway instances, in an Auto Scaling group, and network address translation (NAT) gateways for outbound internet access.*</p>
+</li>
+<li>
+<p>(Optional) Exchange Edge Transport servers for routing email in and out of your environment.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the private subnets:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Microsoft Active Directory domain controllers.*</p>
+</li>
+<li>
+<p>Windows Server–based Amazon EC2 instances as Exchange nodes.</p>
+</li>
+<li>
+<p>Exchange Server Enterprise on each node. This architecture provides redundancy and a witness server to ensure that a quorum is established.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>An internet gateway that connects the VPC to the internet.</p>
+</li>
+<li>
+<p>A Network Load Balancer that distributes incoming traffic across the Exchange Amazon EC2 instances.</p>
+</li>
+<li>
+<p>Amazon Simple Storage Service (Amazon S3) to store and retrieve data.</p>
+</li>
+<li>
+<p>AWS Secrets Manager to encrypt, store, and retrieve credentials for your databases and other services.</p>
+</li>
+<li>
+<p>A Parameter Store resource to provide hierarchical storage for configuration data management and secrets management.</p>
+</li>
+<li>
+<p>AWS Certificate Manager to provision, manage, and deploy SSL/TLS certificates on AWS managed resources.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The following figure shows the disk layout on each Exchange Server node:</p>
+<p><span class="small">*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.</span></p>
 </div>
-<div id="architecture3" class="imageblock">
-<div class="content">
-<img src="docs/operational_guide/images/image3.png" alt="Architecture" width="521" height="172">
 </div>
-<div class="title">Figure 1. Disk layout on Exchange Server node</div>
 </div>
+<div class="sect1">
+<h2 id="_deployment_options">Deployment options</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><strong>Note</strong> You’ll find the installation software on each node in the <strong>C:\Exchangeinstall</strong> folder.</p>
-</div>
-<div class="paragraph">
-<p>Depending on the instance type selected, you might see additional drives for instance store (ephemeral) volumes such as (Z:). Data on instance storage will be lost when you stop your EC2 instance.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="ip-addresses-on-the-exchange-nodes">IP Addresses on the Exchange nodes</h4>
-<div class="paragraph">
-<p>By default, the Microsoft Exchange Quick Start template deploys two Exchange nodes with two IP addresses each:</p>
+<p>This Quick Start provides the following deployment options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>One IP address is used as the primary IP address for the instance.</p>
+<p><a href="https://fwd.aws/MqvGy?" target="_blank" rel="noopener">Deploy Exchange into a new VPC</a>. This option builds a new AWS environment that consists of the VPC, subnets, NAT gateways, security groups, bastion hosts, and other infrastructure components. It then deploys Exchange into this new VPC.</p>
 </li>
 <li>
-<p>A second IP address acts as the Failover Cluster IP resource.</p>
+<p><a href="https://fwd.aws/xq5Mx?" target="_blank" rel="noopener">Deploy Exchange into an existing VPC</a>. This option provisions Exchange in your existing AWS infrastructure.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>When you launch the AWS CloudFormation template, you can specify the addresses for each node, as shown in Figure 4. By default, the 10.0.0.0/19, 10.0.32.0/19, and 10.0.64.0/19 CIDR blocks are used for the private subnets.</p>
-</div>
-<div id="architecture4" class="imageblock">
-<div class="content">
-<img src="docs/operational_guide/images/image4.png" alt="Architecture" width="639" height="146">
-</div>
-<div class="title">Figure 2. Configuring IP addresses on the Exchange node</div>
+<p>This Quick Start provides separate templates for these options. It also lets you configure Classless Inter-Domain Routing (CIDR) blocks, instance types, and Exchange settings.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="database-availability-group">Database Availability Group</h4>
+</div>
+<div class="sect1">
+<h2 id="_predeployment_steps">Predeployment steps</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>A failover cluster is automatically created for the database availability group (DAG). The AWS CloudFormation templates carry out this task when deploying the second node. If you use the default parameter settings in the template, the Quick Start runs the following Windows PowerShell commands to complete this task:</p>
+<p>Before you deploy the Quick Start template, decide whether to use two Availability Zones or three, and whether to use a <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/manage-cluster-quorum" target="_blank" rel="noopener">file share witness</a> or a full node. By default, this deployment creates one Exchange node in each Availability Zone. The file share witness launches in the same Availability Zone as the first Exchange node.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>Install-WindowsFeature failover-clustering –IncludeManagementTools
-
-New-DatabaseAvailabilityGroup -Name DAG -WitnessServer FileServer
-
--WitnessDirectory C:\DAG
-
-Add-DatabaseAvailabilityGroupServer -Identity DAG
-
--MailboxServer ExchangeNode1
-
-Add-DatabaseAvailabilityGroupServer -Identity DAG
-
--MailboxServer ExchangeNode2</pre>
-</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Where possible, deploy this Quick Start using three Availability Zones. This enables automatic failover of database availability groups (DAGs) without the need for manual intervention.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p><strong>Note</strong>: By default, the database availability group is created with the name DAG. To change this value, modify the DAGName default parameter value in the Configure-ExchangeDAG.ps1 file.</p>
+<p>You can deploy a full Exchange node instead of a file share witness. In addition, you can specify whether to deploy the full node or the file share witness in a third Availability Zone. For more information about quorum models, refer to <a href="https://docs.microsoft.com/en-us/Exchange/high-availability/database-availability-groups/database-availability-groups?view=exchserver-2019#database-availability-group-quorum-models" target="_blank" rel="noopener">Database availability group quorum models</a>.</p>
 </div>
 <div class="paragraph">
-<p>The first command runs on each instance during the bootstrapping process. It installs the required components and management tools for the failover clustering services. The rest of the commands run near the end of the bootstrapping process on the second node and are responsible for creating the cluster and for defining the server nodes and IP addresses.</p>
-</div>
-<div class="paragraph">
-<p>By default, the Quick Start configures an even number of servers in the cluster. You need a third resource to maintain a majority vote to keep the cluster online if an individual server fails. For this, the Quick Start uses a dedicated file share witness instance, which can be either a domain-joined server or a third Exchange node (which cannot be part of the DAG itself). By default, the Quick Start creates a Dedicated Instance in the first Availability Zone to act as the file share witness. For production environments, you can also set the <strong>Third AZ</strong> parameter to <strong>witness</strong> to create a Dedicated Instance with a file share in a third Availability Zone.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, you can use any domain-joined server for this task. (This isn’t included in the Quick Start.) If you set the <strong>Third AZ</strong> parameter to <strong>full</strong>, the Quick Start keeps the quorum settings to the default node majority and creates a third Exchange Server node in the third Availability Zone. Note that some AWS Regions support only two Availability Zones; for a current list, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/">AWS Global Infrastructure</a>.</p>
-</div>
-<div class="paragraph">
-<p>The Quick Start automated solution ends after creating the DAG and adding the two Exchange nodes to the DAG. When the deployment is complete, you can create additional databases and make them highly available by creating copies on the second nodes. This process is covered in <a href="#step-3.-optional-create-database-copies">step 3</a> of the deployment instructions.</p>
+<p>In addition, you can deploy an internal Application Load Balancer to provide high availability that distributes traffic to the Exchange nodes. For this configuration, you must import a Secure Sockets Layer (SSL) certificate into AWS Certificate Manager (ACM) before you launch the template.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="edge-transport-nodes">Edge Transport Nodes</h4>
-<div class="paragraph">
-<p>Edge Transport nodes relay inbound and outbound emails and provide smart host services within the Exchange organization. The Edge nodes are installed in the public subnets and aren’t domain-joined. However, they do require information from Active Directory, and configuring an Edge sync subscription is needed.</p>
 </div>
-<div class="paragraph">
-<p>Because Edge Transport role nodes aren’t required for end-to-end mail flow, by default, Edge nodes aren’t deployed. For this to occur, you must select <strong>yes</strong> on the <strong>Deploy Edge servers</strong> launch option, as shown in the following figure:</p>
-</div>
-<div id="architecture5" class="imageblock">
-<div class="content">
-<img src="docs/operational_guide/images/image5.png" alt="Architecture" width="648" height="89">
-</div>
-<div class="title">Figure 3. Deploying Edge servers</div>
-</div>
-<div class="paragraph">
-<p>A pair of Edge servers is deployed in the public subnets (which must be defined), and the Exchange Server Edge Transport role is installed using default settings. The EC2 instances aren’t domain-joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards (NICs). Also, DNS records are created in Active Directory corresponding to their hostname.</p>
-</div>
-<div class="paragraph">
-<p>The Local Administrator password is reset to the Domain Admin password, and an Edge subscription file is created, which can be found in C:\EdgeServerSubscription.xml.</p>
-</div>
-<div class="paragraph">
-<p>Copy the subscription file to a <strong>mailbox</strong> server, and import the subscription by running the following command:</p>
-</div>
-<div class="paragraph">
-<p>New-EdgeSubscription -FileData ([byte[]]$(Get-Content -Path "C:\EdgeServerSubscription.xml" -Encoding Byte -ReadCount 0)) -Site "AZ1"</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="load-balancer">Load balancer</h4>
-<div class="paragraph">
-<p>Exchange servers running with the Client Access/Transport roles are usually situated behind a network load balancer (NLB) with a unified Exchange namespace such as “mail.example.com.” The namespace resolves to the load balancer, which in turns distributes traffic to the Exchange servers.</p>
-</div>
-<div class="paragraph">
-<p>The Exchange Server Quick Start contains an option to deploy an Application Load Balancer that distributes the traffic to the Exchange nodes.</p>
-</div>
-<div class="paragraph">
-<p>By default, the load balancer isn’t deployed because it requires an existing SSL certificate to be imported in AWS Certificate Manager.</p>
-</div>
-<div class="paragraph">
-<p>For a load balancer to be deployed, you must:</p>
-</div>
+<div class="sect1">
+<h2 id="_deployment_steps">Deployment steps</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Import or generate a certificate in AWS Certificate Manager.</p>
+<p>Sign in to your AWS account, and launch this Quick Start, as described under <a href="#_deployment_options">Deployment options</a>. The AWS CloudFormation console opens with a prepopulated template. Deployment takes about 3 hours to complete.</p>
 </li>
 <li>
-<p>Specify the full Amazon Resource Name (ARN) in the CertificateARN option.</p>
+<p>Choose the correct AWS Region, and then choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>Select <strong>true</strong> in <strong>Deploy Load Balancer</strong>, when you launch the Quick Start.</p>
+<p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Unless you are customizing the Quick Start templates for your own projects, don&#8217;t change the default settings for the following Amazon Simple Storage Service (Amazon S3) parameters: <strong>Quick Start S3 bucket name</strong>, <strong>Quick Start S3 bucket Region</strong>, and <strong>Quick Start S3 key prefix</strong>. Changing these settings automatically updates code references to point to a new Quick Start location. For more information, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">AWS Quick Start Contributor&#8217;s Guide</a>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources that might require the ability to automatically expand macros.</p>
+</li>
+<li>
+<p>Choose <strong>Create stack</strong> to deploy the stack.</p>
+</li>
+<li>
+<p>Monitor the stack&#8217;s status, and when the status is <strong>CREATE_COMPLETE</strong>, the Microsoft Exchange deployment is ready.</p>
+</li>
+<li>
+<p>To view the created resources, choose the <strong>Outputs</strong> tab.</p>
 </li>
 </ol>
 </div>
 </div>
-<div class="sect3">
-<h4 id="volume-encryption">Volume Encryption</h4>
-<div class="paragraph">
-<p>As part of the default setup, the Exchange Server Quick Start creates and attaches two EBS volumes to each Exchange node. One EBS volume (corresponding to the D:\ drive) holds the Exchange mailbox databases, while the other EBS volume (E:\) holds the Exchange transaction logs.</p>
 </div>
-<div class="paragraph">
-<p>Optionally, the Quick Start provides an option to encrypt the EBS volumes with either the default AWS Key Management Service (AWS KMS) encryption key or a custom KMS key, as shown in the following figure:</p>
-</div>
-<div id="architecture6" class="imageblock">
-<div class="content">
-<img src="docs/operational_guide/images/image5.png" alt="Architecture" width="648" height="83">
-</div>
-<div class="title">Figure 4. Encrypting the EBS volumes</div>
-</div>
-<div class="paragraph">
-<p><strong>Note</strong> The root volume of the Exchange nodes (C:\) isn’t encrypted, if <strong>Encrypt data volumes</strong> is selected.</p>
-</div>
-</div>
-</div>
+<div class="sect1">
+<h2 id="_postdeployment_steps">Postdeployment steps</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_post_deployment_steps">Post-deployment steps</h3>
-<div class="sect3">
-<h4 id="_run_windows_updates">Run Windows Updates</h4>
+<h3 id="_update_windows">Update Windows</h3>
 <div class="paragraph">
-<p>In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.</p>
+<p>To help ensure that the deployed servers' operating systems and installed applications have the latest Microsoft updates, run update Windows on each server.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1135,13 +1135,13 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 <p>Create an RDP session from the Remote Desktop Gateway server to each deployed server.</p>
 </li>
 <li>
-<p>Open the <strong>Settings</strong> application.</p>
+<p>Navigate to the <strong>Settings</strong> application.</p>
 </li>
 <li>
-<p>Open <strong>Update &amp; Security</strong>.</p>
+<p>Navigate to <strong>Update &amp; Security</strong>.</p>
 </li>
 <li>
-<p>Click <strong>Check for updates</strong>.</p>
+<p>Choose <strong>Check for updates</strong>.</p>
 </li>
 <li>
 <p>Install any updates and reboot if necessary.</p>
@@ -1149,16 +1149,13 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 </ol>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_optional_create_database_copies">(Optional) Create database copies</h4>
+<div class="sect2">
+<h3 id="_optional_create_database_copies">(Optional) Create database copies</h3>
 <div class="paragraph">
-<p>The Quick Start creates a database availability group (DAG) and adds the Exchange nodes to the DAG. As part of the Exchange installation, each Exchange node contains a mailbox database. The first node contains a database called DB1, and the second node contains a database called DB2.</p>
+<p>This Quick Start creates a database availability group (DAG) and adds to it the Exchange nodes. As part of the Exchange installation, each node contains a mailbox database. The first node contains a database called <code>DB1</code>, and the second node contains a database called <code>DB2</code>.</p>
 </div>
 <div class="paragraph">
-<p>As part of configuring high availability for the mailbox roles, you can add mailbox database copies on the other Exchange nodes. Alternatively, you can create entirely new databases and only then create additional copies.</p>
-</div>
-<div class="paragraph">
-<p>To create a second copy for the initial databases, use the following commands:</p>
+<p>As part of configuring high availability for the mailbox roles, you can add mailbox database copies to other Exchange nodes. Alternatively, you can create new databases and then create additional copies. To create a second copy for the initial databases, use the following commands:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1168,18 +1165,18 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_optional_create_a_dns_entry_for_the_load_balancer">(Optional) Create a DNS entry for the load balancer</h4>
+<div class="sect2">
+<h3 id="_optional_create_a_dns_entry_for_the_network_load_balancer">(Optional) Create a DNS entry for the Network Load Balancer</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>If you chose the option to deploy a load balancer, the Network Load Balancer (NLB) will have an endpoint address such as [elb.amazonaws.com].</p>
+<p>If you deploy a Network Load Balancer, it has an endpoint address, such as <code>elb.amazonaws.com</code>.</p>
 </li>
 <li>
-<p>To use the load balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the ALB.</p>
+<p>To use the load balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the Application Load Balancer.</p>
 </li>
 <li>
-<p>Before proceeding, go to the <a href="https://console.aws.amazon.com/ec2/v2/home">Amazon EC2 console</a> and, under <strong>Load balancer</strong>, select the load balancer that the Quick Start created.</p>
+<p>Before proceeding, navigate to the <a href="https://console.aws.amazon.com/ec2/v2/home" target="_blank" rel="noopener">Amazon EC2 console</a>, and under <strong>Load balancer</strong>, choose the load balancer that the Quick Start created.</p>
 </li>
 <li>
 <p>Copy the value listed under the DNS name, as shown in Figure 7.</p>
@@ -1188,92 +1185,76 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </div>
 <div id="architecture7" class="imageblock">
 <div class="content">
-<img src="docs/operational_guide/images/image7.png" alt="Architecture" width="646" height="275">
+<img src="docs/deployment_guide/images/image7.png" alt="Architecture" width="646" height="275">
 </div>
-<div class="title">Figure 5. Creating a DNS entry for the load balancer</div>
+<div class="title">Figure 2. Creating a DNS entry for the Network Load Balancer</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="5">
 <li>
-<p>To create the DNS record, connect using Remote Desktop to one of the domain controllers using domain credentials, and open the DNS console by going to the Start menu and typing “DNS”.</p>
+<p>To create the DNS record, use Remote Desktop with your domain credentials to connect to one of the domain controllers, and open the DNS console by navigating to the <strong>Start</strong> menu and entering <code>DNS</code>.</p>
 </li>
 <li>
-<p>In the DNS console, navigate to the Active Directory zone, right-click, and select <strong>New Alias (CNAME)</strong>, as shown in Figure 8.</p>
+<p>In the DNS console, navigate to the Active Directory in the applicable Availability Zone, and choose <strong>New Alias (CNAME)</strong>, as shown in Figure 8.</p>
 </li>
 </ol>
 </div>
 <div id="architecture8" class="imageblock">
 <div class="content">
-<img src="docs/operational_guide/images/image8.png" alt="Architecture" width="355" height="557">
+<img src="docs/deployment_guide/images/image8.png" alt="Architecture" width="355" height="557">
 </div>
-<div class="title">Figure 6. Selecting New Alias (CNAME)</div>
+<div class="title">Figure 3. Selecting New Alias (CNAME)</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="7">
 <li>
-<p>Create the DNS entry such as “mail” and in <strong>fully qualified domain name (FQDN) for target host</strong>, paste the value of the Application Load Balancer endpoint, as shown in Figure 9.</p>
+<p>Create a DNS entry, such as <strong>mail</strong>, and in <strong>fully qualified domain name (FQDN) for target host</strong>, paste the value of the Application Load Balancer endpoint, as shown in Figure 9.</p>
 </li>
 </ol>
 </div>
 <div id="architecture9" class="imageblock">
 <div class="content">
-<img src="docs/operational_guide/images/image9.png" alt="Architecture" width="422" height="480">
+<img src="docs/deployment_guide/images/image9.png" alt="Architecture" width="422" height="480">
 </div>
-<div class="title">Figure 7. Creating the DNS entry (“mail”)</div>
+<div class="title">Figure 4. Creating the DNS entry ("mail")</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="8">
 <li>
-<p>Verify that the DNS entry is resolved successfully by performing an nslookup. Go to Start and type “cmd”. In the command line window, type the following:</p>
+<p>Verify that the DNS entry successfully resolves by running <code>nslookup</code>. Navigate to <strong>Start</strong> and enter <code>cmd</code>. In the command line, enter the following (where <strong>mail</strong> is the name of your CNAME record and <strong>example.com</strong> is the domain name of your Active Directory):</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Nslookup <strong>mail</strong>.<em>example.com</em></p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>Where mail is the name of the CNAME record you created, and “example.com” is your Active Directory domain name.</p>
-</div>
-</blockquote>
+<p>Nslookup <em>mail.example.com</em></p>
 </div>
 <div class="olist arabic">
-<ol class="arabic" start="10">
+<ol class="arabic" start="9">
 <li>
-<p>Ensure that the record resolves to the load balancer DNS record, such as shown in Figure 10.</p>
+<p>Ensure that the record resolves to the load balancer DNS record, as shown in Figure 10.</p>
 </li>
 </ol>
 </div>
 <div id="architecture10" class="imageblock">
 <div class="content">
-<img src="images/image10.png" alt="Architecture" width="647" height="278">
+<img src="docs/deployment_guide/images/image10.png" alt="Architecture" width="647" height="278">
 </div>
-<div class="title">Figure 8. Verifying the DNS record</div>
-</div>
-</div>
+<div class="title">Figure 5. Verifying the DNS record</div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_best_practices_for_using_exchange_on_aws">Best practices for using Exchange on AWS</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="high-availability-and-disaster-recovery">High availability and disaster recovery</h3>
 <div class="paragraph">
-<p>The architecture built by this Quick Start supports AWS best practices for high availability and security.</p>
-</div>
-<div class="sect3">
-<h4 id="high-availability-and-disaster-recovery">High availability and disaster recovery</h4>
-<div class="paragraph">
-<p>Amazon EC2 provides the ability to place instances in multiple locations composed of AWS Regions and Availability Zones. Regions are dispersed and located in separate geographic areas. Availability Zones are distinct locations within a Region that are engineered to be isolated from failures in other Availability Zones and that provide inexpensive, low-latency network connectivity to other Availability Zones in the same Region.</p>
+<p>Amazon EC2 provides the ability to place instances in multiple AWS Regions and Availability Zones. For more information, refer to <a href="https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/using-regions-availability-zones.html" target="_blank" rel="noopener">Regions and Zones</a>.</p>
 </div>
 <div class="paragraph">
 <p>By launching your instances in separate Regions, you can design your application to be closer to specific customers or to meet legal or other requirements. By launching your instances in separate Availability Zones, you can protect your applications from the failure of a single location. Exchange provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="automatic-failover">Automatic failover</h4>
+<div class="sect2">
+<h3 id="automatic-failover">Automatic failover</h3>
 <div class="paragraph">
-<p>Deploying the Quick Start with the <strong>default parameters</strong> configures a two-node database availability group (DAG) with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.</p>
+<p>Deploying this Quick Start with the <strong>default parameters</strong> configures a two-node DAG with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.</p>
 </div>
 <div class="paragraph">
 <p>The Quick Start implementation supports the following scenarios:</p>
@@ -1292,86 +1273,34 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 </ul>
 </div>
 <div class="paragraph">
-<p>However, the Quick Start default implementation doesn’t provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing quorum on the second cluster node (e.g., ExchangeNode2) to restore application availability.</p>
+<p>This Quick Start&#8217;s default implementation, however, doesn’t provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing a quorum on the second cluster node (for example, <code>ExchangeNode2</code>) to restore application availability.</p>
 </div>
 <div class="paragraph">
-<p>The Quick Start also provides an option to deploy into three Availability Zones. This deployment option can mitigate the loss of quorum in the case of a failure of a single node. However, you can select this option only in AWS Regions that include three or more Availability Zones; for a current list, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/">AWS Global Infrastructure</a>.</p>
+<p>This Quick Start can deploy to three Availability Zones, which can mitigate the loss of quorum if a node fails. Note that you can choose this option only in AWS Regions that include three or more Availability Zones. For a current list, refer to <a href="https://aws.amazon.com/about-aws/global-infrastructure/" target="_blank" rel="noopener">Global Infrastructure</a>.</p>
 </div>
 <div class="paragraph">
-<p>We recommend that you consult the <a href="https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019">Microsoft Exchange Server documentation</a> and customize some of the steps described in this guide or add ones (e.g., deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that best meets your business, IT, and security requirements.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="security-groups-and-firewalls">Security groups and firewalls</h4>
-<div class="paragraph">
-<p>When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.</p>
-</div>
-<div class="paragraph">
-<p>Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, <a href="https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top">Windows Time service</a>, and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see <a href="https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my">Exchange, Firewalls, and Support</a>.</p>
-</div>
-<div class="paragraph">
-<p>Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet.</p>
-</div>
-<div class="paragraph">
-<p>The Quick Start creates certain security groups and rules for you. For a detailed list of port mappings, see the <a href="https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/security.html">Security section</a> of the Active Directory Domain Services Quick Start deployment guide, and the <a href="#security">Security section</a> of this guide.</p>
+<p>Consult the <a href="https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019" target="_blank" rel="noopener">Exchange Server documentation</a> and customize the steps described (for example, deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that meets your business, IT, and security requirements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_security">Security</h3>
+<h3 id="security-groups-and-firewalls">Security groups and firewalls</h3>
 <div class="paragraph">
-<p>AWS provides a set of building blocks (for example, Amazon EC2 and Amazon VPC) that you can use to provision infrastructure for your applications. In this model, some security capabilities, such as physical security, are the responsibility of AWS and are highlighted in the <a href="https://d0.awsstatic.com/whitepapers/aws-security-best-practices.pdf">AWS security whitepaper</a>. Other areas, such as controlling access to applications, fall on the application developer and the tools provided in the Microsoft platform.</p>
+<p>When the Amazon EC2 instances launch, they must be associated with a security group, which acts as a stateful firewall. You control the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all outgoing security-group traffic is permitted. Inbound traffic, however, must be configured to allow the appropriate traffic to reach your instances.</p>
 </div>
 <div class="paragraph">
-<p>This Quick Start configures the following security groups for Exchange Server:</p>
+<p>Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, <a href="https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top" target="_blank" rel="noopener">Windows Time service (W32Time)</a>, and Distributed File System (DFS), among others. The nodes that run Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, refer to <a href="https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-firewalls-and-support-8230-oh-my/ba-p/595710" target="_blank" rel="noopener">Exchange, Firewalls, and Support &#8230;&#8203; Oh, my!</a></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Security group</th>
-<th class="tableblock halign-left valign-top">Associated with</th>
-<th class="tableblock halign-left valign-top">Inbound source</th>
-<th class="tableblock halign-left valign-top">Ports</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DomainMemberSGID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exchange nodes, FileServer, RD Gateway, Domain controllers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard AD ports</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EXCHClientSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exchange nodes, FileServer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">25, 80, 443, 143, 993, 110, 995, 587</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ExchangeSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exchange nodes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ExchangeSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">All ports</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EXCHEdgeSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EXCHEdgeSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnets CIDR, 0.0.0.0/0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50636, 25</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">LoadBalancerSecurityGroup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Load balancer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.0.0/0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.0.0/0</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet. The Quick Start creates certain security groups and rules for you.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For troubleshooting common Quick Start issues, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a> and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html" target="_blank" rel="noopener">Troubleshooting CloudFormation</a>.</p>
 </div>
 </div>
 </div>
@@ -1379,7 +1308,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <h2 id="_feedback">Feedback</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To submit feature ideas and report bugs, use the <strong>Issues</strong> section of the GitHub repository for this Quick Start. To submit code, refer to the <a href="https://aws-quickstart.github.io/" target="_blank" rel="noopener">Quick Start Contributor&#8217;s Guide</a>. For all other feedback, use the following GitHub links:</p>
+<p>To submit feature ideas and report bugs, use the <strong>Issues</strong> section of the <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchange" target="_blank" rel="noopener">GitHub repository</a> for this Quick Start. To submit code, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">Quick Start Contributor&#8217;s Guide</a>. To submit feedback on this deployment guide, use the following GitHub links:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1403,10 +1332,10 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <h2 id="_notices">Notices</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document is provided for informational purposes only. It represents current AWS product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of AWS products or services, each of which is provided “as is” without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from AWS, its affiliates, suppliers, or licensors. The responsibilities and liabilities of AWS to its customers are controlled by AWS agreements, and this document is not part of, nor does it modify, any agreement between AWS and its customers.</p>
+<p>This document is provided for informational purposes only. It represents current AWS product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of AWS products or services, each of which is provided "as is" without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from AWS, its affiliates, suppliers, or licensors. The responsibilities and liabilities of AWS to its customers are controlled by AWS agreements, and this document is not part of, nor does it modify, any agreement between AWS and its customers.</p>
 </div>
 <div class="paragraph">
-<p>The software included with this paper is licensed under the Apache License, version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at <a href="http://aws.amazon.com/apache2.0/" target="_blank" rel="noopener">http://aws.amazon.com/apache2.0/</a> or in the accompanying "license" file. This code is distributed on an "as is" basis, without warranties or conditions of any kind, either expressed or implied. See the License for specific language governing permissions and limitations.</p>
+<p>The software included with this paper is licensed under the Apache License, version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at <a href="http://aws.amazon.com/apache2.0/" target="_blank" rel="noopener">http://aws.amazon.com/apache2.0/</a> or in the accompanying "license" file. This code is distributed on an "as is" basis, without warranties or conditions of any kind, either expressed or implied. Refer to the License for specific language governing permissions and limitations.</p>
 </div>
 </div>
 </div>
