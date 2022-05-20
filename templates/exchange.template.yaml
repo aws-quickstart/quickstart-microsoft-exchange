@@ -459,6 +459,7 @@ Parameters:
     AllowedValues:
     - gp2
     - io2
+    - gp3
     Default: gp2
     Description: The volume type for the Exchange data drive.
     Type: String
