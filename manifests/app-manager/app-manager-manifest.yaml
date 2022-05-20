@@ -1,9 +1,0 @@
-ssm_app_manager:
-  should_upload: true
-  documents_list:
-    - document_name: AWSQuickStarts-Microsoft-Exchange
-      template_name: exchange-main.template.yaml
-      has_nested_stacks: true
-      nested_documents:
-        - resource_name: VPCStack
-          document_name: AWSQuickStarts-AWS-VPC
