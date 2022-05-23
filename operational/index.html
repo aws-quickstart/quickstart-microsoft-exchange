@@ -978,9 +978,11 @@ Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-exchan
 <div class="paragraph">
 <p><a href="#architecture3">Disk layout on Exchange Server node</a> shows the disk layout on each Exchange Server node:</p>
 </div>
-<div id="architecture3" class="paragraph">
-<div class="title">Disk layout on Exchange Server node</div>
-<p>image::../docs/operational_guide/images/image3.png</p>
+<div id="architecture3" class="imageblock">
+<div class="content">
+<img src="docs/operational_guide/images/image3.png" alt="image3">
+</div>
+<div class="title">Figure 1. Disk layout on Exchange Server node</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1016,9 +1018,11 @@ The installation software for each node is located in the <code>C:\Exchangeinsta
 <div class="paragraph">
 <p>When you launch the AWS CloudFormation template, specify the addresses for each node, as shown in <a href="#architecture4">Configuring IP addresses for the Exchange node</a>. By default, the following CIDR blocks are used in the private subnets: <code>10.0.0.0/19</code>, <code>10.0.32.0/19</code>, <code>10.0.64.0/19</code>.</p>
 </div>
-<div id="architecture4" class="paragraph">
-<div class="title">Configuring IP addresses for the Exchange node</div>
-<p>image::../docs/operational_guide/images/image4.png</p>
+<div id="architecture4" class="imageblock">
+<div class="content">
+<img src="/docs/operational_guide/images/image4.png" alt="Configuring IP addresses for the Exchange node">
+</div>
+<div class="title">Figure 2. Configuring IP addresses for the Exchange node</div>
 </div>
 </div>
 <div class="sect3">
@@ -1266,7 +1270,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <div class="content">
 <img src="images/image10.png" alt="Architecture" width="647" height="278">
 </div>
-<div class="title">Figure 1. Verifying the DNS record</div>
+<div class="title">Figure 3. Verifying the DNS record</div>
 </div>
 </div>
 </div>
