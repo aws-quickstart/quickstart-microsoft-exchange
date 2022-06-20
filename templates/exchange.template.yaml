@@ -292,9 +292,10 @@ Parameters:
     Default: t3.large
     AllowedValues:
     - t3.large
-    - t3.large
     - m5.large
     - m5.xlarge
+    - m5.2xlarge
+    - m5.4xlarge
     ConstraintDescription: Select a general purpose instance type
   EdgeNode1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
@@ -464,6 +465,10 @@ Parameters:
     Type: String
   FileServerInstanceType:
     Default: t3.small
+    AllowedValues:
+    - t3.small
+    - t3.large
+    - m5.xlarge
     Description: The Amazon EC2 instance type for the file-share witness server.
     Type: String
   FileServerNetBIOSName:
