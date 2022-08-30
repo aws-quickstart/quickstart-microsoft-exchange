@@ -1751,17 +1751,17 @@ Resources:
       VpcId: !Ref VPCID
       SecurityGroupIngress:
       - Description: Edge Server directory synchronization
-        IpProtocol: udp
+        IpProtocol: tcp
         FromPort: 50636
         ToPort: 50636
         CidrIp: !Ref PrivateSubnet1CIDR
       - Description: Edge Server directory synchronization
-        IpProtocol: udp
+        IpProtocol: tcp
         FromPort: 50636
         ToPort: 50636
         CidrIp: !Ref PrivateSubnet2CIDR
       - Description: Edge Server directory synchronization
-        IpProtocol: udp
+        IpProtocol: tcp
         FromPort: 50636
         ToPort: 50636
         CidrIp: !Ref PrivateSubnet3CIDR
