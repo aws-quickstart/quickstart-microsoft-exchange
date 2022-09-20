@@ -3,6 +3,7 @@
 :partner-product-name: Microsoft Exchange
 :partner-product-short-name: Exchange
 //:partner-company-name: Microsoft
+:current-year: 2022
 :doc-month: September
 :doc-year: 2022
 //:partner-contributors: John Smith, {partner-company-name}
