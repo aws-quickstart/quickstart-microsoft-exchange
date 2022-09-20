@@ -3,8 +3,7 @@
 === Implementation details
 
 [[storage-on-the-exchange-nodes]]
-==== Storage 
- the Exchange nodes
+==== Storage for the Exchange nodes
 
 Storage capacity and performance are key aspects of any production installation. Although capacity and performance vary from one deployment to the next, the Quick Start provides a reference configuration that you can use as a starting point. The AWS CloudFormation template deploys the Exchange nodes using the memory-optimized r5.xlarge instance type by default.
 
@@ -32,7 +31,7 @@ The default disk layout in the Quick Start uses the following EBS volumes:
 
 [#architecture3]
 .Disk layout on Exchange Server node
-image::/docs/operational_guide/images/image3.png[Disk layout on Exchange Server node]
+image::../docs/operational_guide/images/image3.png[Disk layout on Exchange Server node]
 
 NOTE: The installation software for each node is located in the `C:\Exchangeinstall` folder.
 
@@ -50,7 +49,7 @@ When you launch the AWS CloudFormation template, specify the addresses for each 
 
 [#architecture4]
 .Configuring IP addresses for the Exchange node
-image::/docs/operational_guide/images/image4.png[Configuring IP addresses for the Exchange node]
+image::../docs/operational_guide/images/image4.png[Configuring IP addresses for the Exchange node]
 
 [[database-availability-group]]
 ==== Database availability group
@@ -91,8 +90,8 @@ Edge Transport nodes relay inbound and outbound emails and provide smart host se
 Because Edge Transport role nodes aren’t required for end-to-end mail flow, by default, Edge nodes aren’t deployed. For this to occur, you must choose *yes* for the *Deploy edge servers* launch option, as shown in <<architecture5>>.
 
 [#architecture5]
-.Deploying Edge servers
-image::../docs/operational_guide/images/image5.png
+.Deploy edge servers
+image::../docs/operational_guide/images/image5.png[Deploy edge servers]
 
 A pair of edge servers deploy in the public subnets (which must be defined), and the Exchange server edge transport role installs with default settings. The Amazon EC2 instances aren’t domain joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards (NICs). Also, DNS records are created in Active Directory corresponding to their hostname.
 
@@ -125,7 +124,7 @@ Optionally, the Quick Start can encrypt the Amazon EBS volumes with either the d
 
 [#architecture6]
 .Encrypting the EBS volumes
-image::../docs/operational_guide/images/image5.png
+image::../docs/operational_guide/images/image5.png[Encrypting the EBS volumes]
 
 NOTE: If you choose *Encrypt data volumes*, the Exchange nodes (`C:\`) are not encrypted.
 
@@ -161,7 +160,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 
 [#architecture7]
 .Creating a DNS entry for the load balancer
-image::../docs/operational_guide/images/image7.png
+image::../docs/operational_guide/images/image7.png[Creating a DNS entry for the load balancer]
 
 [start=5]
 . To create the DNS record, connect using Remote Desktop to one of the domain controllers using domain credentials, and open the DNS console by navigating to the *Start* menu and searching for *DNS*.
@@ -169,15 +168,15 @@ image::../docs/operational_guide/images/image7.png
 
 [#architecture8]
 .Selecting a new alias (CNAME)
-image::../docs/operational_guide/images/image8.png
+image::../docs/operational_guide/images/image8.png[Selecting a new alias (CNAME)]
 
 [start=7]
 . Create the DNS entry, such as *mail*.
 . Under *fully qualified domain name (FQDN) for target host*, paste the value of the Application Load Balancer endpoint, as shown in <<architecture9>>.
 
 [#architecture9]
-.Creating the "mail" DNS entry
-image::../docs/operational_guide/images/image9.png
+.Creating the mail DNS entry
+image::../docs/operational_guide/images/image9.png[Creating the mail DNS entry]
 
 [start=9]
 . Verify that the DNS entry resolves successfully by running Nslookup.
@@ -192,7 +191,7 @@ NOTE: `Mail` is the name of your CNAME record, and `example.com` is your Active 
 
 [#architecture10]
 .Verifying the DNS record
-image::../images/image10.png[Architecture,width=647,height=278]
+image::../docs/operational_guide/images/image10.png[Verifying the DNS record]
 
 == Best practices for using {partner-product-short-name} on AWS
 
