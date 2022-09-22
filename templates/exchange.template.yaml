@@ -51,6 +51,7 @@ Metadata:
     - Label:
         default: Microsoft Exchange Server Configuration
       Parameters:
+      - AppInsightsApplicationName
       - ExchangeServerVersion
       - IncludeEdgeTransportRole
       - EdgeInstanceType
@@ -61,6 +62,7 @@ Metadata:
       - EnableReFSVolumes
       - EncryptDataVolumes
       - EncryptionKmsKey
+      - SetupAppInsightsMonitoring
       - VolumeSize
       - VolumeType
       - VolumeIops
@@ -101,6 +103,8 @@ Metadata:
         default: Domain Controller 1 private IP address
       ADServer2NetBIOSName:
         default: Domain Controller 2 NetBIOS name
+      AppInsightsApplicationName:
+        default: Application Insights Application name
       CertificateArn:
         default: Network Load Balancer Certificate
       DeployLoadBalancer:
@@ -119,6 +123,14 @@ Metadata:
         default: Exchange Server version
       EdgeInstanceType:
         default: Instance type for Edge server
+      EdgeNode1NetBIOSName:
+        default: Edge Node 1 NetBIOS Name
+      EdgeNode1PrivateIP1:
+        default: Edge Node 1 private IP address
+      EdgeNode2NetBIOSName:
+        default: Edge Node 2 NetBIOS name
+      EdgeNode2PrivateIP1:
+        default: Edge Node 2 private IP address  
       EnableReFSVolumes:
         default: Enable or disable ReFS
       EncryptDataVolumes:
@@ -131,6 +143,32 @@ Metadata:
         default: Path to Exchange 2016 ISO
       Exchange2019Source:
         default: Path to Exchange 2019 ISO
+      ExchangeNodeInstanceType:
+        default: Instance type for Exchange nodes
+      ExchangeNode1NetBIOSName:
+        default: Exchange Node 1 NetBIOS name
+      ExchangeNode1PrivateIP1:
+        default: Exchange Node 1 private IP address 1
+      ExchangeNode1PrivateIP2:
+        default: Exchange Node 1 private IP address 2
+      ExchangeNode2NetBIOSName:
+        default: Exchange Node 2 NetBIOS name
+      ExchangeNode2PrivateIP1:
+        default: Exchange Node 2 private IP address 1
+      ExchangeNode2PrivateIP2:
+        default: Exchange Node 2 private IP address 2
+      ExchangeNode3NetBIOSName:
+        default: Exchange Node 3 NetBIOS Name
+      ExchangeNode3PrivateIP1:
+        default: Exchange Node 3 private IP address 1
+      ExchangeNode3PrivateIP2:
+        default: Exchange Node 3 private IP address 2
+      FileServerInstanceType:
+        default: File Server instance type
+      FileServerNetBIOSName:
+        default: File Server NetBIOS name
+      FileServerPrivateIP:
+        default: File Server private IP address
       IncludeEdgeTransportRole:
         default: Deploy Edge servers
       KeyPairName:
@@ -157,6 +195,8 @@ Metadata:
         default: Quick Start S3 bucket region
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
+      SetupAppInsightsMonitoring:
+        default: Setup Application Insights Monitoring
       ThirdAZ:
         default: Third Availability Zone
       VPCID:
@@ -173,40 +213,6 @@ Metadata:
         default: Windows Server 2016 AMI name
       WS2022FULLBASE:
         default: Windows Server 2022 AMI name
-      FileServerInstanceType:
-        default: File Server instance type
-      FileServerNetBIOSName:
-        default: File Server NetBIOS name
-      FileServerPrivateIP:
-        default: File Server private IP address
-      ExchangeNodeInstanceType:
-        default: Instance type for Exchange nodes
-      ExchangeNode1NetBIOSName:
-        default: Exchange Node 1 NetBIOS name
-      ExchangeNode1PrivateIP1:
-        default: Exchange Node 1 private IP address 1
-      ExchangeNode1PrivateIP2:
-        default: Exchange Node 1 private IP address 2
-      ExchangeNode2NetBIOSName:
-        default: Exchange Node 2 NetBIOS name
-      ExchangeNode2PrivateIP1:
-        default: Exchange Node 2 private IP address 1
-      ExchangeNode2PrivateIP2:
-        default: Exchange Node 2 private IP address 2
-      ExchangeNode3NetBIOSName:
-        default: Exchange Node 3 NetBIOS Name
-      ExchangeNode3PrivateIP1:
-        default: Exchange Node 3 private IP address 1
-      ExchangeNode3PrivateIP2:
-        default: Exchange Node 3 private IP address 2
-      EdgeNode1NetBIOSName:
-        default: Edge Node 1 NetBIOS Name
-      EdgeNode1PrivateIP1:
-        default: Edge Node 1 private IP address
-      EdgeNode2NetBIOSName:
-        default: Edge Node 2 NetBIOS name
-      EdgeNode2PrivateIP1:
-        default: Edge Node 2 private IP address
 Parameters:
   ADServer1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
@@ -229,6 +235,12 @@ Parameters:
     MaxLength: '15'
     MinLength: '1'
     Type: String
+  AppInsightsApplicationName:
+    Description: Application name to be used with AppInsights monitoring.
+    Type: String
+    Default: ''
+    MaxLength: '300'
+    AllowedPattern: '^[a-zA-Z0-9\-]$*'
   CertificateArn:
     Default: ''
     Description: (Conditional) If 'true' was chosen in Deploy Network Load Balancer
@@ -350,6 +362,105 @@ Parameters:
       Leave blank to use default EBS encryption key.
     MaxLength: '90'
     Type: String
+  ExchangeNodeInstanceType:
+    AllowedValues:
+    - m5.xlarge
+    - r4.xlarge
+    - r4.2xlarge
+    - r4.4xlarge
+    - r4.8xlarge
+    - r5.xlarge
+    - r5.2xlarge
+    - r5.4xlarge
+    - r5.8xlarge
+    ConstraintDescription: Only EBS Optimized instance types r4.*, r5.* allowed
+    Default: r5.xlarge
+    Description: The Amazon EC2 instance type for the Exchange nodes.
+    Type: String
+  ExchangeNode1NetBIOSName:
+    AllowedPattern: '[a-zA-Z0-9]+'
+    Default: ExchangeNode1
+    Description: The NetBIOS name of the first Exchange Node (up to 15 characters).
+    MaxLength: '15'
+    MinLength: '1'
+    Type: String
+  ExchangeNode1PrivateIP1:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.0.100
+    Description: The primary private IP for Exchange node 1.
+    Type: String
+  ExchangeNode1PrivateIP2:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.0.101
+    Description: The secondary private IP for Exchange node 1.
+    Type: String
+  ExchangeNode2NetBIOSName:
+    AllowedPattern: '[a-zA-Z0-9]+'
+    Default: ExchangeNode2
+    Description: The NetBIOS name of the second Exchange Node (up to 15 characters).
+    MaxLength: '15'
+    MinLength: '1'
+    Type: String
+  ExchangeNode2PrivateIP1:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.32.100
+    Description: The primary private IP for Exchange node 2.
+    Type: String
+  ExchangeNode2PrivateIP2:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.32.101
+    Description: The secondary private IP for Exchange node 2.
+    Type: String
+  ExchangeNode3NetBIOSName:
+    AllowedPattern: '[a-zA-Z0-9]+'
+    Default: ExchangeNode3
+    Description: (Optional) The NetBIOS name of the third Exchange node (up to 15
+      characters).
+    MaxLength: '15'
+    MinLength: '1'
+    Type: String
+  ExchangeNode3PrivateIP1:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.64.100
+    Description: (Optional) The primary private IP for the Exchange node 3.
+    Type: String
+  ExchangeNode3PrivateIP2:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.64.101
+    Description: (Optional) The secondary private IP for the Exchange node 3.
+    Type: String
+  Exchange2016Source:
+    Default: 'https://download.microsoft.com/download/8/d/2/8d2d01b4-5bbb-4726-87da-0e331bc2b76f/ExchangeServer2016-x64-CU23.ISO'
+    Description: Full URL (including https://) for Exchange 2016 ISO.
+    MaxLength: '2000'
+    MinLength: '1'
+    Type: String
+  Exchange2019Source:
+    Default: 'https://download.microsoft.com/download/b/c/7/bc766694-8398-4258-8e1e-ce4ddb9b3f7d/ExchangeServer2019-x64-CU12.ISO'
+    Description: Full URL (including https://) for Exchange 2019 ISO.
+    MaxLength: '2000'
+    MinLength: '1'
+    Type: String
+  FileServerInstanceType:
+    Default: t3.small
+    AllowedValues:
+    - t3.small
+    - t3.large
+    - m5.xlarge
+    Description: The Amazon EC2 instance type for the file-share witness server.
+    Type: String
+  FileServerNetBIOSName:
+    AllowedPattern: '[a-zA-Z0-9]+'
+    Default: FileServer
+    Description: The NetBIOS name of the file-share witness server (up to 15 characters).
+    MaxLength: '15'
+    MinLength: '1'
+    Type: String
+  FileServerPrivateIP:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    Default: 10.0.0.200
+    Description: The primary private IP for the file-share witness server.
+    Type: String
   IncludeEdgeTransportRole:
     AllowedValues:
     - 'yes'
@@ -423,6 +534,13 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
     Type: String
+  SetupAppInsightsMonitoring:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: Setup Application Insights monitoring for Exchange resources. 
+    Type: String
   ThirdAZ:
     AllowedValues:
     - 'no'
@@ -464,93 +582,6 @@ Parameters:
     Default: gp2
     Description: The volume type for the Exchange data drive.
     Type: String
-  FileServerInstanceType:
-    Default: t3.small
-    AllowedValues:
-    - t3.small
-    - t3.large
-    - m5.xlarge
-    Description: The Amazon EC2 instance type for the file-share witness server.
-    Type: String
-  FileServerNetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
-    Default: FileServer
-    Description: The NetBIOS name of the file-share witness server (up to 15 characters).
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
-  FileServerPrivateIP:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.0.200
-    Description: The primary private IP for the file-share witness server.
-    Type: String
-  ExchangeNodeInstanceType:
-    AllowedValues:
-    - m5.xlarge
-    - r4.xlarge
-    - r4.2xlarge
-    - r4.4xlarge
-    - r4.8xlarge
-    - r5.xlarge
-    - r5.2xlarge
-    - r5.4xlarge
-    - r5.8xlarge
-    ConstraintDescription: Only EBS Optimized instance types r4.*, r5.* allowed
-    Default: r5.xlarge
-    Description: The Amazon EC2 instance type for the Exchange nodes.
-    Type: String
-  ExchangeNode1NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
-    Default: ExchangeNode1
-    Description: The NetBIOS name of the first Exchange Node (up to 15 characters).
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
-  ExchangeNode1PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.0.100
-    Description: The primary private IP for Exchange node 1.
-    Type: String
-  ExchangeNode1PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.0.101
-    Description: The secondary private IP for Exchange node 1.
-    Type: String
-  ExchangeNode2NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
-    Default: ExchangeNode2
-    Description: The NetBIOS name of the second Exchange Node (up to 15 characters).
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
-  ExchangeNode2PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.32.100
-    Description: The primary private IP for Exchange node 2.
-    Type: String
-  ExchangeNode2PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.32.101
-    Description: The secondary private IP for Exchange node 2.
-    Type: String
-  ExchangeNode3NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
-    Default: ExchangeNode3
-    Description: (Optional) The NetBIOS name of the third Exchange node (up to 15
-      characters).
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
-  ExchangeNode3PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.64.100
-    Description: (Optional) The primary private IP for the Exchange node 3.
-    Type: String
-  ExchangeNode3PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
-    Default: 10.0.64.101
-    Description: (Optional) The secondary private IP for the Exchange node 3.
-    Type: String
   WS2016FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
@@ -559,23 +590,13 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2022-English-Full-Base'
     Description: The image name for the AWS Systems Manager Windows Server 2022 AMI ID lookup
-  Exchange2016Source:
-    Default: 'https://download.microsoft.com/download/8/d/2/8d2d01b4-5bbb-4726-87da-0e331bc2b76f/ExchangeServer2016-x64-CU23.ISO'
-    Description: Full URL (including https://) for Exchange 2016 ISO.
-    MaxLength: '2000'
-    MinLength: '1'
-    Type: String
-  Exchange2019Source:
-    Default: 'https://download.microsoft.com/download/b/c/7/bc766694-8398-4258-8e1e-ce4ddb9b3f7d/ExchangeServer2019-x64-CU12.ISO'
-    Description: Full URL (including https://) for Exchange 2019 ISO.
-    MaxLength: '2000'
-    MinLength: '1'
-    Type: String
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   DeployEdge: !Equals [!Ref IncludeEdgeTransportRole, 'yes']
   DeployLoadBalancer: !Equals [!Ref DeployLoadBalancer, 'true']
   Exchange2016Selected: !Equals [!Ref ExchangeServerVersion, '2016']
+  UsingDefaultAppName: !Equals [!Ref AppInsightsApplicationName, '']
+  AppInightsEnabled: !Equals [!Ref SetupAppInsightsMonitoring, 'true']
   EncryptionKmsKeySelected:
     !Not
     - !Equals
@@ -3977,6 +3998,11 @@ Resources:
       Size: !Ref VolumeSize
       VolumeType: !Ref VolumeType
     Type: AWS::EC2::Volume
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode1Volume2:
     Properties:
       AvailabilityZone: !GetAtt ExchangeNode1.AvailabilityZone
@@ -4001,6 +4027,11 @@ Resources:
       Size: !Ref VolumeSize
       VolumeType: !Ref VolumeType
     Type: AWS::EC2::Volume
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode2Volume1:
     Properties:
       AvailabilityZone: !GetAtt ExchangeNode2.AvailabilityZone
@@ -4025,6 +4056,11 @@ Resources:
       Size: !Ref VolumeSize
       VolumeType: !Ref VolumeType
     Type: AWS::EC2::Volume
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode2Volume2:
     Properties:
       AvailabilityZone: !GetAtt ExchangeNode2.AvailabilityZone
@@ -4049,6 +4085,11 @@ Resources:
       Size: !Ref VolumeSize
       VolumeType: !Ref VolumeType
     Type: AWS::EC2::Volume
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode3Volume1:
     Condition: ThirdAzIsFullNode
     Properties:
@@ -4074,6 +4115,11 @@ Resources:
       Size: !Ref VolumeSize
       VolumeType: !Ref VolumeType
     Type: AWS::EC2::Volume
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode3Volume2:
     Condition: ThirdAzIsFullNode
     Properties:
@@ -4105,6 +4151,11 @@ Resources:
       InstanceId: !Ref ExchangeNode1
       VolumeId: !Ref ExchangeNode1Volume1
     Type: AWS::EC2::VolumeAttachment
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EBSVolumeEncryption
   ExchangeNode1Volume2Attachment:
     Properties:
       Device: /dev/xvdg
@@ -4219,6 +4270,25 @@ Resources:
            ConditionKey: "Backup"
            ConditionValue: "yes"
       BackupPlanId: !Ref ExchangeBackupPlan
+  ExchangeResourceGroup:
+    Condition: AppInsightsEnabled
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name: !If [UsingDefaultAppName, !Sub "ApplicationInsights-${AWS::StackName}", !Ref AppInsightsApplicationName]
+      ResourceQuery:
+        Query:
+          TagFilters:
+            - Key: 'aws:cloudformation:stack-name'
+              Values:
+                - !Sub "${AWS::StackName}"
+        Type: 'TAG_FILTERS_1_0'          
+  ApplicationInsightsExchange:
+    Condition: AppInsightsEnabled
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName: !Ref 'ExchangeResourceGroup'
+      AutoConfigurationEnabled: true
+    DependsOn: ExchangeResourceGroup
 Outputs:
   DomainAdmin:
     Description: Domain administrator account
