@@ -4,7 +4,7 @@
 :partner-product-short-name: Exchange
 //:partner-company-name: Microsoft
 :current-year: 2022
-:doc-month: September
+:doc-month: October
 :doc-year: 2022
 //:partner-contributors: John Smith, {partner-company-name}
 //:other-contributors: Akua Mansa, Trek10
@@ -12,3 +12,4 @@
 //:aws-ia-contributors: Toni Jones, AWS Integration & Automation team
 // :private_repo:
 :xrefstyle: short
+:aws-ia-contributors: Dragos Madarasan, Aaron Lima, and Dave May, AWS Integration & Automation team
