@@ -3,59 +3,54 @@
 === Implementation details
 
 [[storage-on-the-exchange-nodes]]
-==== Storage 
- the Exchange nodes
+==== Storage for the Exchange nodes
 
-Storage capacity and performance are key aspects of any production installation. Although capacity and performance vary from one deployment to the next, the Quick Start provides a reference configuration that you can use as a starting point. The AWS CloudFormation template deploys the Exchange nodes using the memory-optimized r5.xlarge instance type by default.
+Storage capacity and performance are important aspects of any production installation. Although capacity and performance vary from one deployment to the next, the Quick Start provides a reference configuration that you can use as a starting point. The AWS CloudFormation template deploys the Exchange nodes using the memory-optimized `r5.xlarge` instance type by default.
 
-To provide high performanc and durable storage, the Quick Start includes Amazon Elastic Block Store (Amazon EBS) volumes. EBS volumes are network-attached disk storage, which you can create and attach to EC2 instances. Once these are attached, you can create a file system on top of these volumes, run a mailbox database, or use them in any other way you would use a block device. EBS volumes are placed in a specific Availability Zone, where they are automatically replicated to protect you from the failure of a single component.
+To provide high-performance and durable storage, the Quick Start includes Amazon Elastic Block Store (Amazon EBS) volumes. Amazon EBS volumes are network-attached disk storage, which you can create and attach to Amazon Elastic Compute Cloud (Amazon EC2) instances. When these are attached, you can create a file system on top of these volumes, run a mailbox database, or use them in any way you would use a block device. EBS volumes are placed in a specific Availability Zone (AZ) where they are automatically replicated to protect you from the failure of a single component.
 
-Provisioned IOPS EBS volumes offer storage with consistent and low-latency performance. They are backed by solid state drives (SSDs) and are designed for applications with I/O-intensive workloads, such as databases.
+Provisioned IOPS EBS volumes offer storage with consistent and low-latency performance. They are backed by solid state drives (SSDs) and are designed for applications with I/O-intensive workloads, such as databases. Amazon EBS–optimized instances, such as the R5 instance type, deliver dedicated throughput between Amazon EC2 and Amazon EBS. The dedicated throughput minimizes conflicts between Amazon EBS I/O and other traffic from your Amazon EC2 instance.
 
-Amazon EBS-optimized instances, such as the R5 instance type, deliver dedicated throughput between Amazon EC2 and Amazon EBS. The dedicated throughput minimizes contention between Amazon EBS I/O and other traffic from your Amazon EC2 instance, and provides the best performance for your EBS volumes.
+By default, on each Exchange node, the Quick Start deploys three 500-GiB General Purpose (`gp2`) SSD volumes to store mailbox databases and transaction logs. The `gp2` volume type delivers a consistent baseline of three IOPS/GiB, which provides a total of 1,500 IOPS per volume for Exchange database and transaction log volumes.
 
-By default, on each Exchange node, the Quick Start deploys three 500-GiB General Purpose (GP2) SSD volumes to store mailbox databases and transaction logs. The database and log partitions are formatted using GUID Partition Table ( GPT).
+You can customize the volume size and switch to using dedicated IOPS volumes. The database and log partitions are formatted using a GUID Partition Table. By default, the Quick Start creates partitions using Resilient File System (ReFS), which is the preferred architecture for Exchange Server 2016 and 2019. If you set the `ReFS` parameter to *false*, the partitions are formatted using NTFS.
 
-By default, the Quick Start creates partitions using Resilient File System (ReFS), which is the preferred architecture for Exchange Server 2016 and Exchange Server 2019. If you set the enable or disable ReFS parameter to *false*, the partitions are formatted using NTFS.
+If you need more IOPS per volume, use Provisioned IOPS SSD volumes by changing the *Exchange Server Volume Type* and *Exchange Server Volume IOPS* parameters. Alternatively, use a https://learn.microsoft.com/en-us/troubleshoot/windows-server/backup-and-storage/establish-striped-volume-raid-0[striped volume^].
 
-The GP2 volume type delivers a consistent baseline of 3 IOPS/GiB, which provides a total of 1,500 IOPS per volume for Exchange database and transaction log volumes. You can customize the volume size, and you can switch to using dedicated IOPS volumes.
+The default disk layout in the Quick Start uses the following Amazon EBS volumes:
 
-If you need more IOPS per volume, consider using provisioned IOPS SSD volumes by changing the *Exchange Server Volume Type* and *Exchange Server Volume IOPS* parameters, or use disk striping within Windows.
-
-The default disk layout in the Quick Start uses the following EBS volumes:
-
-* One general-purpose SSD volume (100 GiB) for the operating system (`C:`)
-* One general-purpose SSD volume (500 GiB) to host the Exchange Server database files (`D:`)
-* One general-purpose SSD volume (500 GiB) to host the Exchange Server transaction log files (`E:`)
+* One General Purpose SSD volume (100 GiB) for the operating system (`C:`)
+* One General Purpose SSD volume (500 GiB) to host the Exchange Server database files (`D:`)
+* One General Purpose SSD volume (500 GiB) to host the Exchange Server transaction log files (`E:`)
 
 <<architecture3>> shows the disk layout on each Exchange Server node:
 
 [#architecture3]
 .Disk layout on Exchange Server node
-image::../docs/operational_guide/images/image3.png
+image::../../docs/operational_guide/images/image3.png[Disk layout on Exchange Server node, role="th"]
+
+Depending on the instance type you choose, you may see additional drives for instance store (ephemeral) volumes, such as (`Z:`). When you halt your Amazon EC2 instance, the data are lost.
 
 NOTE: The installation software for each node is located in the `C:\Exchangeinstall` folder.
 
-Depending on the instance type you choose, you may see additional drives for instance-store (ephemeral) volumes, such as (`Z:`). When you halt your EC2 instance, the data is lost.
-
 [[ip-addresses-on-the-exchange-nodes]]
-==== IP Addresses on the Exchange nodes
+==== IP addresses on the Exchange nodes
 
-By default, the Microsoft Exchange Quick Start template deploys two Exchange nodes with two IP addresses each:
+By default, the Quick Start template deploys two Exchange nodes with two IP addresses each:
 
 * One IP address for the primary instance
 * One IP address for the failover cluster
 
-When you launch the AWS CloudFormation template, specify the addresses for each node, as shown in <<architecture4>>. By default, the following CIDR blocks are used in the private subnets: `10.0.0.0/19`, `10.0.32.0/19`, `10.0.64.0/19`.
+When you launch the AWS CloudFormation template, specify the addresses for each node, as shown in <<architecture4>>. By default, the following CIDR blocks are used in the following private subnets: `10.0.0.0/19`, `10.0.32.0/19`, and `10.0.64.0/19`.
 
 [#architecture4]
 .Configuring IP addresses for the Exchange node
-image::../docs/operational_guide/images/image4.png
+image::../../docs/operational_guide/images/image4.png[Configuring IP addresses for the Exchange node, role="th"]
 
 [[database-availability-group]]
 ==== Database availability group
 
-A failover cluster is automatically created for the database availability group (DAG). The AWS CloudFormation templates carry out this task when deploying the second node. If you use the default parameter settings in the template, the Quick Start runs the following Windows PowerShell commands to complete this task:
+A failover cluster is automatically created for the database availability group (DAG). The AWS CloudFormation templates carry out this task when deploying the second node. If you use the default parameter settings in the template, the Quick Start runs the following PowerShell commands to complete this task:
 
 ```
 Install-WindowsFeature failover-clustering –IncludeManagementTools
@@ -73,32 +68,33 @@ Add-DatabaseAvailabilityGroupServer -Identity DAG
 -MailboxServer ExchangeNode2
 ```
 
-NOTE: By default, the database availability group is created with the name DAG. To change this value, modify the `DAGName` default parameter value in the `Configure-ExchangeDAG.ps1` file.
+NOTE: To assign a different name to the DAG, modify the `DAGName` parameter value in the `Configure-ExchangeDAG.ps1` file.
 
-The first command runs on each instance during the bootstrapping process. It installs the required components and management tools for the failover clustering services. The rest of the commands run near the end of the bootstrapping process on the second node and are responsible for creating the cluster and for defining the server nodes and IP addresses.
+The first command runs on each instance during the bootstrapping process. It installs the required components and management tools for the failover clustering services. The remaining commands run near the end of the bootstrapping process on the second node and are responsible for creating the cluster as well as defining the server nodes and IP addresses.
 
-By default, the Quick Start configures an even number of servers in the cluster. You need a third resource to maintain a majority vote to keep the cluster online if an individual server fails. For this, the Quick Start uses a dedicated file share witness instance, which can be either a domain-joined server or a third Exchange node (which cannot be part of the DAG itself). By default, the Quick Start creates a dedicated instance in the first Availability Zone to act as the file share witness. For production environments, you can also set the third AZ parameter to *witness* to create a dedicated instance with a file share in a third Availability Zone.
+By default, the Quick Start configures an even number of servers in the cluster. If an individual server fails, you must have a third resource to maintain a majority vote to keep the cluster online. For this, the Quick Start uses a dedicated file share witness instance, which can be either a domain-joined server or a third Exchange node (which cannot be part of the DAG itself). By default, the Quick Start creates a Dedicated Instance in the first Availability Zone to act as the file share witness. For production environments, you can also set the third Availability Zone parameter to *witness* to create a Dedicated Instance with a file share in a third Availability Zone.
 
-Alternatively, you can use any domain-joined server for this task. (This isn’t included in the Quick Start.) If you set the third AZ parameter to *full*, the Quick Start keeps the quorum settings to the default node majority and creates a third Exchange Server node in the third Availability Zone. Note that some AWS Regions support only two Availability Zones; for a current list, see https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure^].
+Alternatively, you can use any domain-joined server for this task (this functionality is not included in the Quick Start). If you set the third Availability Zone parameter to *full*, the Quick Start transfers the quorum settings to the default node majority and creates a third Exchange node in a third Availability Zone.
 
-The Quick Start automated solution ends after creating the DAG and adding the two Exchange nodes to the DAG. When the deployment is complete, you can create additional databases and make them highly available by creating copies on the second nodes. This process is covered in link:#step-3.-optional-create-database-copies[step 3] of the deployment instructions.
+NOTE: Some AWS Regions support only two Availability Zones. For more information, refer to https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure^].
+
+The Quick Start deployment ends after it creates the DAG and adds two Exchange nodes to it. When the deployment completes, you can create additional databases and make them highly available by creating copies on the second node. For more information, refer to link:#step-3.-optional-create-database-copies[step 3] of the deployment instructions.
 
 [[edge-transport-nodes]]
-==== Edge transport nodes
+==== Edge Transport nodes
 
-Edge Transport nodes relay inbound and outbound emails and provide smart host services within the Exchange organization. The Edge nodes are installed in the public subnets and aren’t domain-joined. However, they do require information from Active Directory, and configuring an Edge sync subscription is needed.
+Edge Transport nodes relay inbound and outbound emails and provide host services within the Exchange organization. The Edge nodes are installed in the public subnets and aren’t domain-joined. But they do require information from Active Directory, and configuring an Edge sync subscription is required.
 
-Because Edge Transport role nodes aren’t required for end-to-end mail flow, by default, Edge nodes aren’t deployed. For this to occur, you must choose *yes* for the *Deploy edge servers* launch option, as shown in <<architecture5>>.
+Because Edge Transport role nodes aren’t required for mail flow, Edge nodes aren’t deployed by default. To create Edge nodes, choose *yes* for the *Deploy Edge servers* launch option, as shown in <<architecture5>>.
 
 [#architecture5]
-.Deploying Edge servers
-image::../docs/operational_guide/images/image5.png
+.Deploy Edge servers
+image::../../docs/operational_guide/images/image5.png[Deploy Edge servers, role="th"]
 
-A pair of edge servers deploy in the public subnets (which must be defined), and the Exchange server edge transport role installs with default settings. The Amazon EC2 instances aren’t domain joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards (NICs). Also, DNS records are created in Active Directory corresponding to their hostname.
+A pair of Edge servers deploy in the public subnets (which must be defined), and the Exchange Transport role installs using default settings. The Amazon EC2 instances aren’t domain joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards. Also, DNS records that correspond to their hostnames are created in Active Directory.
 
-The local administrator password resets to the domain admin password, and an Edge subscription file is created, which can be found in `C:\EdgeServerSubscription.xml`.
+The local administrator password resets to the domain administrator password, and an Edge subscription file is created, which is located in `C:\EdgeServerSubscription.xml`. Copy the subscription file to a mailbox server, and import the subscription by running the following command:
 
-Copy the subscription file to a mailbox server, and import the subscription by running the following command:
 ```
 New-EdgeSubscription -FileData ([byte[]]$(Get-Content -Path "C:\EdgeServerSubscription.xml" -Encoding Byte -ReadCount 0)) -Site "AZ1"
 ```
@@ -106,11 +102,11 @@ New-EdgeSubscription -FileData ([byte[]]$(Get-Content -Path "C:\EdgeServerSubscr
 [[load-balancer]]
 ==== Load balancer
 
-Exchange servers that run with client-access or ransport roles are usually situated behind a network load balancer with a unified Exchange namespace, such as `mail.example.com`. The namespace resolves to the load balancer, which in turns distributes traffic to Exchange servers.
+Exchange servers that run with client access or transport roles are usually situated behind a Network Load Balancer with a unified Exchange namespace, such as `mail.example.com`. The namespace resolves to the load balancer, which in turn distributes traffic to Exchange servers.
 
 The Quick Start contains an option to deploy an Application Load Balancer that distributes traffic to the Exchange nodes. By default, the load balancer doesn't deploy because it requires an existing SSL certificate in AWS Certificate Manager.
 
-For a load balancer to be deployed, complete the following steps:
+To deploy a load balancer, complete the following steps:
 
 . Import or generate a certificate in AWS Certificate Manager.
 . Specify the full Amazon Resource Name (ARN) in the `CertificateARN` option.
@@ -119,22 +115,22 @@ For a load balancer to be deployed, complete the following steps:
 [[volume-encryption]]
 ==== Volume encryption
 
-By default, the Exchange Server Quick Start creates and attaches two Amazon EBS volumes to each node. One EBS volume (corresponding to the `D:\` drive) holds the Exchange mailbox databases, while the other EBS volume (`E:\`) holds the Exchange transaction logs.
+By default, the Quick Start creates and attaches two Amazon EBS volumes to each node. One EBS volume (corresponding to the `D:\` drive) holds the Exchange mailbox databases, while the other EBS volume (`E:\`) holds the Exchange transaction logs.
 
 Optionally, the Quick Start can encrypt the Amazon EBS volumes with either the default AWS Key Management Service (AWS KMS) encryption key or a custom KMS key, as shown in <<architecture6>>:
 
 [#architecture6]
 .Encrypting the EBS volumes
-image::../docs/operational_guide/images/image5.png
+image::../../docs/operational_guide/images/image5.png[Encrypting the EBS volumes, role="th"]
 
-NOTE: If you choose *Encrypt data volumes*, the Exchange nodes (`C:\`) are not encrypted.
+WARNING: If you choose *Encrypt data volumes*, the Exchange nodes (`C:\`) are not encrypted.
 
-=== Postdeployment steps
+=== Postdeployment
 
-==== Run Windows Updates
+==== Update Windows
+To ensure that the applications of deployed servers have the latest Microsoft updates, run Windows update on each server:
 
-To ensure that the OS and installed applications of deployed servers have the latest Microsoft updates, run Windows update on each server:
-. Create an RDP session from the Remote Desktop Gateway server to each deployed server.
+. Create a Remote Desktop Protocol (RDP) session from the Remote Desktop Gateway server for each deployed server.
 . Navigate to the *Settings* application.
 . Navigate to *Update & Security*.
 . Choose *Check for updates*.
@@ -154,88 +150,89 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 ```
 
 ==== (Optional) Create a DNS entry for the load balancer
-. If you chose the option to deploy a load balancer, the Network Load Balancer (NLB) has an endpoint address, such as `elb.amazonaws.com`.
+. If you chose the option to deploy a load balancer, the Network Load Balancer has an endpoint address, such as `elb.amazonaws.com`.
 . To use an Application Load Balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the load balancer.
 . Before proceeding, navigate to the https://console.aws.amazon.com/ec2/v2/home[Amazon EC2 console^] and, under *Load balancer*, choose the load balancer that the Quick Start created.
 . Under the DNS name, copy the listed value, as shown in <<architecture7>>.
 
 [#architecture7]
 .Creating a DNS entry for the load balancer
-image::../docs/operational_guide/images/image7.png
+image::../../docs/operational_guide/images/image7.png[Creating a DNS entry for the load balancer, role="th"]
 
 [start=5]
-. To create the DNS record, connect using Remote Desktop to one of the domain controllers using domain credentials, and open the DNS console by navigating to the *Start* menu and searching for *DNS*.
+. To create the DNS record, use Remote Desktop with domain credentials to connect to one of the domain controllers.
+. Open the DNS console by navigating to the *Start* menu and searching for *DNS*.
 . In the DNS console, navigate to the Active Directory zone, and choose *New Alias (CNAME)*, as shown in <<architecture8>>.
 
 [#architecture8]
 .Selecting a new alias (CNAME)
-image::../docs/operational_guide/images/image8.png
+image::../../docs/operational_guide/images/image8.png[Selecting a new alias (CNAME), role="th"]
 
 [start=7]
 . Create the DNS entry, such as *mail*.
 . Under *fully qualified domain name (FQDN) for target host*, paste the value of the Application Load Balancer endpoint, as shown in <<architecture9>>.
 
 [#architecture9]
-.Creating the "mail" DNS entry
-image::../docs/operational_guide/images/image9.png
+.Creating the mail DNS entry
+image::../../docs/operational_guide/images/image9.png[Creating the mail DNS entry, role="th"]
 
 [start=9]
-. Verify that the DNS entry resolves successfully by running Nslookup.
-. Navigate to *Start*, and serach for *cmd*. From the command-line window, enter the following:
+. Verify that the DNS entry resolves successfully by running `Nslookup`.
+. Navigate to *Start*, and search for *cmd*. From the command line window, enter the following:
 ```
 Nslookup *mail*._example.com_
 ```
 NOTE: `Mail` is the name of your CNAME record, and `example.com` is your Active Directory domain name.
 
 [start=11]
-.  Verify that the record resolves to the load balancer's DNS record, as shown in <<architecture10>>.
+. Verify that the record resolves to the load balancer's DNS record, as shown in <<architecture10>>.
 
 [#architecture10]
 .Verifying the DNS record
-image::../images/image10.png[Architecture,width=647,height=278]
+image::../../docs/operational_guide/images/image10.png[Verifying the DNS record, role="th"]
 
 == Best practices for using {partner-product-short-name} on AWS
 
 The Quick Start architecture supports AWS best practices for high availability and security.
 
 [[high-availability-and-disaster-recovery]]
-==== High availability and disaster recovery
+=== High availability and disaster recovery
 
-Amazon EC2 provides the ability to place instances in multiple locations composed of AWS Regions and Availability Zones. Regions are dispersed and located in separate geographic areas. Availability Zones are distinct locations within a Region that are engineered to be isolated from failures in other Availability Zones and that provide inexpensive, low-latency network connectivity to other Availability Zones in the same Region.
+Amazon EC2 provides the ability to place instances in multiple locations composed of AWS Regions and Availability Zones. Regions are dispersed and located in separate geographic areas. For more information, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-availability-zones[Availability Zones^].
 
 By launching your instances in separate Regions, you can design your application to be closer to specific customers or to meet legal or other requirements. By launching your instances in separate Availability Zones, you can protect your applications from the failure of a single location. Exchange provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.
 
 [[automatic-failover]]
-==== Automatic failover
+=== Automatic failover
 
-Deploying the Quick Start using default parameters configures a two-node database availability group (DAG) with a fileshare witness. The DAG uses Windows Server failover clustering for automatic failover.
+Deploying the Quick Start using default parameters configures a two-node DAG with a file share witness. The DAG uses Windows Server failover clustering for automatic failover.
 
 The Quick Start supports the following scenarios:
 
 * Protection from the failure of a single instance
-* Automatic failover between cluster nodes
-* Automatic failover between Availability Zones
+* Automatic failover of cluster nodes
+* Automatic failover of Availability Zones
 
-The Quick Start default implementation doesn’t, however, provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing quorum on the second cluster node (e.g., ExchangeNode2) to restore application availability.
+The Quick Start default implementation doesn’t, however, provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, prevents automatic failover to Availability Zone 2. This is because the cluster fails when it loses quorum. In this scenario, follow manual disaster recovery steps that include restarting the cluster service and forcing quorum on the second cluster node (for example, `ExchangeNode2`) to restore application availability.
 
-The Quick Start also provides an option to deploy into three Availability Zones. This deployment option can mitigate the loss of quorum in the case of a failure of a single node. However, you can select this option only in AWS Regions that include three or more Availability Zones; for a current list, see https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure^].
+The Quick Start also provides an option to deploy to three Availability Zones. This deployment option mitigates the loss of quorum in if a node fails, but you can select this option only in AWS Regions that include three or more Availability Zones. For more information, refer to https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure^].
 
-We recommend that you consult the https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019[Microsoft Exchange Server documentation^] and customize some of the steps described in this guide or add ones (e.g., deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that best meets your business, IT, and security requirements.
+You can customize the steps described in this guide or add ones that satisfy your business, IT, and security requirements (for example to deploy additional cluster nodes or configure mailbox database copies). For more information, refer to the https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019[Microsoft Exchange Server documentation^].
 
 [[security-groups-and-firewalls]]
-==== Security groups and firewalls
+=== Security groups and firewalls
 
-When the EC2 instances are launched, they must be associated with a security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving the security group, and you can build granular rules that are scoped by protocol, port number, and source or destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.
+When the Amazon EC2 instances launch, they must be associated with a security group, which acts as a stateful firewall. You control the inbound and outbound traffic of the security group, but you can also add granular rules for protocol, port number, IP address, and subnet. By default, all outbound traffic of a security group is permitted. Inbound traffic, however, must be configured to allow the appropriate traffic to reach your instances.
 
-Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time service^], and Distributed File System (DFS), among others. The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, see https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my[Exchange, Firewalls, and Support^].
+Domain controllers and member servers require security group rules to allow traffic for services such as Active Directory Domain Services (AD DS) replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time Service (W32Time)^], and Distributed File System (DFS). The nodes running Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, refer to https://blogs.technet.microsoft.com/exchange/2013/02/18/exchange-firewalls-and-support-oh-my[Exchange, Firewalls, and Support… Oh, my!^]
 
 Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet.
 
-The Quick Start creates certain security groups and rules for you. For a detailed list of port mappings, see the https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/security.html[Security section^] of the Active Directory Domain Services Quick Start deployment guide, and the link:#security[Security section] of this guide.
+The Quick Start creates certain security groups and rules for you. For a detailed list of port mappings, refer to the https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/security.html[Security section^] of the https://aws.amazon.com/quickstart/architecture/active-directory-ds/[AD DS Quick Start^] deployment guide, and the link:#security[Security section] of this guide.
 
 === Security
 
-AWS provides a set of building blocks (for example, Amazon EC2 and Amazon VPC) that you can use to provision infrastructure for your applications. In this model, some security capabilities, such as physical security, are the responsibility of AWS and are highlighted in the https://d0.awsstatic.com/whitepapers/aws-security-best-practices.pdf[AWS security whitepaper^]. Other areas, such as controlling access to applications, fall on the application developer and the tools provided in the Microsoft platform.
+AWS provides building blocks (for example, Amazon EC2 and Amazon VPC) that you can use to provision infrastructure for your applications. In this model, some security capabilities, such as physical security, are the responsibility of AWS and are highlighted in https://aws.amazon.com/architecture/security-identity-compliance/[Best Practices for Security, Identity, & Compliance^]. Other areas, such as controlling access to applications, depend on the application developer and tools of the Microsoft platform.
 
 The Quick Start configures the following security groups for Exchange Server:
 ```

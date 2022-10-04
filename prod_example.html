@@ -750,8 +750,7 @@ p {
 
 /* image layout */
 #toc.toc2 #toctitle {
-  /* Do not change! This link is intended to be broken for non-production builds. */
-  background-image: url("images/AWS-Logo.svg");
+  background-image: url("docs/boilerplate/.images/AWS-Logo.svg");
   background-repeat: no-repeat;
   background-size: 50%;
   background-position: center;
@@ -816,6 +815,26 @@ a img {
   background:#ffffb3;
 }
 
+.watermark {
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  color:#00f;
+  cursor: default;
+  display: block;
+  font-size: 400px;
+  font-weight: 1000;
+  margin: 0;
+  opacity:0.05;
+  top: 30%;
+  position: fixed;
+  text-align: center;
+  transform: rotate(-30deg);
+  user-select: none;
+  z-index: -1;
+}
+
 .footer-text{color:rgba(255,255,255,.8);line-height:1.44;background:#1c222a;padding:1.25em;max-width:100%;margin-bottom:unset}
 p.footer-text a{color:#d7d8d8}
 
@@ -824,7 +843,7 @@ p.footer-text a{color:#d7d8d8}
 .image-container img {
   width: 1px;
   height: 1px;
-  } 
+  }
 /* END dummy image */
 
 </style>
@@ -867,16 +886,16 @@ p.footer-text a{color:#d7d8d8}
 <img src="https://aws-quickstart.s3.amazonaws.com/docs/deployment-guide/aws-quickstart-deployment-graphic.png" alt="QS" width="80" height="80">
 </div>
 </div>
-<div class="imageblock image-container">
-<div class="content">
-<img src="https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-exchange/docs/boilerplate/.images/aws-quickstart-graphic.png" alt="">
-</div>
-</div>
 <div class="paragraph text-center">
 <p><strong>March 2022</strong><br>
 <em>Dragos Madarasan, Aaron Lima, and Dave May, AWS Integration &amp; Automation team</em><br></p>
 </div>
-<div class="admonitionblock tip text-left">
+<div class="imageblock text-left image-container">
+<div class="content">
+<img src="https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-exchange/docs/boilerplate/.images/aws-quickstart-graphic.png" alt="">
+</div>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
@@ -889,7 +908,7 @@ Refer to the <a href="https://github.com/aws-quickstart/quickstart-microsoft-exc
 </table>
 </div>
 <div class="paragraph text-left">
-<p>This Quick Start was created by Amazon Web Services (AWS). <a href="http://aws.amazon.com/quickstart/" target="_blank" rel="noopener">Quick Starts</a> are automated reference deployments that help people deploy popular technologies on AWS according to AWS best practices.</p>
+<p>This Quick Start was created by Amazon Web Services (AWS). <a href="http://aws.amazon.com/quickstart/" target="_blank" rel="noopener">Quick Starts</a> are automated reference deployments that help people deploy popular technologies on AWS according to AWS best practices. If you&#8217;re unfamiliar with AWS Quick Starts, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>.</p>
 </div>
 </div>
 </div>
@@ -1106,7 +1125,7 @@ Unless you are customizing the Quick Start templates for your own projects, don&
 <p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources that might require the ability to automatically expand macros.</p>
+<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select all of the check boxes to acknowledge that the template creates IAM resources that might require the ability to automatically expand macros.</p>
 </li>
 <li>
 <p>Choose <strong>Create stack</strong> to deploy the stack.</p>
@@ -1301,6 +1320,9 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 <div class="sectionbody">
 <div class="paragraph">
 <p>For troubleshooting common Quick Start issues, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a> and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html" target="_blank" rel="noopener">Troubleshooting CloudFormation</a>.</p>
+</div>
+<div class="paragraph">
+<p>After you successfully deploy a Quick Start, confirm that your resources and services are updated and configured—including any required patches—to meet your security and other needs. For more information, refer to the <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">Shared Responsibility Model</a>.</p>
 </div>
 </div>
 </div>
