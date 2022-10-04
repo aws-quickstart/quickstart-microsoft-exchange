@@ -3547,7 +3547,7 @@ Resources:
                   - !Ref DomainAdminUser
                   - ''' -ExUserSecParam '''
                   - !Ref ExchangeAdminSecrets
-                  - ''' -UrlRewriteLink '''
+                  - ''' -VisualCRuntimeLink '''
                   - !FindInMap
                     - MediaLinksMapper
                     - VisualCRuntime
