@@ -27,7 +27,7 @@ The default disk layout in the Quick Start uses the following Amazon EBS volumes
 
 [#architecture3]
 .Disk layout on Exchange Server node
-image::../docs/operational_guide/images/image3.png[Disk layout on Exchange Server node, role="th"]
+image::../../docs/operational_guide/images/image3.png[Disk layout on Exchange Server node, role="th"]
 
 Depending on the instance type you choose, you may see additional drives for instance store (ephemeral) volumes, such as (`Z:`). When you halt your Amazon EC2 instance, the data are lost.
 
@@ -45,7 +45,7 @@ When you launch the AWS CloudFormation template, specify the addresses for each 
 
 [#architecture4]
 .Configuring IP addresses for the Exchange node
-image::../docs/operational_guide/images/image4.png[Configuring IP addresses for the Exchange node, role="th"]
+image::../../docs/operational_guide/images/image4.png[Configuring IP addresses for the Exchange node, role="th"]
 
 [[database-availability-group]]
 ==== Database availability group
@@ -89,7 +89,7 @@ Because Edge Transport role nodes aren’t required for mail flow, Edge nodes ar
 
 [#architecture5]
 .Deploy Edge servers
-image::../docs/operational_guide/images/image5.png[Deploy Edge servers, role="th"]
+image::../../docs/operational_guide/images/image5.png[Deploy Edge servers, role="th"]
 
 A pair of Edge servers deploy in the public subnets (which must be defined), and the Exchange Transport role installs using default settings. The Amazon EC2 instances aren’t domain joined, but the DNS suffix that corresponds to the domain name is configured on the network interface cards. Also, DNS records that correspond to their hostnames are created in Active Directory.
 
@@ -121,7 +121,7 @@ Optionally, the Quick Start can encrypt the Amazon EBS volumes with either the d
 
 [#architecture6]
 .Encrypting the EBS volumes
-image::../docs/operational_guide/images/image5.png[Encrypting the EBS volumes, role="th"]
+image::../../docs/operational_guide/images/image5.png[Encrypting the EBS volumes, role="th"]
 
 WARNING: If you choose *Encrypt data volumes*, the Exchange nodes (`C:\`) are not encrypted.
 
@@ -157,7 +157,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 
 [#architecture7]
 .Creating a DNS entry for the load balancer
-image::../docs/operational_guide/images/image7.png[Creating a DNS entry for the load balancer, role="th"]
+image::../../docs/operational_guide/images/image7.png[Creating a DNS entry for the load balancer, role="th"]
 
 [start=5]
 . To create the DNS record, use Remote Desktop with domain credentials to connect to one of the domain controllers.
@@ -166,7 +166,7 @@ image::../docs/operational_guide/images/image7.png[Creating a DNS entry for the 
 
 [#architecture8]
 .Selecting a new alias (CNAME)
-image::../docs/operational_guide/images/image8.png[Selecting a new alias (CNAME), role="th"]
+image::../../docs/operational_guide/images/image8.png[Selecting a new alias (CNAME), role="th"]
 
 [start=7]
 . Create the DNS entry, such as *mail*.
@@ -174,7 +174,7 @@ image::../docs/operational_guide/images/image8.png[Selecting a new alias (CNAME)
 
 [#architecture9]
 .Creating the mail DNS entry
-image::../docs/operational_guide/images/image9.png[Creating the mail DNS entry, role="th"]
+image::../../docs/operational_guide/images/image9.png[Creating the mail DNS entry, role="th"]
 
 [start=9]
 . Verify that the DNS entry resolves successfully by running `Nslookup`.
@@ -189,7 +189,7 @@ NOTE: `Mail` is the name of your CNAME record, and `example.com` is your Active 
 
 [#architecture10]
 .Verifying the DNS record
-image::../docs/operational_guide/images/image10.png[Verifying the DNS record, role="th"]
+image::../../docs/operational_guide/images/image10.png[Verifying the DNS record, role="th"]
 
 == Best practices for using {partner-product-short-name} on AWS
 
