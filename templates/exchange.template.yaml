@@ -215,23 +215,22 @@ Metadata:
         default: Windows Server 2022 AMI name
 Parameters:
   ADServer1NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: DC1
     Description: The NetBIOS name of the first Active Directory server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ADServer1PrivateIP:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.0.10
     Description: The private IP for the first Active Directory server located in Availability
       Zone 1.
     Type: String
   ADServer2NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: DC2
-    Description: The NetBIOS name of the second Active Directory server (up to 15
-      characters).
+    Description: The NetBIOS name of the second Active Directory server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -242,6 +241,7 @@ Parameters:
     MaxLength: '300'
     AllowedPattern: '^[a-zA-Z0-9\-]*$'
   CertificateArn:
+    AllowedPattern: '^(arn:[\w+=\/,.@-]+:[\w+=\/,.@-]+:[\w+=\/,.@-]*:[0-9]+:[\w+=,.@-]+(\/[\w+=,.@-]+)*)?$'
     Default: ''
     Description: (Conditional) If 'true' was chosen in Deploy Network Load Balancer
       option, specify the Certificate arn to be used by load balancer in arn:aws:acm:[REGION]:[ACCOUNTNUMBER]:certificate/[GUID]
@@ -256,7 +256,7 @@ Parameters:
     Description: Choose true to deploy an Network Load Balancer (NLB).
     Type: String
   DomainAdminPassword:
-    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
+    AllowedPattern: '(?=^.{8,32}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*'
     Description: The password for the domain admin user. Must be at least 8 characters
       containing letters, numbers and symbols.
     MaxLength: '32'
@@ -264,7 +264,7 @@ Parameters:
     NoEcho: 'true'
     Type: String
   DomainAdminUser:
-    AllowedPattern: '[a-zA-Z0-9]*'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: StackAdmin
     Description: The user name for the account that will be used as Domain Administrator.
       This is separate from the default "Administrator" account.
@@ -272,7 +272,7 @@ Parameters:
     MinLength: '5'
     Type: String
   DomainDNSName:
-    AllowedPattern: '[a-zA-Z0-9]+\..+'
+    AllowedPattern: '^[a-zA-Z0-9]+[a-zA-Z0-9\-]*\.[a-zA-Z0-9]+$'
     Default: example.com
     Description: The fully qualified domain name (FQDN) of the forest root domain
       (e.g. example.com).
@@ -283,7 +283,7 @@ Parameters:
     Description: The ID of the Domain Member Security Group (e.g., sg-7f16e910).
     Type: AWS::EC2::SecurityGroup::Id
   DomainNetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: EXAMPLE
     Description: The NetBIOS name of the domain (up to 15 characters) for users of
       earlier versions of Windows (e.g. EXAMPLE).
@@ -310,27 +310,27 @@ Parameters:
       - m5.4xlarge
     ConstraintDescription: Select a general purpose instance type
   EdgeNode1NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: EdgeNode1
     Description: The NetBIOS name of the first Edge Server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   EdgeNode1PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.128.12
     Description: The primary private IP for the first Edge Server located in Availability
       Zone 1.
     Type: String
   EdgeNode2NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: EdgeNode2
     Description: The NetBIOS name of the second Edge Server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   EdgeNode2PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.144.12
     Description: The primary private IP for the second Edge Server located in Availability
       Zone 2.
@@ -357,6 +357,7 @@ Parameters:
     Description: Choose true to encrypt the data and log volumes on Exchange nodes.
     Type: String
   EncryptionKmsKey:
+    AllowedPattern: '^(arn:[\w+=\/,.@-]+:[\w+=\/,.@-]+:[\w+=\/,.@-]*:[0-9]+:[\w+=,.@-]+(\/[\w+=,.@-]+)*)?$'
     Default: ''
     Description: (Optional) Specify the KMS encryption arn in format arn:aws:kms:[REGION]:[ACCOUNTNUMBER]:key/[GUID].
       Leave blank to use default EBS encryption key.
@@ -378,41 +379,41 @@ Parameters:
     Description: The Amazon EC2 instance type for the Exchange nodes.
     Type: String
   ExchangeNode1NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: ExchangeNode1
     Description: The NetBIOS name of the first Exchange Node (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ExchangeNode1PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.0.100
     Description: The primary private IP for Exchange node 1.
     Type: String
   ExchangeNode1PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.0.101
     Description: The secondary private IP for Exchange node 1.
     Type: String
   ExchangeNode2NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: ExchangeNode2
     Description: The NetBIOS name of the second Exchange Node (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ExchangeNode2PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.32.100
     Description: The primary private IP for Exchange node 2.
     Type: String
   ExchangeNode2PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.32.101
     Description: The secondary private IP for Exchange node 2.
     Type: String
   ExchangeNode3NetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: ExchangeNode3
     Description: (Optional) The NetBIOS name of the third Exchange node (up to 15
       characters).
@@ -420,22 +421,24 @@ Parameters:
     MinLength: '1'
     Type: String
   ExchangeNode3PrivateIP1:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.64.100
     Description: (Optional) The primary private IP for the Exchange node 3.
     Type: String
   ExchangeNode3PrivateIP2:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.64.101
     Description: (Optional) The secondary private IP for the Exchange node 3.
     Type: String
   Exchange2016Source:
+    AllowedPattern: '^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$'
     Default: 'https://download.microsoft.com/download/8/d/2/8d2d01b4-5bbb-4726-87da-0e331bc2b76f/ExchangeServer2016-x64-CU23.ISO'
     Description: Full URL (including https://) for Exchange 2016 ISO.
     MaxLength: '2000'
     MinLength: '1'
     Type: String
   Exchange2019Source:
+    AllowedPattern: '^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$'
     Default: 'https://download.microsoft.com/download/b/c/7/bc766694-8398-4258-8e1e-ce4ddb9b3f7d/ExchangeServer2019-x64-CU12.ISO'
     Description: Full URL (including https://) for Exchange 2019 ISO.
     MaxLength: '2000'
@@ -450,14 +453,14 @@ Parameters:
     Description: The Amazon EC2 instance type for the file-share witness server.
     Type: String
   FileServerNetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9]+'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
     Default: FileServer
     Description: The NetBIOS name of the file-share witness server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   FileServerPrivateIP:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     Default: 10.0.0.200
     Description: The primary private IP for the file-share witness server.
     Type: String
@@ -478,7 +481,7 @@ Parameters:
     Description: The ID of the private subnet 1 in Availability Zone 1 (e.g., subnet-a0246dcd).
     Type: AWS::EC2::Subnet::Id
   PrivateSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
     Default: 10.0.0.0/19
     Description: The CIDR block for the private subnet 1 located in Availability Zone
       1.
@@ -487,7 +490,7 @@ Parameters:
     Description: The ID of the private subnet 2 in Availability Zone 2 (e.g., subnet-a0246dcd).
     Type: AWS::EC2::Subnet::Id
   PrivateSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
     Default: 10.0.32.0/19
     Description: The CIDR block for the private subnet 2 located in Availability Zone
       2.
@@ -512,7 +515,7 @@ Parameters:
       subnet-a0246dcd).
     Type: AWS::EC2::Subnet::Id
   QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    AllowedPattern: '^[a-z0-9]+[a-z0-9\.\-]*[a-z0-9]+$'
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
       (-).
@@ -522,11 +525,12 @@ Parameters:
       It cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
+    AllowedPattern:  '^[a-z]+\-[a-z\-]+\-[0-9]{1}$'
     Default: us-east-1
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    AllowedPattern: '^[a-zA-Z0-9\-\/]+$'
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slash (/).
     Default: quickstart-microsoft-exchange/
@@ -556,7 +560,7 @@ Parameters:
     Description: The ID of the VPC (e.g., vpc-0343606e).
     Type: AWS::EC2::VPC::Id
   VPCCidrBlock:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/16
     Description: The CIDR block for the VPC.
