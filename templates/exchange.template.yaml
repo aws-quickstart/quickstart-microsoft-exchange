@@ -566,24 +566,23 @@ Parameters:
     Description: The CIDR block for the VPC.
     Type: String
   VolumeIops:
-    Default: '1000'
+    Default: '3000'
     Description: The Iops for the Exchange Data drive (Only used when volume type
-      is io2).
-    MaxValue: '64000'
-    MinValue: '100'
+      is gp3).
+    MaxValue: '16000'
+    MinValue: '3000'
     Type: Number
   VolumeSize:
     Default: '500'
     Description: The volume size for the Exchange data drive.
     MaxValue: '16000'
-    MinValue: '100'
+    MinValue: '125'
     Type: Number
   VolumeType:
     AllowedValues:
-    - gp2
-    - io2
     - gp3
-    Default: gp2
+    - st1
+    Default: gp3
     Description: The volume type for the Exchange data drive.
     Type: String
   WS2016FULLBASE:
@@ -615,7 +614,7 @@ Conditions:
   ThirdAzIsWitness: !Equals [!Ref ThirdAZ, 'witness']
   UseEncryptedDataVolumes: !Equals [!Ref EncryptDataVolumes, 'true']
   UseReFSDataVolumes: !Equals [!Ref EnableReFSVolumes, 'true']
-  VolIsio2: !Equals [!Ref VolumeType, 'io2']
+  VolIsgp3: !Equals [!Ref VolumeType, 'gp3']
   EnableBackups: !Equals [!Ref EnableBackups, 'yes']
 Rules:
   SubnetsInVPC:
@@ -1105,7 +1104,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       ImageId:
@@ -1613,7 +1612,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       IamInstanceProfile: !Ref ExchangeProfile
@@ -1986,7 +1985,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       ImageId: !Ref WS2022FULLBASE
       IamInstanceProfile: !Ref ExchangeProfile
       InstanceType: !Ref FileServerInstanceType
@@ -2583,7 +2582,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
@@ -3277,7 +3276,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
@@ -3868,7 +3867,7 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           VolumeSize: 100
-          VolumeType: gp2
+          VolumeType: gp3
       - DeviceName: /dev/xvdca
         VirtualName: ephemeral0
       EbsOptimized: true
@@ -3983,7 +3982,7 @@ Resources:
       AvailabilityZone: !GetAtt ExchangeNode1.AvailabilityZone
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Encrypted:
@@ -4025,7 +4024,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -4054,7 +4053,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -4083,7 +4082,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -4113,7 +4112,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize
@@ -4143,7 +4142,7 @@ Resources:
         - !Ref AWS::NoValue
       Iops:
         !If
-        - VolIsio2
+        - VolIsgp3
         - !Ref VolumeIops
         - !Ref AWS::NoValue
       Size: !Ref VolumeSize

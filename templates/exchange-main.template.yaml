@@ -605,23 +605,23 @@ Parameters:
     Description: CIDR Block for the VPC.
     Type: String
   VolumeIops:
-    Default: '1000'
+    Default: '3000'
     Description: The provisioned IOPS for the Exchange Data and Logs volumes.
-      This parameter is only applicable when Exchange Server Volume Type is set to "io2".
-    MaxValue: '64000'
-    MinValue: '100'
+      This parameter is only applicable when Exchange Server Volume Type is set to "gp3".
+    MaxValue: '16000'
+    MinValue: '3000'
     Type: Number
   VolumeSize:
     Default: '500'
     Description: The volume size for the Exchange Data and Logs volumes.
     MaxValue: '16000'
-    MinValue: '100'
+    MinValue: '125'
     Type: Number
   VolumeType:
     AllowedValues:
-      - gp2
-      - io2
-    Default: gp2
+      - gp3
+      - st1
+    Default: gp3
     Description: The volume type for the Exchange Data and Logs volumes.
     Type: String
 Conditions:
