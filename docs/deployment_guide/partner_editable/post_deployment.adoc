@@ -12,7 +12,7 @@ To help ensure that the deployed servers' operating systems and installed applic
 
 === (Optional) Create database copies
 
-This Quick Start creates a database availability group (DAG) and adds to it the Exchange nodes. As part of the Exchange installation, each node contains a mailbox database. The first node contains a database called `DB1`, and the second node contains a database called `DB2`.
+This Partner Solution creates a database availability group (DAG) and adds to it the Exchange nodes. As part of the Exchange installation, each node contains a mailbox database. The first node contains a database called `DB1`, and the second node contains a database called `DB2`.
 
 As part of configuring high availability for the mailbox roles, you can add mailbox database copies to other Exchange nodes. Alternatively, you can create new databases and then create additional copies. To create a second copy for the initial databases, use the following commands:
 
@@ -26,7 +26,7 @@ Add-MailboxDatabaseCopy -Identity DB2 –MailboxServer ExchangeNode1 -Activation
 
 . If you deploy a Network Load Balancer, it has an endpoint address, such as `elb.amazonaws.com`.
 . To use the load balancer with your Exchange namespace, create a CNAME record in Active Directory that points to the Application Load Balancer.
-. Before proceeding, navigate to the https://console.aws.amazon.com/ec2/v2/home[Amazon EC2 console^], and under *Load balancer*, choose the load balancer that the Quick Start created.
+. Before proceeding, navigate to the https://console.aws.amazon.com/ec2/v2/home[Amazon EC2 console^], and under *Load balancer*, choose the load balancer that the Partner Solution created.
 .  Copy the value listed under the DNS name, as shown in Figure 7.
 
 [#architecture7]
@@ -71,17 +71,17 @@ By launching your instances in separate Regions, you can design your application
 [[automatic-failover]]
 === Automatic failover
 
-Deploying this Quick Start with the *default parameters* configures a two-node DAG with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.
+Deploying this Partner Solution with the *default parameters* configures a two-node DAG with a file share witness. The DAG uses Windows Server Failover Clustering for automatic failover.
 
-The Quick Start implementation supports the following scenarios:
+The Partner Solution implementation supports the following scenarios:
 
 * Protection from the failure of a single instance
 * Automatic failover between the cluster nodes
 * Automatic failover between Availability Zones
 
-This Quick Start's default implementation, however, doesn’t provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing a quorum on the second cluster node (for example, `ExchangeNode2`) to restore application availability.
+This Partner Solution's default implementation, however, doesn’t provide automatic failover in every case. For example, the loss of Availability Zone 1, which contains the primary node and file share witness, would prevent automatic failover to Availability Zone 2. This is because the cluster would fail as it loses quorum. In this scenario, you could follow manual disaster recovery steps that include restarting the cluster service and forcing a quorum on the second cluster node (for example, `ExchangeNode2`) to restore application availability.
 
-This Quick Start can deploy to three Availability Zones, which can mitigate the loss of quorum if a node fails. Note that you can choose this option only in AWS Regions that include three or more Availability Zones. For a current list, refer to https://aws.amazon.com/about-aws/global-infrastructure/[Global Infrastructure^].
+This Partner Solution can deploy to three Availability Zones, which can mitigate the loss of quorum if a node fails. Note that you can choose this option only in AWS Regions that include three or more Availability Zones. For a current list, refer to https://aws.amazon.com/about-aws/global-infrastructure/[Global Infrastructure^].
 
 Consult the https://docs.microsoft.com/en-us/Exchange/exchange-server?view=exchserver-2019[Exchange Server documentation^] and customize the steps described (for example, deploy additional cluster nodes and configure mailbox database copies) to deploy a solution that meets your business, IT, and security requirements.
 
@@ -92,4 +92,4 @@ When the Amazon EC2 instances launch, they must be associated with a security gr
 
 Domain controllers and member servers require several security group rules to allow traffic for services such as AD DS replication, user authentication, https://docs.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-top[Windows Time service (W32Time)^], and Distributed File System (DFS), among others. The nodes that run Exchange Server permit full communication between each other, as recommended by Microsoft best practices. For more information, refer to https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-firewalls-and-support-8230-oh-my/ba-p/595710[Exchange, Firewalls, and Support ... Oh, my!^]
 
-Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet. The Quick Start creates certain security groups and rules for you.
+Edge node servers (if configured to be deployed) allow port 25 TCP (SMTP) from the entire internet. The Partner Solution creates certain security groups and rules for you.
