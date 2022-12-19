@@ -1,6 +1,6 @@
-This Quick Start deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
+This Partner Solution deploys Microsoft Exchange on the AWS Cloud. If you are unfamiliar with AWS Partner Solutions, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^].
 
-In addition to this Quick Start, we published a set of Microsoft-based Quick Starts that you can use to deploy other common Microsoft workloads on AWS, which include the following:
+In addition to this Partner Solution, we published a set of Microsoft-based Partner Solutions that you can use to deploy other common Microsoft workloads on AWS, which include the following:
 
 * Microsoft Active Directory
 * Remote Desktop Gateway (RD Gateway)
@@ -9,10 +9,10 @@ In addition to this Quick Start, we published a set of Microsoft-based Quick Sta
 * Microsoft SQL Server
 * Windows Server Update Services
 
-Each of these Quick Starts includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. For more information about using Quick Starts to deploy Microsoft workloads, refer to https://aws.amazon.com/quickstart/?solutions-all.sort-by=item.additionalFields.sortDate&solutions-all.sort-order=desc&awsf.filter-tech-category=*all&awsf.filter-industry=*all&awsf.filter-content-type=content-type%23quick-start&solutions-all.q=microsoft&solutions-all.q_operator=AND[AWS Quick Starts^].
+Each of these Partner Solutions includes a virtual private cloud (VPC) environment, which is deployed based on AWS best practices. For more information about using Partner Solutions to deploy Microsoft workloads, refer to https://aws.amazon.com/quickstart/?solutions-all.sort-by=item.additionalFields.sortDate&solutions-all.sort-order=desc&awsf.filter-tech-category=*all&awsf.filter-industry=*all&awsf.filter-content-type=content-type%23quick-start&solutions-all.q=microsoft&solutions-all.q_operator=AND[AWS Partner Solutions^].
 
 // For more information on deploying Microsoft Exchange on the AWS Cloud, see the https://aws-quickstart.github.io/quickstart-microsoft-exchange/operational/index.html[Operational Guide].
 
-// For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
+// For advanced information about the product that this Partner Solution deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
-// For information about using this Quick Start for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
+// For information about using this Partner Solution for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
