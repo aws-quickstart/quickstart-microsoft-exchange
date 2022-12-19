@@ -485,7 +485,7 @@ Parameters:
       - '2'
       - '3'
       - '4'
-    Default: '1'
+    Default: '0'
     Description: The number of Remote Desktop Gateway hosts to create.
     Type: String
   NumberOfAZs:
