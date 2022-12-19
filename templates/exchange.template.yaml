@@ -637,6 +637,9 @@ Mappings:
       2013x64: https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe
     UrlRewrite:
       v21: https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi
+    SecurityUpdates:
+      e2016: https://download.microsoft.com/download/e/9/a/e9a07b3b-b440-44bb-8484-7ece339ffaf1/Exchange2016-KB5019758-x64-en.exe # KB5019758 for Exchange 2017 CU23
+      e2019: https://download.microsoft.com/download/d/b/9/db9ee80e-9c18-40d8-91f9-f2353dcf4f86/Exchange2019-KB5019758-x64-en.exe # KB5019758 for Exchange 2019 CU12
 Resources:
   ExchangeAdminSecrets:
     Type: AWS::SecretsManager::Secret
@@ -1083,6 +1086,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-NetFramework.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-SecurityUpdates.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-SecurityUpdates.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
@@ -1600,6 +1616,19 @@ Resources:
                     - !Sub '${QSS3BucketName}-${AWS::Region}'
                     - !Ref QSS3BucketName
               authentication: S3AccessCreds
+            C:\cfn\scripts\Install-SecurityUpdates.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-SecurityUpdates.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
@@ -1751,7 +1780,7 @@ Resources:
             Resource: !Ref ExchangeAdminSecrets
       Path: /
       ManagedPolicyArns:
-      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM'
+      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore'
       AssumeRolePolicyDocument:
         Statement:
         - Action:
@@ -2053,7 +2082,10 @@ Resources:
             a-install-ucma-runtime:
               command: powershell.exe -Command "C:\cfn\scripts\Install-UcmaRuntime.ps1"
               waitAfterCompletion: '0'
-            b-install-exchange-organization:
+            b-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
+            c-install-exchange-organization:
               command:
                 !Join
                 - ''
@@ -2068,7 +2100,7 @@ Resources:
                   - !Ref ExchangeAdminSecrets
                   - '''"'
               waitAfterCompletion: '0'
-            c-install-exchange:
+            d-install-exchange:
               command:
                 !Join
                 - ''
@@ -2570,6 +2602,19 @@ Resources:
                     - !Sub '${QSS3BucketName}-${AWS::Region}'
                     - !Ref QSS3BucketName
               authentication: S3AccessCreds
+            C:\cfn\scripts\Install-SecurityUpdates.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-SecurityUpdates.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
@@ -2735,7 +2780,10 @@ Resources:
             a-install-ucma-runtime:
               command: powershell.exe -Command "C:\cfn\scripts\Install-UcmaRuntime.ps1
               waitAfterCompletion: '0'
-            b-install-exchange:
+            b-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever              
+            c-install-exchange:
               command:
                 !Join
                 - ''
@@ -3263,6 +3311,19 @@ Resources:
                     - !Sub '${QSS3BucketName}-${AWS::Region}'
                     - !Ref QSS3BucketName
               authentication: S3AccessCreds
+            C:\cfn\scripts\Install-SecurityUpdates.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-SecurityUpdates.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
         configSets:
           config:
           - setup
@@ -3353,7 +3414,10 @@ Resources:
             a-install-ucma-runtime:
               command: powershell.exe -Command "C:\cfn\scripts\Install-UcmaRuntime.ps1
               waitAfterCompletion: '0'
-            b-install-exchange:
+            b-reboot:
+              command: powershell.exe -Command "C:\cfn\scripts\Restart-Computer.ps1"
+              waitAfterCompletion: forever
+            c-install-exchange:
               command:
                 !Join
                 - ''
@@ -3846,6 +3910,19 @@ Resources:
               source:
                 !Sub
                 - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-UrlRewrite.ps1
+                - S3Region: !If
+                    - UsingDefaultBucket
+                    - !Ref AWS::Region
+                    - !Ref QSS3BucketRegion
+                  S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub '${QSS3BucketName}-${AWS::Region}'
+                    - !Ref QSS3BucketName
+              authentication: S3AccessCreds
+            C:\cfn\scripts\Install-SecurityUpdates.ps1:
+              source:
+                !Sub
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Install-SecurityUpdates.ps1
                 - S3Region: !If
                     - UsingDefaultBucket
                     - !Ref AWS::Region
